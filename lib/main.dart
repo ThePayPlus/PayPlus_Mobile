@@ -9,13 +9,13 @@ import 'app/routes/app_pages.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize date formatting for Indonesian locale
   await initializeDateFormatting('id', null);
   
   Intl.defaultLocale = 'id';
   runApp(
     GetMaterialApp(
       title: "PayPlus",
+      debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       theme: ThemeData(
@@ -27,7 +27,6 @@ void main() async {
           elevation: 0,
         ),
       ),
-      debugShowCheckedModeBanner: false,
     ),
   );
 }
