@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import '../controllers/bill_controller.dart';
 import '../../../data/models/bill_model.dart';
 
@@ -10,12 +9,12 @@ class EditBillView extends GetView<BillController> {
   @override
   Widget build(BuildContext context) {
     final Bill bill = Get.arguments as Bill;
-    
+
     // Populate the form with the bill data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.populateFormForEdit(bill);
     });
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Bill'),
@@ -56,11 +55,12 @@ class EditBillView extends GetView<BillController> {
                 onTap: () async {
                   final pickedDate = await showDatePicker(
                     context: Get.context!,
-                    initialDate: controller.selectedDate.value ?? DateTime.now(),
+                    initialDate:
+                        controller.selectedDate.value ?? DateTime.now(),
                     firstDate: DateTime.now(),
                     lastDate: DateTime(2030),
                   );
-                  
+
                   if (pickedDate != null) {
                     controller.setSelectedDate(pickedDate);
                   }
@@ -68,23 +68,23 @@ class EditBillView extends GetView<BillController> {
               ),
               const SizedBox(height: 16),
               Obx(() => DropdownButtonFormField<String>(
-                value: controller.selectedCategory.value,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Category',
-                ),
-                items: controller.categories.map((category) {
-                  return DropdownMenuItem(
-                    value: category,
-                    child: Text(category),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    controller.selectedCategory.value = value;
-                  }
-                },
-              )),
+                    value: controller.selectedCategory.value,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Category',
+                    ),
+                    items: controller.categories.map((category) {
+                      return DropdownMenuItem(
+                        value: category,
+                        child: Text(category),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.selectedCategory.value = value;
+                      }
+                    },
+                  )),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
@@ -102,7 +102,7 @@ class EditBillView extends GetView<BillController> {
                       controller.selectedDate.value!,
                       controller.selectedCategory.value,
                     );
-                    
+
                     // Show success message
                     Get.snackbar(
                       'Success',
@@ -110,11 +110,12 @@ class EditBillView extends GetView<BillController> {
                       backgroundColor: Colors.green.shade100,
                       colorText: Colors.green.shade900,
                     );
-                    
+
                     // Go back to the bills page
                     Get.back();
                   },
-                  child: const Text('Save Changes', style: TextStyle(color: Colors.white)),
+                  child: const Text('Save Changes',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../controllers/income_controller.dart';
-import 'package:payplus_mobile/app/routes/app_pages.dart';
 
 class IncomeView extends GetView<IncomeController> {
   const IncomeView({super.key});
