@@ -2,14 +2,32 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart'; // Add this import
+
 import 'app/routes/app_pages.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize date formatting for Indonesian locale
+  await initializeDateFormatting('id', null);
+  
+  Intl.defaultLocale = 'id';
   runApp(
     GetMaterialApp(
-      title: "Application",
+      title: "PayPlus",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        scaffoldBackgroundColor: Colors.grey[50],
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 0,
+        ),
+      ),
+      debugShowCheckedModeBanner: false,
     ),
   );
 }
