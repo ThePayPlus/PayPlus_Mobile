@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';  // Add this import
+import 'package:intl/intl.dart'; // Add this import
 import '../../../data/models/bill_model.dart';
 
 class BillController extends GetxController {
   final bills = <Bill>[].obs;
   final isLoading = false.obs;
-  
+
   // Form controllers
   final nameController = TextEditingController();
   final amountController = TextEditingController();
@@ -16,23 +16,23 @@ class BillController extends GetxController {
   final selectedCategory = RxString('Rent');
   final selectedDate = Rx<DateTime?>(null);
   Timer? _notificationTimer;
-  
+
   @override
   void onInit() {
     super.onInit();
     fetchBills();
-    
+
     // Set up timer to check for notifications every 1 minutes
     _notificationTimer = Timer.periodic(const Duration(minutes: 1), (_) {
       checkBillNotifications();
     });
-    
+
     // Also check immediately on startup
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkBillNotifications();
     });
   }
-  
+
   @override
   void onClose() {
     _notificationTimer?.cancel();
@@ -81,7 +81,7 @@ class BillController extends GetxController {
         ),
       ];
       isLoading.value = false;
-      
+
       // Check for overdue bills and show notifications
       checkOverdueBills();
     });
@@ -98,15 +98,15 @@ class BillController extends GetxController {
   }
 
   void checkBillNotifications() {
-    final now = DateTime.now();
+    /*  final now = DateTime.now();
     final tomorrow = DateTime(now.year, now.month, now.day + 1);
-    
+     */
     for (var bill in bills) {
       // Check for overdue bills
       if (bill.isOverdue) {
         showOverdueNotification(bill);
       }
-      
+
       // Check for bills due tomorrow using the isDueTomorrow getter
       if (bill.isDueTomorrow) {
         showDueTomorrowNotification(bill);
@@ -120,7 +120,7 @@ class BillController extends GetxController {
       symbol: 'Rp ',
       decimalDigits: 0,
     );
-    
+
     Get.snackbar(
       'Bill Due Tomorrow',
       'Your bill for "${bill.name}" (${currencyFormat.format(bill.amount)}) is due tomorrow!',
@@ -164,7 +164,7 @@ class BillController extends GetxController {
       category: category,
       icon: getCategoryIcon(category),
     );
-    
+
     bills.add(newBill);
     bills.sort((a, b) => a.dueDate.compareTo(b.dueDate));
   }
@@ -189,7 +189,8 @@ class BillController extends GetxController {
   }
 
   // Add these methods after deleteBill method
-  void editBill(String id, String name, double amount, DateTime dueDate, String category) {
+  void editBill(String id, String name, double amount, DateTime dueDate,
+      String category) {
     final index = bills.indexWhere((bill) => bill.id == id);
     if (index != -1) {
       bills[index] = Bill(
@@ -204,7 +205,7 @@ class BillController extends GetxController {
       bills.sort((a, b) => a.dueDate.compareTo(b.dueDate));
     }
   }
-  
+
   void populateFormForEdit(Bill bill) {
     nameController.text = bill.name;
     amountController.text = bill.amount.toString();
@@ -217,7 +218,7 @@ class BillController extends GetxController {
     selectedDate.value = date;
     dateController.text = DateFormat('yyyy-MM-dd').format(date);
   }
-  
+
   void clearForm() {
     nameController.clear();
     amountController.clear();
@@ -225,7 +226,7 @@ class BillController extends GetxController {
     selectedDate.value = null;
     selectedCategory.value = categories.first;
   }
-  
+
   void submitForm() {
     if (nameController.text.isNotEmpty &&
         amountController.text.isNotEmpty &&
@@ -236,9 +237,9 @@ class BillController extends GetxController {
         selectedDate.value!,
         selectedCategory.value,
       );
-      
+
       clearForm();
-      
+
       Get.snackbar(
         'Success',
         'Bill added successfully',
