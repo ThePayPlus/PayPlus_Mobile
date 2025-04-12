@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../controllers/transfer_page_controller.dart';
 
-class TransferPageView extends GetView<TransferPageController> {
-  const TransferPageView({Key? key}) : super(key: key);
+class TransferView extends GetView<TransferPageController> {
+  const TransferView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class TransferPageView extends GetView<TransferPageController> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Search for a Number
               const Text(
                 'Search for a Number',
@@ -106,20 +106,19 @@ class TransferPageView extends GetView<TransferPageController> {
                 ],
               ),
               const SizedBox(height: 8),
-              
+
               // Selected User
               Obx(() => controller.selectedUser.value.isNotEmpty
-                ? Text(
-                    controller.selectedUser.value,
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  )
-                : const SizedBox.shrink()
-              ),
+                  ? Text(
+                      controller.selectedUser.value,
+                      style: const TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : const SizedBox.shrink()),
               const SizedBox(height: 24),
-              
+
               // Transfer Section
               const Text(
                 'Transfer',
@@ -130,7 +129,7 @@ class TransferPageView extends GetView<TransferPageController> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Send Amount
               const Text(
                 'Send Amount',
@@ -161,7 +160,7 @@ class TransferPageView extends GetView<TransferPageController> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Transfer Type
               const Text(
                 'Transfer Type',
@@ -180,24 +179,24 @@ class TransferPageView extends GetView<TransferPageController> {
                 ),
                 child: DropdownButtonHideUnderline(
                   child: Obx(() => DropdownButton<String>(
-                    value: controller.transferType.value,
-                    isExpanded: true,
-                    items: controller.transferTypes.map((String type) {
-                      return DropdownMenuItem<String>(
-                        value: type,
-                        child: Text(type),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        controller.transferType.value = newValue;
-                      }
-                    },
-                  )),
+                        value: controller.transferType.value,
+                        isExpanded: true,
+                        items: controller.transferTypes.map((String type) {
+                          return DropdownMenuItem<String>(
+                            value: type,
+                            child: Text(type),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            controller.transferType.value = newValue;
+                          }
+                        },
+                      )),
                 ),
               ),
               const SizedBox(height: 32),
-              
+
               // Send Button
               SizedBox(
                 width: double.infinity,

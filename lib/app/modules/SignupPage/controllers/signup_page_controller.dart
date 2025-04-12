@@ -7,7 +7,7 @@ class SignupPageController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  
+
   final isPasswordHidden = true.obs;
   final isConfirmPasswordHidden = true.obs;
 
@@ -35,43 +35,43 @@ class SignupPageController extends GetxController {
       Get.snackbar('Error', 'Please enter your name');
       return;
     }
-    
+
     if (phoneController.text.isEmpty) {
       Get.snackbar('Error', 'Please enter your phone number');
       return;
     }
-    
+
     if (emailController.text.isEmpty) {
       Get.snackbar('Error', 'Please enter your email address');
       return;
     }
-    
+
     if (!GetUtils.isEmail(emailController.text)) {
       Get.snackbar('Error', 'Please enter a valid email address');
       return;
     }
-    
+
     if (passwordController.text.isEmpty) {
       Get.snackbar('Error', 'Please enter your password');
       return;
     }
-    
+
     if (confirmPasswordController.text.isEmpty) {
       Get.snackbar('Error', 'Please confirm your password');
       return;
     }
-    
+
     if (passwordController.text != confirmPasswordController.text) {
       Get.snackbar('Error', 'Passwords do not match');
       return;
     }
-    
+
     // TODO: Implement actual registration logic here
     // For now, just navigate to login
-    Get.offAllNamed('/login-page');
+    Get.offAllNamed('/login');
   }
 
   void goToLogin() {
-    Get.offAllNamed('/login-page');
+    Get.offAllNamed('/login');
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/signup_page_controller.dart';
 
-class SignupPageView extends GetView<SignupPageController> {
-  const SignupPageView({Key? key}) : super(key: key);
+class SignupView extends GetView<SignupPageController> {
+  const SignupView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class SignupPageView extends GetView<SignupPageController> {
                   },
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Create an Account Text
                 const Text(
                   'Create an Account',
@@ -93,7 +93,7 @@ class SignupPageView extends GetView<SignupPageController> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                
+
                 // Name Field
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +126,7 @@ class SignupPageView extends GetView<SignupPageController> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Phone Number Field
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +160,7 @@ class SignupPageView extends GetView<SignupPageController> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Email Address Field
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +194,7 @@ class SignupPageView extends GetView<SignupPageController> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Password Field
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,36 +208,37 @@ class SignupPageView extends GetView<SignupPageController> {
                     ),
                     const SizedBox(height: 8),
                     Obx(() => TextField(
-                      controller: controller.passwordController,
-                      obscureText: controller.isPasswordHidden.value,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your password',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            controller.isPasswordHidden.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.grey,
+                          controller: controller.passwordController,
+                          obscureText: controller.isPasswordHidden.value,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your password',
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                controller.isPasswordHidden.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () =>
+                                  controller.togglePasswordVisibility(),
+                            ),
                           ),
-                          onPressed: () => controller.togglePasswordVisibility(),
-                        ),
-                      ),
-                    )),
+                        )),
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Confirm Password Field
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,36 +252,37 @@ class SignupPageView extends GetView<SignupPageController> {
                     ),
                     const SizedBox(height: 8),
                     Obx(() => TextField(
-                      controller: controller.confirmPasswordController,
-                      obscureText: controller.isConfirmPasswordHidden.value,
-                      decoration: InputDecoration(
-                        hintText: 'Confirm your password',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            controller.isConfirmPasswordHidden.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.grey,
+                          controller: controller.confirmPasswordController,
+                          obscureText: controller.isConfirmPasswordHidden.value,
+                          decoration: InputDecoration(
+                            hintText: 'Confirm your password',
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                controller.isConfirmPasswordHidden.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () =>
+                                  controller.toggleConfirmPasswordVisibility(),
+                            ),
                           ),
-                          onPressed: () => controller.toggleConfirmPasswordVisibility(),
-                        ),
-                      ),
-                    )),
+                        )),
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Register Button
                 SizedBox(
                   width: double.infinity,
@@ -304,7 +306,7 @@ class SignupPageView extends GetView<SignupPageController> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Login Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 class LoginPageController extends GetxController {
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
-  
+
   final isPasswordHidden = true.obs;
   final rememberMe = false.obs;
 
@@ -29,12 +29,12 @@ class LoginPageController extends GetxController {
       Get.snackbar('Error', 'Please enter your phone number');
       return;
     }
-    
+
     if (passwordController.text.isEmpty) {
       Get.snackbar('Error', 'Please enter your password');
       return;
     }
-    
+
     // TODO: Implement actual login logic here
     // For now, just navigate to home
     Get.offAllNamed('/home');
@@ -42,6 +42,6 @@ class LoginPageController extends GetxController {
 
   void goToSignUp() {
     // Navigate to sign up page
-    Get.toNamed('/signup-page');
+    Get.toNamed('/signup');
   }
 }

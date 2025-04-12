@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 
 import '../controllers/login_page_controller.dart';
 
-class LoginPageView extends GetView<LoginPageController> {
-  const LoginPageView({Key? key}) : super(key: key);
+class LoginView extends GetView<LoginPageController> {
+  const LoginView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class LoginPageView extends GetView<LoginPageController> {
                   height: 60,
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Welcome Back Text
                 const Text(
                   'Welcome Back!',
@@ -49,7 +49,7 @@ class LoginPageView extends GetView<LoginPageController> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                
+
                 // Phone Number Field
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +83,7 @@ class LoginPageView extends GetView<LoginPageController> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Password Field
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,44 +97,45 @@ class LoginPageView extends GetView<LoginPageController> {
                     ),
                     const SizedBox(height: 8),
                     Obx(() => TextField(
-                      controller: controller.passwordController,
-                      obscureText: controller.isPasswordHidden.value,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your password',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            controller.isPasswordHidden.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.grey,
+                          controller: controller.passwordController,
+                          obscureText: controller.isPasswordHidden.value,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your password',
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                controller.isPasswordHidden.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () =>
+                                  controller.togglePasswordVisibility(),
+                            ),
                           ),
-                          onPressed: () => controller.togglePasswordVisibility(),
-                        ),
-                      ),
-                    )),
+                        )),
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Remember Me Checkbox
                 Row(
                   children: [
                     Obx(() => Checkbox(
-                      value: controller.rememberMe.value,
-                      onChanged: (value) => controller.toggleRememberMe(),
-                      activeColor: const Color(0xFF6C63FF),
-                    )),
+                          value: controller.rememberMe.value,
+                          onChanged: (value) => controller.toggleRememberMe(),
+                          activeColor: const Color(0xFF6C63FF),
+                        )),
                     const Text(
                       'Remember me',
                       style: TextStyle(
@@ -144,7 +145,7 @@ class LoginPageView extends GetView<LoginPageController> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Login Button
                 SizedBox(
                   width: double.infinity,
@@ -168,7 +169,7 @@ class LoginPageView extends GetView<LoginPageController> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Sign Up Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
