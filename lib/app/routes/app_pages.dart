@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:payplus_mobile/app/modules/SavingsPage/bindings/savings_binding.dart';
+import 'package:payplus_mobile/app/modules/SavingsPage/views/savings_page.dart';
 import '../modules/bills/bindings/bill_binding.dart';
 import '../modules/bills/views/bill_view.dart';
 import '../modules/bills/views/edit_bill_view.dart'; // Add this import
@@ -62,6 +64,11 @@ class AppPages {
       name: _Paths.TRANSFER,
       page: () => const TransferView(),
       binding: TransferBinding(),
+    ),
+    GetPage(
+      name: _Paths.SAVINGS,
+      page: () => const SavingsPage(),
+      binding: SavingsBinding(),
     ),
   ];
 }
