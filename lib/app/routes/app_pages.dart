@@ -6,6 +6,8 @@ import '../modules/SignupPage/bindings/signup_page_binding.dart';
 import '../modules/SignupPage/views/signup_page_view.dart';
 import '../modules/TransferPage/bindings/transfer_page_binding.dart';
 import '../modules/TransferPage/views/transfer_page_view.dart';
+import 'package:payplus_mobile/app/modules/SavingsPage/bindings/savings_binding.dart';
+import 'package:payplus_mobile/app/modules/SavingsPage/views/savings_page.dart';
 import '../modules/bills/bindings/bill_binding.dart';
 import '../modules/bills/views/bill_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -62,6 +64,11 @@ class AppPages {
       name: _Paths.TRANSFER,
       page: () => const TransferView(),
       binding: TransferBinding(),
+    ),
+    GetPage(
+      name: _Paths.SAVINGS,
+      page: () => const SavingsPage(),
+      binding: SavingsBinding(),
     ),
   ];
 }

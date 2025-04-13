@@ -11,6 +11,7 @@ abstract class Routes {
   static const SIGNUP = _Paths.SIGNUP;
   static const TRANSFER = _Paths.TRANSFER;
   static const TES = _Paths.TES;
+  static const SAVINGS = _Paths.SAVINGS;
 }
 
 abstract class _Paths {
@@ -24,4 +25,5 @@ abstract class _Paths {
   static const SIGNUP = '/signup';
   static const TRANSFER = '/transfer';
   static const TES = '/tes';
+  static const SAVINGS = '/savings';
 }

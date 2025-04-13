@@ -17,7 +17,7 @@ class HomeController extends GetxController {
     } else if (index == 1) {
       // Navigate to chatbot
       // Get.toNamed(Routes.CHATBOT);
-      Get.toNamed(Routes.BILLS);
+      Get.toNamed(Routes.SAVINGS);
     }
   }
 
