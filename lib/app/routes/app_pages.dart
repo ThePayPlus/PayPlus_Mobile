@@ -1,20 +1,20 @@
 import 'package:get/get.dart';
+
+import '../modules/LoginPage/bindings/login_page_binding.dart';
+import '../modules/LoginPage/views/login_page_view.dart';
+import '../modules/SignupPage/bindings/signup_page_binding.dart';
+import '../modules/SignupPage/views/signup_page_view.dart';
+import '../modules/TransferPage/bindings/transfer_page_binding.dart';
+import '../modules/TransferPage/views/transfer_page_view.dart';
 import '../modules/bills/bindings/bill_binding.dart';
 import '../modules/bills/views/bill_view.dart';
-import '../modules/bills/views/edit_bill_view.dart'; // Add this import
-import 'package:payplus_mobile/app/modules/LoginPage/bindings/login_page_binding.dart';
-import 'package:payplus_mobile/app/modules/LoginPage/views/login_page_view.dart';
-import 'package:payplus_mobile/app/modules/SignupPage/bindings/signup_page_binding.dart';
-import 'package:payplus_mobile/app/modules/SignupPage/views/signup_page_view.dart';
-import 'package:payplus_mobile/app/modules/TransferPage/bindings/transfer_page_binding.dart';
-import 'package:payplus_mobile/app/modules/TransferPage/views/transfer_page_view.dart';
-
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
-import '../modules/setting/bindings/setting_binding.dart';
-import '../modules/setting/views/setting_view.dart';
 import '../modules/income/bindings/income_binding.dart';
 import '../modules/income/views/income_view.dart';
+import '../modules/setting/bindings/setting_binding.dart';
+import '../modules/setting/views/setting_view.dart';
+import '../modules/bills/views/edit_bill_view.dart'; // Add this import
 
 part 'app_routes.dart';
 
