@@ -253,11 +253,15 @@ class HomeView extends GetView<HomeController> {
           const SizedBox(height: 16),
           Row(
             children: [
-              _buildBalanceInfoGradient(
-                  'Income', 'Rp. 2,500,000', Icons.arrow_upward),
-              const SizedBox(width: 24),
-              _buildBalanceInfoGradient(
-                  'Expense', 'Rp. 1,500,000', Icons.arrow_downward),
+              Expanded(
+                child: _buildBalanceInfoGradient(
+                    'Income', 'Rp. 2,500,000', Icons.arrow_upward),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildBalanceInfoGradient(
+                    'Expense', 'Rp. 1,500,000', Icons.arrow_downward),
+              ),
             ],
           ),
         ],
@@ -274,11 +278,14 @@ class HomeView extends GetView<HomeController> {
           size: 16,
         ),
         const SizedBox(width: 4),
-        Text(
-          '$label: $amount',
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.white,
+        Flexible(
+          child: Text(
+            '$label: $amount',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
