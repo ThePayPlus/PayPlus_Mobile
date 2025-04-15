@@ -4,39 +4,26 @@ import 'package:get/get.dart';
 import '../controllers/transfer_page_controller.dart';
 
 class TransferView extends GetView<TransferPageController> {
-  const TransferView({Key? key}) : super(key: key);
+  const TransferView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/Logo-PayPlus.png',
-              height: 30,
-            ),
-            const SizedBox(width: 8),
-            const Text(
-              'PayPlus',
-              style: TextStyle(
-                color: Color(0xFF8A2BE2),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          onPressed: () => Get.offAllNamed('/home'),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu, color: Colors.black87),
-            onPressed: () {
-              // Open drawer or menu
-            },
+        title: const Text(
+          'Transfer Money',
+          style: TextStyle(
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -74,7 +61,15 @@ class TransferView extends GetView<TransferPageController> {
                         hintStyle: TextStyle(color: Colors.grey[400]),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none,
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: const Color(0xFF6C63FF)),
                         ),
                         filled: true,
                         fillColor: Colors.white,
@@ -149,7 +144,15 @@ class TransferView extends GetView<TransferPageController> {
                   hintStyle: TextStyle(color: Colors.grey[400]),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: const Color(0xFF6C63FF)),
                   ),
                   filled: true,
                   fillColor: Colors.white,

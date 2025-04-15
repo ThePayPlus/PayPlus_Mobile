@@ -8,7 +8,7 @@ class TransferPageController extends GetxController {
   final RxString selectedUser = ''.obs;
   final RxString transferType = 'Normal'.obs;
   
-  final List<String> transferTypes = ['Normal', 'Express', 'Scheduled'];
+  final List<String> transferTypes = ['Normal', 'Gift'];
   
   void searchUser() {
     // Mock implementation - in a real app, this would search a database or API

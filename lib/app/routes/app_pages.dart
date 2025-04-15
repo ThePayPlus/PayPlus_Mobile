@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:payplus_mobile/app/modules/TopUpPage/bindings/topup_binding.dart';
+import 'package:payplus_mobile/app/modules/TopUpPage/views/topup_page.dart';
 
 import '../modules/Chat/bindings/chat_binding.dart';
 import '../modules/Chat/views/chat_view.dart';
@@ -97,6 +99,11 @@ class AppPages {
       name: _Paths.CHAT_BOT,
       page: () => const ChatBotView(),
       binding: ChatBotBinding(),
+    ),
+    GetPage(
+      name: _Paths.TOPUP,
+      page: () => const TopUpPage(),
+      binding: TopUpBinding(),
     ),
   ];
 }
