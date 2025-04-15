@@ -11,13 +11,14 @@ class OutcomeView extends GetView<OutcomeController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F8),
       appBar: AppBar(
+        title: const Text('Outcome Records', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
-        title: Image.asset(
-          'assets/images/Logo-PayPlus.png',
-          height: 40,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.offAllNamed('/home'),
         ),
-        centerTitle: true,
-        elevation: 0.5,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
