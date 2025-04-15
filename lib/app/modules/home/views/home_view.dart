@@ -340,7 +340,7 @@ class HomeView extends GetView<HomeController> {
             _buildQuickActionButton(
               icon: Icons.star,
               label: 'Social',
-              onTap: () {},
+              onTap: () => Get.toNamed(Routes.FRIEND_PAGE),
             ),
             _buildQuickActionButton(
               icon: Icons.more_horiz,
