@@ -37,20 +37,65 @@ class HomeView extends GetView<HomeController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Welcome Section
-            const Text(
-              'Welcome back,',
-              style: TextStyle(
-                fontSize: 16,
-                color: textMediumColor,
-              ),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'John Doe',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: textDarkColor,
+            Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: primaryColor,
+                    child: const Text(
+                      'JD',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Welcome back,',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: textMediumColor,
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'John Doe',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: textDarkColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: cardColor,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.notifications_outlined,
+                          color: primaryColor),
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 24),
