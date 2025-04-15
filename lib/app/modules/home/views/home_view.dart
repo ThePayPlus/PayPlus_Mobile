@@ -253,11 +253,15 @@ class HomeView extends GetView<HomeController> {
           const SizedBox(height: 16),
           Row(
             children: [
-              _buildBalanceInfoGradient(
-                  'Income', 'Rp. 2,500,000', Icons.arrow_upward),
-              const SizedBox(width: 24),
-              _buildBalanceInfoGradient(
-                  'Expense', 'Rp. 1,500,000', Icons.arrow_downward),
+              Expanded(
+                child: _buildBalanceInfoGradient(
+                    'Income', 'Rp. 2,500,000', Icons.arrow_upward),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildBalanceInfoGradient(
+                    'Expense', 'Rp. 1,500,000', Icons.arrow_downward),
+              ),
             ],
           ),
         ],
@@ -274,11 +278,14 @@ class HomeView extends GetView<HomeController> {
           size: 16,
         ),
         const SizedBox(width: 4),
-        Text(
-          '$label: $amount',
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.white,
+        Flexible(
+          child: Text(
+            '$label: $amount',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
@@ -299,16 +306,11 @@ class HomeView extends GetView<HomeController> {
         ),
         const SizedBox(height: 16),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildQuickActionButton(
               icon: Icons.send,
               label: 'Send',
-              onTap: () {},
-            ),
-            _buildQuickActionButton(
-              icon: Icons.qr_code_scanner,
-              label: 'Scan',
               onTap: () {},
             ),
             _buildQuickActionButton(
@@ -323,9 +325,9 @@ class HomeView extends GetView<HomeController> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildQuickActionButton(
               icon: Icons.savings,
@@ -342,11 +344,6 @@ class HomeView extends GetView<HomeController> {
               label: 'Social',
               onTap: () => Get.toNamed(Routes.FRIEND_PAGE),
             ),
-            _buildQuickActionButton(
-              icon: Icons.more_horiz,
-              label: 'More',
-              onTap: () {},
-            ),
           ],
         ),
       ],
@@ -361,8 +358,8 @@ class HomeView extends GetView<HomeController> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 70,
-        height: 70,
+        width: 100,
+        height: 85,
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(14),
