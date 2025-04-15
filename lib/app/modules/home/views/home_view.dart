@@ -316,7 +316,7 @@ class HomeView extends GetView<HomeController> {
             _buildQuickActionButton(
               icon: Icons.account_balance_wallet,
               label: 'Top Up',
-              onTap: () {},
+              onTap: () => Get.toNamed(Routes.TOPUP),
             ),
             _buildQuickActionButton(
               icon: Icons.history,
