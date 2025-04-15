@@ -5,7 +5,7 @@ import '../controllers/bill_controller.dart';
 import '../../../data/models/bill_model.dart';
 
 class BillView extends GetView<BillController> {
-  const BillView({Key? key}) : super(key: key);
+  const BillView({super.key});
 
   @override
   Widget build(BuildContext context) {

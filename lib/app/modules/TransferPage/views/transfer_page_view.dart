@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/transfer_page_controller.dart';
 
 class TransferView extends GetView<TransferPageController> {
-  const TransferView({Key? key}) : super(key: key);
+  const TransferView({super.key});
 
   @override
   Widget build(BuildContext context) {

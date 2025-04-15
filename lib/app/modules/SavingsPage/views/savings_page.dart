@@ -132,14 +132,14 @@ class _SavingsPageState extends State<SavingsPage> {
   }
 
   void showAddToSavingDialog(int index) {
-    final _amountController = TextEditingController();
+    final amountController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Add to Savings"),
         content: TextField(
-          controller: _amountController,
+          controller: amountController,
           decoration: const InputDecoration(labelText: "Amount to add"),
           keyboardType: TextInputType.number,
         ),
@@ -152,7 +152,7 @@ class _SavingsPageState extends State<SavingsPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              final amount = int.tryParse(_amountController.text) ?? 0;
+              final amount = int.tryParse(amountController.text) ?? 0;
               if (amount > 0) {
                 setState(() {
                   savingsList[index] = Saving(
@@ -184,8 +184,10 @@ class _SavingsPageState extends State<SavingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/logoPayplus.png', height: 40),
+        title: Image.asset('assets/images/Logo-PayPlus.png', height: 40),
         backgroundColor: Colors.white,
+        centerTitle: true,
+        elevation: 0.5,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
