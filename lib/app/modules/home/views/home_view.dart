@@ -311,7 +311,7 @@ class HomeView extends GetView<HomeController> {
             _buildQuickActionButton(
               icon: Icons.send,
               label: 'Send',
-              onTap: () {},
+              onTap: () => Get.toNamed(Routes.TRANSFER),
             ),
             _buildQuickActionButton(
               icon: Icons.account_balance_wallet,
@@ -321,7 +321,7 @@ class HomeView extends GetView<HomeController> {
             _buildQuickActionButton(
               icon: Icons.history,
               label: 'History',
-              onTap: () => Get.toNamed(Routes.INCOME),
+              onTap: () {},
             ),
           ],
         ),
@@ -432,7 +432,7 @@ class HomeView extends GetView<HomeController> {
                 amount: 'Rp. 2,800,000',
                 icon: Icons.arrow_downward_rounded,
                 iconColor: const Color(0xFFFF6B6B),
-                onTap: () => Get.toNamed(Routes.INCOME),
+                onTap: () => Get.toNamed(Routes.OUTCOME),
               ),
             ),
           ],
@@ -583,7 +583,7 @@ class HomeView extends GetView<HomeController> {
               ),
             ),
             TextButton(
-              onPressed: () => Get.toNamed(Routes.INCOME),
+              onPressed: () {},
               child: const Text(
                 'See All',
                 style: TextStyle(
