@@ -16,7 +16,7 @@ import '../modules/income/bindings/income_binding.dart';
 import '../modules/income/views/income_view.dart';
 import '../modules/setting/bindings/setting_binding.dart';
 import '../modules/setting/views/setting_view.dart';
-import '../modules/bills/views/edit_bill_view.dart'; // Add this import
+import '../modules/bills/views/edit_bill_view.dart';
 
 part 'app_routes.dart';
 
