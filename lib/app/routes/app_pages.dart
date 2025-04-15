@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/Chat/bindings/chat_binding.dart';
 import '../modules/Chat/views/chat_view.dart';
+import '../modules/ChatBot/bindings/chat_bot_binding.dart';
+import '../modules/ChatBot/views/chat_bot_view.dart';
 import '../modules/ChatList/bindings/chat_list_binding.dart';
 import '../modules/ChatList/views/chat_list_view.dart';
 import '../modules/FriendPage/bindings/friend_page_binding.dart';
@@ -90,6 +92,11 @@ class AppPages {
       name: _Paths.CHAT_LIST,
       page: () => const ChatListView(),
       binding: ChatListBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHAT_BOT,
+      page: () => const ChatBotView(),
+      binding: ChatBotBinding(),
     ),
   ];
 }
