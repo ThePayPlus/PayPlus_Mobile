@@ -218,7 +218,7 @@ class HomeView extends GetView<HomeController> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'Rp. 5,000,000',
+                    'Rp. 1,700,000',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -255,12 +255,12 @@ class HomeView extends GetView<HomeController> {
             children: [
               Expanded(
                 child: _buildBalanceInfoGradient(
-                    'Income', 'Rp. 2,500,000', Icons.arrow_upward),
+                    'Income', 'Rp. 4,500,000', Icons.arrow_downward),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: _buildBalanceInfoGradient(
-                    'Expense', 'Rp. 1,500,000', Icons.arrow_downward),
+                    'Expense', 'Rp. 2,800,000', Icons.arrow_upward),
               ),
             ],
           ),
@@ -321,7 +321,7 @@ class HomeView extends GetView<HomeController> {
             _buildQuickActionButton(
               icon: Icons.history,
               label: 'History',
-              onTap: () => Get.toNamed(Routes.INCOME),
+              onTap: () {},
             ),
           ],
         ),
@@ -420,7 +420,7 @@ class HomeView extends GetView<HomeController> {
               child: _buildRecordCard(
                 title: 'Income Records',
                 amount: 'Rp. 4,500,000',
-                icon: Icons.arrow_upward_rounded,
+                icon: Icons.arrow_downward_rounded,
                 iconColor: const Color(0xFF4CAF50),
                 onTap: () => Get.toNamed(Routes.INCOME),
               ),
@@ -428,11 +428,11 @@ class HomeView extends GetView<HomeController> {
             const SizedBox(width: 16),
             Expanded(
               child: _buildRecordCard(
-                title: 'Expense Records',
+                title: 'Outcome Records',
                 amount: 'Rp. 2,800,000',
-                icon: Icons.arrow_downward_rounded,
+                icon: Icons.arrow_upward_rounded,
                 iconColor: const Color(0xFFFF6B6B),
-                onTap: () => Get.toNamed(Routes.INCOME),
+                onTap: () => Get.toNamed(Routes.OUTCOME),
               ),
             ),
           ],
@@ -583,7 +583,7 @@ class HomeView extends GetView<HomeController> {
               ),
             ),
             TextButton(
-              onPressed: () => Get.toNamed(Routes.INCOME),
+              onPressed: () {},
               child: const Text(
                 'See All',
                 style: TextStyle(

@@ -4,6 +4,8 @@ import 'package:payplus_mobile/app/modules/TopUpPage/views/topup_page.dart';
 
 import '../modules/Chat/bindings/chat_binding.dart';
 import '../modules/Chat/views/chat_view.dart';
+import '../modules/ChatBot/bindings/chat_bot_binding.dart';
+import '../modules/ChatBot/views/chat_bot_view.dart';
 import '../modules/ChatList/bindings/chat_list_binding.dart';
 import '../modules/ChatList/views/chat_list_view.dart';
 import '../modules/FriendPage/bindings/friend_page_binding.dart';
@@ -23,6 +25,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/income/bindings/income_binding.dart';
 import '../modules/income/views/income_view.dart';
+import '../modules/outcome/bindings/outcome_binding.dart';
+import '../modules/outcome/views/outcome_view.dart';
 import '../modules/setting/bindings/setting_binding.dart';
 import '../modules/setting/views/setting_view.dart';
 
@@ -59,6 +63,11 @@ class AppPages {
       binding: IncomeBinding(),
     ),
     GetPage(
+      name: _Paths.OUTCOME,
+      page: () => const OutcomeView(),
+      binding: OutcomeBinding(),
+    ),
+    GetPage(
       name: _Paths.LOGIN,
       page: () => const LoginView(),
       binding: LoginBinding(),
@@ -92,6 +101,11 @@ class AppPages {
       name: _Paths.CHAT_LIST,
       page: () => const ChatListView(),
       binding: ChatListBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHAT_BOT,
+      page: () => const ChatBotView(),
+      binding: ChatBotBinding(),
     ),
     GetPage(
       name: _Paths.TOPUP,

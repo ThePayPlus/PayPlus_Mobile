@@ -11,13 +11,14 @@ class OutcomeView extends GetView<OutcomeController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F8),
       appBar: AppBar(
+        title: const Text('Outcome Records', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
-        title: Image.asset(
-          'assets/images/Logo-PayPlus.png',
-          height: 40,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.offAllNamed('/home'),
         ),
-        centerTitle: true,
-        elevation: 0.5,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -32,10 +33,6 @@ class OutcomeView extends GetView<OutcomeController> {
                 color: Color(0xFF333333),
               ),
             ),
-            const SizedBox(height: 16),
-
-            // Total Outcome Card
-            _buildTotalOutcomeCard(),
             const SizedBox(height: 16),
 
             // Outcome Statistics Cards
@@ -58,66 +55,6 @@ class OutcomeView extends GetView<OutcomeController> {
     );
   }
 
-  // Card to display the total outcome
-  Widget _buildTotalOutcomeCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.green.shade100,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Icon(
-              Icons.account_balance_wallet,
-              color: Colors.green.shade600,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Total Outcome',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF666666),
-                ),
-              ),
-              const SizedBox(height: 4),
-              GetX<OutcomeController>(
-                builder: (controller) => Text(
-                  controller.formatCurrency(controller.totalOutcome.value),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF333333),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   // Grid of outcome stats cards
   Widget _buildOutcomeStatsGrid() {
     return GridView.count(
@@ -128,6 +65,23 @@ class OutcomeView extends GetView<OutcomeController> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       children: [
+        _buildStatCard(
+          title: 'Total Outcome',
+          icon: Icons.account_balance_wallet,
+          iconColor: Colors.green,
+          iconBgColor: Colors.green.shade100,
+          valueWidget: GetX<OutcomeController>(
+            builder: (controller) => Text(
+              controller.formatCurrency(controller.totalOutcome.value),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF333333),
+              ),
+            ),
+          ),
+        ),
+
         // Total Transactions Card
         _buildStatCard(
           title: 'Total Transactions',

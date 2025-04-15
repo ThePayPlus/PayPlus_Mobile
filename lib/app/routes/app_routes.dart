@@ -7,6 +7,7 @@ abstract class Routes {
   static const EDIT_BILL = _Paths.EDIT_BILL;
   static const SETTING = _Paths.SETTING;
   static const INCOME = _Paths.INCOME;
+  static const OUTCOME = _Paths.OUTCOME;
   static const LOGIN = _Paths.LOGIN;
   static const SIGNUP = _Paths.SIGNUP;
   static const TRANSFER = _Paths.TRANSFER;
@@ -15,6 +16,7 @@ abstract class Routes {
   static const FRIEND_PAGE = _Paths.FRIEND_PAGE;
   static const CHAT = _Paths.CHAT;
   static const CHAT_LIST = _Paths.CHAT_LIST;
+  static const CHAT_BOT = _Paths.CHAT_BOT;
   static const TOPUP = _Paths.TOPUP;
 }
 
@@ -25,6 +27,7 @@ abstract class _Paths {
   static const EDIT_BILL = '/edit-bill';
   static const SETTING = '/setting';
   static const INCOME = '/income';
+  static const OUTCOME = '/outcome';
   static const LOGIN = '/login';
   static const SIGNUP = '/signup';
   static const TRANSFER = '/transfer';
@@ -33,5 +36,6 @@ abstract class _Paths {
   static const FRIEND_PAGE = '/friend-page';
   static const CHAT = '/chat';
   static const CHAT_LIST = '/chat-list';
+  static const CHAT_BOT = '/chat-bot';
   static const TOPUP = '/topup';
 }
