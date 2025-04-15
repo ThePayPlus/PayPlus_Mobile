@@ -133,14 +133,14 @@ class _SavingsPageState extends State<SavingsPage> {
   }
 
   void showAddToSavingDialog(int index) {
-    final _amountController = TextEditingController();
+    final amountController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Add to Savings"),
         content: TextField(
-          controller: _amountController,
+          controller: amountController,
           decoration: const InputDecoration(labelText: "Amount to add"),
           keyboardType: TextInputType.number,
         ),
@@ -153,7 +153,7 @@ class _SavingsPageState extends State<SavingsPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              final amount = int.tryParse(_amountController.text) ?? 0;
+              final amount = int.tryParse(amountController.text) ?? 0;
               if (amount > 0) {
                 setState(() {
                   savingsList[index] = Saving(
