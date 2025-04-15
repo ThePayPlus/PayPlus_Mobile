@@ -25,6 +25,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/income/bindings/income_binding.dart';
 import '../modules/income/views/income_view.dart';
+import '../modules/outcome/bindings/outcome_binding.dart';
+import '../modules/outcome/views/outcome_view.dart';
 import '../modules/setting/bindings/setting_binding.dart';
 import '../modules/setting/views/setting_view.dart';
 
@@ -59,6 +61,11 @@ class AppPages {
       name: _Paths.INCOME,
       page: () => const IncomeView(),
       binding: IncomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.OUTCOME,
+      page: () => const OutcomeView(),
+      binding: OutcomeBinding(),
     ),
     GetPage(
       name: _Paths.LOGIN,
