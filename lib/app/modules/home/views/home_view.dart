@@ -228,7 +228,7 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () => Get.toNamed(Routes.TOPUP),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: cardColor,
                   foregroundColor: primaryColor,
@@ -316,7 +316,7 @@ class HomeView extends GetView<HomeController> {
             _buildQuickActionButton(
               icon: Icons.account_balance_wallet,
               label: 'Top Up',
-              onTap: () {},
+              onTap: () => Get.toNamed(Routes.TOPUP),
             ),
             _buildQuickActionButton(
               icon: Icons.history,

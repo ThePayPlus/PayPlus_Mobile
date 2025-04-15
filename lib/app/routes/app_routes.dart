@@ -16,6 +16,7 @@ abstract class Routes {
   static const FRIEND_PAGE = _Paths.FRIEND_PAGE;
   static const CHAT = _Paths.CHAT;
   static const CHAT_LIST = _Paths.CHAT_LIST;
+  static const TOPUP = _Paths.TOPUP;
 }
 
 abstract class _Paths {
@@ -34,4 +35,5 @@ abstract class _Paths {
   static const FRIEND_PAGE = '/friend-page';
   static const CHAT = '/chat';
   static const CHAT_LIST = '/chat-list';
+  static const TOPUP = '/topup';
 }
