@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Saving {
   final String title;
@@ -132,14 +133,14 @@ class _SavingsPageState extends State<SavingsPage> {
   }
 
   void showAddToSavingDialog(int index) {
-    final _amountController = TextEditingController();
+    final amountController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Add to Savings"),
         content: TextField(
-          controller: _amountController,
+          controller: amountController,
           decoration: const InputDecoration(labelText: "Amount to add"),
           keyboardType: TextInputType.number,
         ),
@@ -152,7 +153,7 @@ class _SavingsPageState extends State<SavingsPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              final amount = int.tryParse(_amountController.text) ?? 0;
+              final amount = int.tryParse(amountController.text) ?? 0;
               if (amount > 0) {
                 setState(() {
                   savingsList[index] = Saving(
@@ -184,10 +185,24 @@ class _SavingsPageState extends State<SavingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/logoPayplus.png', height: 40),
+        title: Padding(
+          padding: const EdgeInsets.only(top: 30),
+          child: const Text(
+            'Savings Page',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
         backgroundColor: Colors.white,
+        leading: Padding(
+          padding: const EdgeInsets.only(top: 24),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () =>
+                Get.offAllNamed('/home'), // Navigate to '/home' and clear history
+          ),
+        ),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -195,12 +210,7 @@ class _SavingsPageState extends State<SavingsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 50),
-                const Text(
-                  'Savings Page',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
                 buildSummaryCard(
                   icon: Icons.attach_money,
                   title: 'Total Savings Target',
@@ -243,9 +253,11 @@ class _SavingsPageState extends State<SavingsPage> {
                   final index = entry.key;
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20),
-                    child: buildSavingCard(saving, index, () => _deleteSaving(index)),
+                    child: buildSavingCard(
+                        saving, index, () => _deleteSaving(index)),
                   );
                 }),
+                SizedBox(height: 50,)
               ],
             ),
           ),
@@ -270,9 +282,9 @@ class _SavingsPageState extends State<SavingsPage> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(10),
+              color: Colors.black.withAlpha(30),
               blurRadius: 4,
-              offset: Offset(0, 2),
+              offset: Offset(0, 3),
             ),
           ],
         ),
@@ -317,9 +329,9 @@ class _SavingsPageState extends State<SavingsPage> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(10),
+            color: Colors.black.withAlpha(30),
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: Offset(0, 3),
           ),
         ],
       ),
