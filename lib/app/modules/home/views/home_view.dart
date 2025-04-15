@@ -314,11 +314,6 @@ class HomeView extends GetView<HomeController> {
               onTap: () {},
             ),
             _buildQuickActionButton(
-              icon: Icons.qr_code_scanner,
-              label: 'Scan',
-              onTap: () {},
-            ),
-            _buildQuickActionButton(
               icon: Icons.account_balance_wallet,
               label: 'Top Up',
               onTap: () {},
@@ -347,11 +342,6 @@ class HomeView extends GetView<HomeController> {
             _buildQuickActionButton(
               icon: Icons.star,
               label: 'Social',
-              onTap: () {},
-            ),
-            _buildQuickActionButton(
-              icon: Icons.more_horiz,
-              label: 'More',
               onTap: () {},
             ),
           ],
