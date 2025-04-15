@@ -306,7 +306,7 @@ class HomeView extends GetView<HomeController> {
         ),
         const SizedBox(height: 16),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildQuickActionButton(
               icon: Icons.send,
@@ -325,9 +325,9 @@ class HomeView extends GetView<HomeController> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildQuickActionButton(
               icon: Icons.savings,
@@ -358,8 +358,8 @@ class HomeView extends GetView<HomeController> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 70,
-        height: 70,
+        width: 100,
+        height: 85,
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(14),
