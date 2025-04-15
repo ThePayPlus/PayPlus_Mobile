@@ -228,7 +228,7 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () => Get.toNamed(Routes.TOPUP),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: cardColor,
                   foregroundColor: primaryColor,
