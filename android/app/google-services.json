@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "687680344006",
+    "project_id": "payplus-6jabarz",
+    "storage_bucket": "payplus-6jabarz.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687680344006:android:a06692fffb6c3a9fc8ecc7",
+        "android_client_info": {
+          "package_name": "payplus.payplus_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1kWA_4Vjjua78SbfSjr7Xuq1qaKoyM_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
