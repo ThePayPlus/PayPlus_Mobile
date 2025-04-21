@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:payplus_mobile/app/modules/TopUpPage/bindings/topup_binding.dart';
 import 'package:payplus_mobile/app/modules/TopUpPage/views/topup_page.dart';
-
+import 'package:payplus_mobile/app/modules/TopUpAmountPage/bindings/topupamount_binding.dart';
+import 'package:payplus_mobile/app/modules/TopUpAmountPage/views/topupamount_page.dart';
 import '../modules/Chat/bindings/chat_binding.dart';
 import '../modules/Chat/views/chat_view.dart';
 import '../modules/ChatBot/bindings/chat_bot_binding.dart';
@@ -111,6 +112,11 @@ class AppPages {
       name: _Paths.TOPUP,
       page: () => const TopUpPage(),
       binding: TopUpBinding(),
+    ),
+    GetPage(
+      name: _Paths.TOPUPAMOUNT,
+      page: () => const TopUpAmountPage(),
+      binding: TopUpAmountBinding(),
     ),
   ];
 }

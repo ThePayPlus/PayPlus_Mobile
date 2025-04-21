@@ -18,6 +18,7 @@ abstract class Routes {
   static const CHAT_LIST = _Paths.CHAT_LIST;
   static const CHAT_BOT = _Paths.CHAT_BOT;
   static const TOPUP = _Paths.TOPUP;
+  static const TOPUPAMOUNT = _Paths.TOPUPAMOUNT;
 }
 
 abstract class _Paths {
@@ -38,4 +39,5 @@ abstract class _Paths {
   static const CHAT_LIST = '/chat-list';
   static const CHAT_BOT = '/chat-bot';
   static const TOPUP = '/topup';
+  static const TOPUPAMOUNT = '/topupamount';
 }
