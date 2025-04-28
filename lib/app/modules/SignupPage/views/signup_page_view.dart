@@ -286,8 +286,10 @@ class SignupView extends GetView<SignupPageController> {
                 // Register Button
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => controller.register(),
+                  child: Obx(() => ElevatedButton(
+                    onPressed: controller.isLoading.value 
+                      ? null 
+                      : () => controller.register(),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6C63FF),
                       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -295,15 +297,24 @@ class SignupView extends GetView<SignupPageController> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Register',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                    child: controller.isLoading.value
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Register',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                  )),
                 ),
                 const SizedBox(height: 24),
 

@@ -149,8 +149,10 @@ class LoginView extends GetView<LoginPageController> {
                 // Login Button
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => controller.login(),
+                  child: Obx(() => ElevatedButton(
+                    onPressed: controller.isLoading.value 
+                      ? null 
+                      : () => controller.login(),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6C63FF),
                       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -158,15 +160,24 @@ class LoginView extends GetView<LoginPageController> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                    child: controller.isLoading.value
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Login',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                  )),
                 ),
                 const SizedBox(height: 24),
 

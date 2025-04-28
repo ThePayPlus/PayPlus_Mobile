@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:payplus_mobile/services/api_service.dart';
 
 class LoginPageController extends GetxController {
   final phoneController = TextEditingController();
@@ -7,6 +8,7 @@ class LoginPageController extends GetxController {
 
   final isPasswordHidden = true.obs;
   final rememberMe = false.obs;
+  final isLoading = false.obs;
 
   @override
   void onClose() {
@@ -23,21 +25,67 @@ class LoginPageController extends GetxController {
     rememberMe.value = !rememberMe.value;
   }
 
-  void login() {
+  Future<void> login() async {
     // Validate inputs
     if (phoneController.text.isEmpty) {
-      Get.snackbar('Error', 'Please enter your phone number');
+      Get.snackbar(
+        'Error', 
+        'Please enter your phone number',
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+      );
       return;
     }
 
     if (passwordController.text.isEmpty) {
-      Get.snackbar('Error', 'Please enter your password');
+      Get.snackbar(
+        'Error', 
+        'Please enter your password',
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+      );
       return;
     }
 
-    // TODO: Implement actual login logic here
-    // For now, just navigate to home
-    Get.offAllNamed('/home');
+    try {
+      isLoading.value = true;
+      
+      // Call the API service to login
+      final result = await ApiService.login(
+        phoneController.text, 
+        passwordController.text
+      );
+      
+      if (result['success']) {
+        // Login successful
+        Get.snackbar(
+          'Success', 
+          'Login successful',
+          backgroundColor: Colors.green.withOpacity(0.7),
+          colorText: Colors.white,
+        );
+        
+        // Navigate to home page
+        Get.offAllNamed('/home');
+      } else {
+        // Login failed
+        Get.snackbar(
+          'Error', 
+          result['message'] ?? 'Login failed',
+          backgroundColor: Colors.red.withOpacity(0.7),
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error', 
+        'Login failed: ${e.toString()}',
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void goToSignUp() {
