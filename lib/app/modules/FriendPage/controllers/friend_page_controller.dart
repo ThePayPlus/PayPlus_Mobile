@@ -1,116 +1,70 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../Chat/views/chat_view.dart';
-import '../../../routes/app_pages.dart';
-
-class Friend {
-  final String id;
-  final String name;
-  final String imageUrl;
-  final String lastMessage;
-  final String lastMessageTime;
-  final bool isOnline;
-  final int unreadCount;
-  final String phone;
-  final String chatRoomId;
-
-  Friend({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-    required this.lastMessage,
-    required this.lastMessageTime,
-    this.isOnline = false,
-    this.unreadCount = 0,
-    this.phone = '',
-    this.chatRoomId = '',
-  });
-}
+import 'package:payplus_mobile/services/api_service.dart';
 
 class FriendPageController extends GetxController {
-  final RxList<Friend> friends = <Friend>[].obs;
-  final RxInt tabIndex = 0.obs;
+  final searchController = TextEditingController();
+  final friends = <Map<String, dynamic>>[].obs;
+  final isLoading = false.obs;
+  final errorMessage = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    loadFriends();
+    fetchFriends();
   }
 
-  void loadFriends() {
-    // Data teman yang sesuai dengan chat list
-    friends.addAll([
-      Friend(
-        id: '1',
-        name: 'Sarah Johnson',
-        imageUrl: 'assets/images/default.png',
-        lastMessage: 'Sudah transfer uang untuk acara besok?',
-        lastMessageTime: 'Baru saja',
-        isOnline: true,
-        unreadCount: 2,
-        phone: '+628123456789',
-        chatRoomId: 'chat1',
-      ),
-      Friend(
-        id: '2',
-        name: 'PayPlus Support',
-        imageUrl: 'assets/images/default.png',
-        lastMessage: 'Transaksi pembayaran Anda berhasil diproses',
-        lastMessageTime: '2 jam lalu',
-        isOnline: true,
-        unreadCount: 0,
-        phone: '+628000111222',
-        chatRoomId: 'chat_support',
-      ),
-      Friend(
-        id: '3',
-        name: 'John Smith',
-        imageUrl: 'assets/images/default.png',
-        lastMessage: 'Terima kasih atas pembayarannya',
-        lastMessageTime: 'Kemarin',
-        phone: '+628234567890',
-        chatRoomId: 'chat2',
-      ),
-      Friend(
-        id: '4',
-        name: 'Maria Garcia',
-        imageUrl: 'assets/images/default.png',
-        lastMessage: 'Saya sudah mengirimkan invoice untuk proyek kita',
-        lastMessageTime: '2 hari lalu',
-        isOnline: true,
-        phone: '+628345678901',
-        chatRoomId: 'chat3',
-      ),
-      Friend(
-        id: '5',
-        name: 'David Wilson',
-        imageUrl: 'assets/images/default.png',
-        lastMessage: 'Pembayaran telah diterima, terima kasih',
-        lastMessageTime: '5 hari lalu',
-        unreadCount: 0,
-        phone: '+628456789012',
-        chatRoomId: 'chat4',
-      ),
-    ]);
+  @override
+  void onClose() {
+    searchController.dispose();
+    super.onClose();
   }
 
-  void addFriend(String name, String phone) {
-    // Create a new friend and add to list
-    final newId = (friends.length + 1).toString();
-    final newFriend = Friend(
-      id: newId,
-      name: name,
-      imageUrl: 'assets/images/default.png',
-      lastMessage: '',
-      lastMessageTime: '',
-      phone: phone,
-      chatRoomId: 'chat$newId',
-    );
+  Future<void> fetchFriends() async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
 
-    friends.add(newFriend);
+      final result = await ApiService.getFriends();
+
+      if (result['success']) {
+        friends.value =
+            List<Map<String, dynamic>>.from(result['data']['friends'] ?? []);
+      } else {
+        errorMessage.value = result['message'] ?? 'Gagal memuat daftar teman';
+      }
+    } catch (e) {
+      errorMessage.value = 'Terjadi kesalahan: ${e.toString()}';
+    } finally {
+      isLoading.value = false;
+    }
   }
 
-  void startChat(Friend friend) {
-    // Navigate to chat screen
-    Get.toNamed(Routes.CHAT);
+  // Fungsi untuk mencari teman berdasarkan nama
+  void searchFriends(String query) {
+    // Implementasi pencarian akan ditambahkan nanti
+  }
+
+  // Fungsi untuk menambahkan teman baru
+  Future<bool> addFriend(String phoneNumber) async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      final result = await ApiService.addFriend(phoneNumber);
+
+      if (result['success']) {
+        await fetchFriends(); // Refresh daftar teman
+        return true;
+      } else {
+        errorMessage.value = result['message'] ?? 'Gagal menambahkan teman';
+        return false;
+      }
+    } catch (e) {
+      errorMessage.value = 'Terjadi kesalahan: ${e.toString()}';
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
   }
 }
