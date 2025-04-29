@@ -28,8 +28,19 @@ class FriendPageController extends GetxController {
       final result = await ApiService.getFriends();
 
       if (result['success']) {
-        friends.value =
-            List<Map<String, dynamic>>.from(result['data']['friends'] ?? []);
+        // Perbaikan: Penanganan data yang lebih baik
+        if (result['data'] != null && result['data']['friends'] != null) {
+          friends.value = List<Map<String, dynamic>>.from(result['data']['friends']);
+        } else if (result['data'] != null) {
+          // Jika struktur data berbeda (mungkin langsung array)
+          try {
+            friends.value = List<Map<String, dynamic>>.from(result['data']);
+          } catch (e) {
+            errorMessage.value = 'Format data tidak sesuai: ${e.toString()}';
+          }
+        } else {
+          friends.value = [];
+        }
       } else {
         errorMessage.value = result['message'] ?? 'Gagal memuat daftar teman';
       }
