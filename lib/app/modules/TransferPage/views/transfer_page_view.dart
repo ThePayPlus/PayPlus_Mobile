@@ -198,6 +198,53 @@ class TransferView extends GetView<TransferPageController> {
                       )),
                 ),
               ),
+              const SizedBox(height: 16),
+              
+              // Notes field - only visible when Gift is selected
+              Obx(() => controller.transferType.value == 'Gift'
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Gift Notes',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: controller.notesController,
+                        decoration: InputDecoration(
+                          hintText: 'Add a message for your gift',
+                          hintStyle: TextStyle(color: Colors.grey[400]),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: const Color(0xFF6C63FF)),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                        ),
+                        maxLines: 3,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  )
+                : const SizedBox.shrink()
+              ),
               const SizedBox(height: 32),
 
               // Send Button

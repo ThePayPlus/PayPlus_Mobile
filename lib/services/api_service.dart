@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'http://10.0.2.2:3000/api';
+  static const String baseUrl = 'http://10.128.94.106:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -48,21 +49,17 @@ class ApiService {
       );
 
       final data = jsonDecode(response.body);
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         // If login successful, store the token
-        if (data['data'] != null && data['data']['token'] != null) {
-          print('Token ditemukan: ${data['data']['token']}');
-          await setAuthToken(data['data']['token']);
+        if (data['token'] != null) {
+          await setAuthToken(data['token']);
         }
         return {'success': true, 'data': data};
       } else {
-        return {'success': false, 'message': data['message'] ?? 'Login gagal'};
+        return {'success': false, 'message': data['message'] ?? 'Login failed'};
       }
     } catch (e) {
-      print('Error login: ${e.toString()}');
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }
@@ -89,7 +86,7 @@ class ApiService {
       } else {
         return {
           'success': false,
-          'message': data['message'] ?? 'Registrasi gagal'
+          'message': data['message'] ?? 'Registration failed'
         };
       }
     } catch (e) {
@@ -102,17 +99,16 @@ class ApiService {
     final token = await getAuthToken();
     return token != null && token.isNotEmpty;
   }
-
-  // Metode untuk mendapatkan daftar teman
+  
+  // Get friends list
   static Future<Map<String, dynamic>> getFriends() async {
     try {
+      // Pastikan token sudah ada
       final token = await getAuthToken();
-      if (token == null) {
+      if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Anda belum login'};
       }
-
-      _headers['Authorization'] = 'Bearer $token';
-
+      
       final response = await http.get(
         Uri.parse('$baseUrl/friends'),
         headers: _headers,
@@ -123,31 +119,27 @@ class ApiService {
       if (response.statusCode == 200) {
         return {'success': true, 'data': data};
       } else {
-        return {
-          'success': false,
-          'message': data['message'] ?? 'Gagal memuat daftar teman'
-        };
+        return {'success': false, 'message': data['message'] ?? 'Gagal memuat daftar teman'};
       }
     } catch (e) {
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }
-
-  // Metode untuk menambahkan teman
-  static Future<Map<String, dynamic>> addFriend(String friendPhone) async {
+  
+  // Add friend by phone number
+  static Future<Map<String, dynamic>> addFriend(String phoneNumber) async {
     try {
+      // Pastikan token sudah ada
       final token = await getAuthToken();
-      if (token == null) {
+      if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Anda belum login'};
       }
-
-      _headers['Authorization'] = 'Bearer $token';
-
+      
       final response = await http.post(
         Uri.parse('$baseUrl/friends/add'),
         headers: _headers,
         body: jsonEncode({
-          'friendPhone': friendPhone,
+          'phone': phoneNumber,
         }),
       );
 
@@ -156,69 +148,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return {'success': true, 'data': data};
       } else {
-        return {
-          'success': false,
-          'message': data['message'] ?? 'Gagal menambahkan teman'
-        };
-      }
-    } catch (e) {
-      return {'success': false, 'message': 'Network error: ${e.toString()}'};
-    }
-  }
-
-  // Metode untuk logout
-  static Future<Map<String, dynamic>> logout() async {
-    try {
-      final token = await getAuthToken();
-      if (token == null) {
-        return {'success': false, 'message': 'Anda belum login'};
-      }
-
-      _headers['Authorization'] = 'Bearer $token';
-
-      final response = await http.post(
-        Uri.parse('$baseUrl/auth/logout'),
-        headers: _headers,
-      );
-
-      await clearAuthToken();
-
-      if (response.statusCode == 200) {
-        return {'success': true, 'message': 'Logout berhasil'};
-      } else {
-        final data = jsonDecode(response.body);
-        return {'success': false, 'message': data['message'] ?? 'Logout gagal'};
-      }
-    } catch (e) {
-      await clearAuthToken(); // Tetap hapus token lokal meskipun ada error
-      return {'success': true, 'message': 'Logout berhasil (lokal)'};
-    }
-  }
-
-  // Metode untuk mendapatkan profil pengguna
-  static Future<Map<String, dynamic>> getProfile() async {
-    try {
-      final token = await getAuthToken();
-      if (token == null) {
-        return {'success': false, 'message': 'Anda belum login'};
-      }
-
-      _headers['Authorization'] = 'Bearer $token';
-
-      final response = await http.get(
-        Uri.parse('$baseUrl/profile'),
-        headers: _headers,
-      );
-
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        return {'success': true, 'data': data};
-      } else {
-        return {
-          'success': false,
-          'message': data['message'] ?? 'Gagal memuat profil'
-        };
+        return {'success': false, 'message': data['message'] ?? 'Gagal menambahkan teman'};
       }
     } catch (e) {
       return {'success': false, 'message': 'Network error: ${e.toString()}'};

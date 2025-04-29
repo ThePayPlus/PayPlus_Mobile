@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 class TransferPageController extends GetxController {
   final searchController = TextEditingController();
   final amountController = TextEditingController();
+  final notesController = TextEditingController(); // Add notes controller
   
   final RxString selectedUser = ''.obs;
   final RxString transferType = 'Normal'.obs;
@@ -48,6 +49,7 @@ class TransferPageController extends GetxController {
     // Reset fields after successful transfer
     searchController.clear();
     amountController.clear();
+    notesController.clear(); // Clear notes field too
     selectedUser.value = '';
   }
   
@@ -55,6 +57,7 @@ class TransferPageController extends GetxController {
   void onClose() {
     searchController.dispose();
     amountController.dispose();
+    notesController.dispose(); // Dispose notes controller
     super.onClose();
   }
 }
