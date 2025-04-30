@@ -17,9 +17,6 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
     super.dispose();
   }
 
-  // Variabel untuk menyimpan pilihan amount
-  String? _selectedAmount;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +25,7 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
           padding: EdgeInsets.only(top: 30),
           child: Text(
             "Top Up",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         backgroundColor: Colors.white,
@@ -57,8 +54,15 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
                 TextField(
                   controller: _amountController,
                   keyboardType: TextInputType.number,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  decoration: InputDecoration(
+                  style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  decoration: const InputDecoration(
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.only(top: 0, left: 0),
+                      child: Text(
+                        'Rp',
+                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     hintText: '0',
                     hintStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     border: UnderlineInputBorder(
@@ -66,21 +70,21 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 const Text(
                   'Select Amount:',
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 // Tombol rekomendasi
                 GridView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3, // 2x3 layout
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 16,
-                    childAspectRatio: 3, // Atur aspek perbandingan lebar dan tinggi
+                    childAspectRatio: 1.8, // Atur aspek perbandingan lebar dan tinggi
                   ),
                   itemCount: 6,
                   itemBuilder: (context, index) {
@@ -96,21 +100,7 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
                   },
                 ),
                 const SizedBox(height: 30),
-                const Text(
-                  'Account Number:',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: _amountController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 30),
+                // Hapus TextField kedua untuk Account Number karena sudah ada TextField untuk amount di atas
                 // Tombol Continue
                 SizedBox(
                   width: double.infinity,
@@ -171,7 +161,7 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
         side: BorderSide(color: Color(0xFF6C63FF)),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),

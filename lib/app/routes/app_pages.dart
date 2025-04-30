@@ -1,8 +1,5 @@
 import 'package:get/get.dart';
-import 'package:payplus_mobile/app/modules/TopUpPage/bindings/topup_binding.dart';
-import 'package:payplus_mobile/app/modules/TopUpPage/views/topup_page.dart';
-import 'package:payplus_mobile/app/modules/TopUpAmountPage/bindings/topupamount_binding.dart';
-import 'package:payplus_mobile/app/modules/TopUpAmountPage/views/topupamount_page.dart';
+
 import '../modules/Chat/bindings/chat_binding.dart';
 import '../modules/Chat/views/chat_view.dart';
 import '../modules/ChatBot/bindings/chat_bot_binding.dart';
@@ -17,8 +14,14 @@ import '../modules/SavingsPage/bindings/savings_binding.dart';
 import '../modules/SavingsPage/views/savings_page.dart';
 import '../modules/SignupPage/bindings/signup_page_binding.dart';
 import '../modules/SignupPage/views/signup_page_view.dart';
+import '../modules/TopUpAmountPage/bindings/topupamount_binding.dart';
+import '../modules/TopUpAmountPage/views/topupamount_page.dart';
+import '../modules/TopUpPage/bindings/topup_binding.dart';
+import '../modules/TopUpPage/views/topup_page.dart';
 import '../modules/TransferPage/bindings/transfer_page_binding.dart';
 import '../modules/TransferPage/views/transfer_page_view.dart';
+import '../modules/add_friend_dialog/bindings/add_friend_dialog_binding.dart';
+import '../modules/add_friend_dialog/views/add_friend_dialog_view.dart';
 import '../modules/bills/bindings/bill_binding.dart';
 import '../modules/bills/views/bill_view.dart';
 import '../modules/bills/views/edit_bill_view.dart';
