@@ -544,91 +544,52 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _buildRecentTransactions() {
-    // Create sample transaction data
-    final List<Map<String, dynamic>> transactions = [
-      {
-        'icon': Icons.shopping_bag,
-        'title': 'Shopping',
-        'date': 'Today, 14:30',
-        'amount': 'Rp. 150,000',
-        'isExpense': true,
-      },
-      {
-        'icon': Icons.attach_money,
-        'title': 'Salary',
-        'date': 'Today, 09:15',
-        'amount': 'Rp. 3,500,000',
-        'isExpense': false,
-      },
-      {
-        'icon': Icons.fastfood,
-        'title': 'Food & Beverage',
-        'date': 'Yesterday, 19:45',
-        'amount': 'Rp. 85,000',
-        'isExpense': true,
-      },
-      {
-        'icon': Icons.card_giftcard,
-        'title': 'Gift from John',
-        'date': 'Yesterday, 11:20',
-        'amount': 'Rp. 200,000',
-        'isExpense': false,
-      },
-      {
-        'icon': Icons.home,
-        'title': 'Rent Payment',
-        'date': '20 Jul 2023',
-        'amount': 'Rp. 1,200,000',
-        'isExpense': true,
-      },
-    ];
+    return Obx(() {
+      final transactions = controller.recentTransactions;
+      if (transactions.isEmpty) {
+        return Center(child: Text('Tidak ada transaksi terbaru.'));
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Recent Transactions',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: textDarkColor,
+            ),
+          ),
+          const SizedBox(height: 12),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: transactions.length,
+            itemBuilder: (context, index) {
+              final tx = transactions[index];
+              return _buildTransactionItem(
+                icon: _getIconForType(tx['type']),
+                title: tx['type'] ?? '-',
+                date: tx['date'] ?? '-',
+                amount: 'Rp. ${tx['amount'] ?? 0}',
+                isExpense: tx['transactionType'] == 'expense' ? true : false,
+              );
+            },
+          ),
+        ],
+      );
+    });
+  }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Recent Transactions',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: textDarkColor,
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                'See All',
-                style: TextStyle(
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: transactions.length,
-          itemBuilder: (context, index) {
-            final transaction = transactions[index];
-            return _buildTransactionItem(
-              icon: transaction['icon'],
-              title: transaction['title'],
-              date: transaction['date'],
-              amount: transaction['isExpense']
-                  ? '-${transaction['amount']}'
-                  : '+${transaction['amount']}',
-              isExpense: transaction['isExpense'],
-            );
-          },
-        ),
-      ],
-    );
+  IconData _getIconForType(String? type) {
+    switch (type) {
+      case 'topup':
+        return Icons.wallet;
+      case 'gift':
+        return Icons.card_giftcard;
+      default:
+        return Icons.receipt_long;
+    }
   }
 
   Widget _buildTransactionItem({
@@ -705,7 +666,7 @@ class HomeView extends GetView<HomeController> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              amount,
+              isExpense ? '-$amount' : '+$amount',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,

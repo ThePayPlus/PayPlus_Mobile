@@ -14,10 +14,24 @@ class HomeController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
 
+  final RxList<Map<String, dynamic>> recentTransactions =
+      <Map<String, dynamic>>[].obs;
+
   @override
   void onInit() {
     super.onInit();
     fetchProfileData();
+    fetchRecentTransactions();
+  }
+
+  void fetchRecentTransactions() async {
+    try {
+      final result = await ApiService.getRecentTransactions();
+      recentTransactions.assignAll(result);
+    } catch (e) {
+      // Handle error jika perlu
+      recentTransactions.clear();
+    }
   }
 
   void fetchProfileData() async {

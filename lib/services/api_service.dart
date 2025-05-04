@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'https://ws1qtsds-3000.asse.devtunnels.ms/api';
+  static const String baseUrl = 'https://localhost:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -332,5 +332,20 @@ class ApiService {
     } catch (e) {
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
+  }
+
+  static Future<List<Map<String, dynamic>>> getRecentTransactions() async {
+    final headers = await _getAuthHeaders();
+    final response = await http.get(
+      Uri.parse('$baseUrl/recent-transactions'),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['success'] == true) {
+        return List<Map<String, dynamic>>.from(data['data'] ?? data);
+      }
+    }
+    return [];
   }
 }
