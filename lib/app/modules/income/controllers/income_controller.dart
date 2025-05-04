@@ -1,137 +1,109 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:payplus_mobile/app/data/models/income_record_model.dart';
+import 'package:get/get.dart';
+import '../models/income_model.dart';
+import 'package:payplus_mobile/services/api_service.dart';
 
 class IncomeController extends GetxController {
-  // Observable variables
-  final RxList<IncomeRecord> incomeRecords = <IncomeRecord>[].obs;
-  final RxDouble totalIncome = 0.0.obs;
-  final RxInt totalTransactions = 0.obs;
-  final RxDouble normalIncome = 0.0.obs;
-  final RxDouble giftIncome = 0.0.obs;
-  final RxDouble topupIncome = 0.0.obs;
-
-  // Current filter
-  final RxString currentFilter = 'all'.obs;
-
-  // Filtered records
-  final RxList<IncomeRecord> filteredRecords = <IncomeRecord>[].obs;
+  var isLoading = false.obs;
+  var incomeRecords = <Income>[].obs;
+  var filteredRecords = <Income>[].obs;
+  var errorMessage = ''.obs;
+  
+  // Nilai default untuk menghindari null
+  var totalIncome = "0".obs;
+  var normalIncome = "0".obs;
+  var giftIncome = "0".obs;
+  var topupIncome = "0".obs;
+  var totalTransactions = 0.obs;
+  var currentFilter = "all".obs;
 
   @override
   void onInit() {
     super.onInit();
-    // Load mock data when controller initializes
-    loadMockData();
+    fetchIncomeRecords();
   }
 
-  // Method to load mock income data
-  void loadMockData() {
-    // Create some sample income records
-    final mockData = [
-      IncomeRecord(
-          id: 1,
-          amount: 1500000,
-          date: '2023-05-15',
-          type: 'normal',
-          senderPhone: '081234567890',
-          senderName: 'John Doe'),
-      IncomeRecord(
-          id: 2,
-          amount: 500000,
-          date: '2023-05-14',
-          type: 'gift',
-          senderPhone: '085678901234',
-          senderName: 'Jane Smith',
-          message: 'Happy birthday!'),
-      IncomeRecord(
-          id: 3,
-          amount: 2000000,
-          date: '2023-05-12',
-          type: 'topup',
-          senderPhone: '089012345678',
-          senderName: 'Bank Transfer'),
-      IncomeRecord(
-          id: 4,
-          amount: 750000,
-          date: '2023-05-10',
-          type: 'normal',
-          senderPhone: '081234567890',
-          senderName: 'John Doe'),
-      IncomeRecord(
-          id: 5,
-          amount: 1000000,
-          date: '2023-05-08',
-          type: 'gift',
-          senderPhone: '087654321098',
-          senderName: 'Sarah Connor',
-          message: 'For your new project!'),
-      IncomeRecord(
-          id: 6,
-          amount: 3000000,
-          date: '2023-05-05',
-          type: 'topup',
-          senderPhone: '089012345678',
-          senderName: 'Bank Transfer'),
-    ];
-
-    // Set the income records
-    incomeRecords.value = mockData;
-
-    // Calculate totals from the data
-    calculateTotals();
-
-    // Apply initial filter (all)
-    applyFilter('all');
+  Future<void> fetchIncomeRecords() async {
+    try {
+      isLoading(true);
+      errorMessage('');
+      
+      final result = await ApiService.getIncomeRecords();
+      
+      if (result['success'] == true) {
+        final List<dynamic> records = result['records'] ?? [];
+        incomeRecords.value = records.map((record) => Income.fromJson(record)).toList();
+        
+        // Terapkan filter default
+        applyFilter(currentFilter.value);
+        
+        // Hitung total dan kategori income
+        calculateIncomeStats();
+      } else {
+        errorMessage(result['message'] ?? 'Terjadi kesalahan');
+      }
+    } catch (e) {
+      errorMessage('Terjadi kesalahan: ${e.toString()}');
+    } finally {
+      isLoading(false);
+    }
   }
-
-  // Calculate total income, transactions and type-specific incomes
-  void calculateTotals() {
-    double total = 0;
-    double normal = 0;
-    double gift = 0;
-    double topup = 0;
-
+  
+  void calculateIncomeStats() {
+    int total = 0;
+    int normal = 0;
+    int gift = 0;
+    int topup = 0;
+    
     for (var record in incomeRecords) {
-      total += record.amount;
-
+      // Konversi amount ke int dengan aman
+      int amount = int.tryParse(record.amount) ?? 0;
+      
+      total += amount;
+      
       switch (record.type) {
         case 'normal':
-          normal += record.amount;
+          normal += amount;
           break;
         case 'gift':
-          gift += record.amount;
+          gift += amount;
           break;
         case 'topup':
-          topup += record.amount;
+          topup += amount;
           break;
       }
     }
-
-    totalIncome.value = total;
+    
+    totalIncome.value = total.toString();
+    normalIncome.value = normal.toString();
+    giftIncome.value = gift.toString();
+    topupIncome.value = topup.toString();
     totalTransactions.value = incomeRecords.length;
-    normalIncome.value = normal;
-    giftIncome.value = gift;
-    topupIncome.value = topup;
   }
-
-  // Apply filter to income records
+  
   void applyFilter(String filter) {
     currentFilter.value = filter;
-
+    
     if (filter == 'all') {
       filteredRecords.value = incomeRecords;
     } else {
-      filteredRecords.value =
-          incomeRecords.where((record) => record.type == filter).toList();
+      filteredRecords.value = incomeRecords.where((record) => record.type == filter).toList();
     }
   }
 
-  // Format currency to rupiah format
-  String formatCurrency(double amount) {
-    return 'Rp. ${amount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}';
+  String getIncomeTypeLabel(String type) {
+    switch (type) {
+      case 'normal':
+        return 'Transfer';
+      case 'gift':
+        return 'Hadiah';
+      case 'topup':
+        return 'Top Up';
+      default:
+        return 'Lainnya';
+    }
   }
-
-  // Get the color for the income type
+  
   Color getIncomeTypeColor(String type) {
     switch (type) {
       case 'normal':
@@ -144,18 +116,26 @@ class IncomeController extends GetxController {
         return Colors.grey;
     }
   }
-
-  // Get the background color for the income type
+  
   Color getIncomeTypeBackgroundColor(String type) {
     switch (type) {
       case 'normal':
-        return Colors.blue.shade100;
+        return Colors.blue.shade50;
       case 'gift':
-        return Colors.purple.shade100;
+        return Colors.purple.shade50;
       case 'topup':
-        return Colors.amber.shade100;
+        return Colors.amber.shade50;
       default:
-        return Colors.grey.shade100;
+        return Colors.grey.shade50;
+    }
+  }
+
+  String formatCurrency(String amount) {
+    try {
+      final value = int.parse(amount);
+      return 'Rp ${value.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+    } catch (e) {
+      return 'Rp 0';
     }
   }
 }

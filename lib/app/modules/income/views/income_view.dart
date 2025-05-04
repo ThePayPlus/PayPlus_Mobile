@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../controllers/income_controller.dart';
+import '../models/income_model.dart';
 
 class IncomeView extends GetView<IncomeController> {
   const IncomeView({super.key});
@@ -11,7 +12,8 @@ class IncomeView extends GetView<IncomeController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F8),
       appBar: AppBar(
-        title: const Text('Income Records', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Income Records',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -20,42 +22,68 @@ class IncomeView extends GetView<IncomeController> {
           onPressed: () => Get.offAllNamed('/home'),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Income Overview',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
-              ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        
+        if (controller.errorMessage.isNotEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  controller.errorMessage.value,
+                  style: const TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => controller.fetchIncomeRecords(),
+                  child: const Text('Coba Lagi'),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
+          );
+        }
+        
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Income Overview',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF333333),
+                ),
+              ),
+              const SizedBox(height: 16),
 
-            // Total Income Card
-            _buildTotalIncomeCard(),
-            const SizedBox(height: 16),
+              // Total Income Card
+              _buildTotalIncomeCard(),
+              const SizedBox(height: 16),
 
-            // Income Statistics Cards
-            _buildIncomeStatsGrid(),
-            const SizedBox(height: 24),
+              // Income Statistics Cards
+              _buildIncomeStatsGrid(),
+              const SizedBox(height: 24),
 
-            // Income Distribution Chart
-            _buildIncomeDistributionChart(),
-            const SizedBox(height: 24),
+              // Income Distribution Chart
+              _buildIncomeDistributionChart(),
+              const SizedBox(height: 24),
 
-            // Recent Transactions
-            _buildRecentTransactionsHeader(),
-            const SizedBox(height: 16),
+              // Recent Transactions
+              _buildRecentTransactionsHeader(),
+              const SizedBox(height: 16),
 
-            // Income Records Cards
-            _buildIncomeRecordsList(),
-          ],
-        ),
-      ),
+              // Income Records Cards
+              _buildIncomeRecordsList(),
+            ],
+          ),
+        );
+      }),
     );
   }
 
@@ -102,14 +130,12 @@ class IncomeView extends GetView<IncomeController> {
                 ),
               ),
               const SizedBox(height: 4),
-              GetX<IncomeController>(
-                builder: (controller) => Text(
-                  controller.formatCurrency(controller.totalIncome.value),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF333333),
-                  ),
+              Text(
+                controller.formatCurrency(controller.totalIncome.value),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF333333),
                 ),
               ),
             ],
@@ -135,14 +161,12 @@ class IncomeView extends GetView<IncomeController> {
           icon: Icons.people,
           iconColor: Colors.orange,
           iconBgColor: Colors.orange.shade100,
-          valueWidget: GetX<IncomeController>(
-            builder: (controller) => Text(
-              controller.totalTransactions.toString(),
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
-              ),
+          valueWidget: Text(
+            controller.totalTransactions.toString(),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
             ),
           ),
         ),
@@ -153,14 +177,12 @@ class IncomeView extends GetView<IncomeController> {
           icon: Icons.pie_chart,
           iconColor: Colors.blue,
           iconBgColor: Colors.blue.shade100,
-          valueWidget: GetX<IncomeController>(
-            builder: (controller) => Text(
-              controller.formatCurrency(controller.normalIncome.value),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
-              ),
+          valueWidget: Text(
+            controller.formatCurrency(controller.normalIncome.value),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
             ),
           ),
         ),
@@ -171,14 +193,12 @@ class IncomeView extends GetView<IncomeController> {
           icon: Icons.card_giftcard,
           iconColor: Colors.purple,
           iconBgColor: Colors.purple.shade100,
-          valueWidget: GetX<IncomeController>(
-            builder: (controller) => Text(
-              controller.formatCurrency(controller.giftIncome.value),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
-              ),
+          valueWidget: Text(
+            controller.formatCurrency(controller.giftIncome.value),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
             ),
           ),
         ),
@@ -189,14 +209,12 @@ class IncomeView extends GetView<IncomeController> {
           icon: Icons.account_balance_wallet,
           iconColor: Colors.amber,
           iconBgColor: Colors.amber.shade100,
-          valueWidget: GetX<IncomeController>(
-            builder: (controller) => Text(
-              controller.formatCurrency(controller.topupIncome.value),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
-              ),
+          valueWidget: Text(
+            controller.formatCurrency(controller.topupIncome.value),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
             ),
           ),
         ),
@@ -265,6 +283,18 @@ class IncomeView extends GetView<IncomeController> {
 
   // Income distribution chart
   Widget _buildIncomeDistributionChart() {
+    // Konversi nilai string ke double untuk chart
+    double normalValue = double.tryParse(controller.normalIncome.value) ?? 0;
+    double giftValue = double.tryParse(controller.giftIncome.value) ?? 0;
+    double topupValue = double.tryParse(controller.topupIncome.value) ?? 0;
+    
+    // Jika semua nilai 0, tambahkan nilai kecil untuk menghindari chart kosong
+    if (normalValue == 0 && giftValue == 0 && topupValue == 0) {
+      normalValue = 1;
+      giftValue = 1;
+      topupValue = 1;
+    }
+    
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -292,47 +322,45 @@ class IncomeView extends GetView<IncomeController> {
           const SizedBox(height: 20),
           SizedBox(
             height: 200,
-            child: GetX<IncomeController>(
-              builder: (controller) => PieChart(
-                PieChartData(
-                  sectionsSpace: 2,
-                  centerSpaceRadius: 40,
-                  sections: [
-                    PieChartSectionData(
-                      color: Colors.blue,
-                      value: controller.normalIncome.value,
-                      title: 'Normal',
-                      radius: 60,
-                      titleStyle: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+            child: PieChart(
+              PieChartData(
+                sectionsSpace: 2,
+                centerSpaceRadius: 40,
+                sections: [
+                  PieChartSectionData(
+                    color: Colors.blue,
+                    value: normalValue,
+                    title: 'Normal',
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    PieChartSectionData(
-                      color: Colors.purple,
-                      value: controller.giftIncome.value,
-                      title: 'Gift',
-                      radius: 60,
-                      titleStyle: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                  ),
+                  PieChartSectionData(
+                    color: Colors.purple,
+                    value: giftValue,
+                    title: 'Gift',
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    PieChartSectionData(
-                      color: Colors.amber,
-                      value: controller.topupIncome.value,
-                      title: 'TopUp',
-                      radius: 60,
-                      titleStyle: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                  ),
+                  PieChartSectionData(
+                    color: Colors.amber,
+                    value: topupValue,
+                    title: 'TopUp',
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -411,67 +439,61 @@ class IncomeView extends GetView<IncomeController> {
 
   // Filter button
   Widget _buildFilterButton(String label, String filterValue) {
-    return GetX<IncomeController>(
-      builder: (controller) => ElevatedButton(
-        onPressed: () => controller.applyFilter(filterValue),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: controller.currentFilter.value == filterValue
-              ? const Color(0xFF8E44AD)
-              : Colors.grey.shade200,
-          foregroundColor: controller.currentFilter.value == filterValue
-              ? Colors.white
-              : Colors.grey.shade700,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          elevation: controller.currentFilter.value == filterValue ? 2 : 0,
+    return ElevatedButton(
+      onPressed: () => controller.applyFilter(filterValue),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: controller.currentFilter.value == filterValue
+            ? const Color(0xFF8E44AD)
+            : Colors.grey.shade200,
+        foregroundColor: controller.currentFilter.value == filterValue
+            ? Colors.white
+            : Colors.grey.shade700,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(label),
+        elevation: controller.currentFilter.value == filterValue ? 2 : 0,
       ),
+      child: Text(label),
     );
   }
 
   // List of income record cards
   Widget _buildIncomeRecordsList() {
-    return GetX<IncomeController>(
-      builder: (controller) {
-        if (controller.filteredRecords.isEmpty) {
-          return Container(
-            padding: const EdgeInsets.all(32),
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.search_off, size: 48, color: Colors.grey.shade400),
-                const SizedBox(height: 16),
-                Text(
-                  'No income records found',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ],
+    if (controller.filteredRecords.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(32),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search_off, size: 48, color: Colors.grey.shade400),
+            const SizedBox(height: 16),
+            Text(
+              'No income records found',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade600,
+              ),
             ),
-          );
-        }
+          ],
+        ),
+      );
+    }
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: controller.filteredRecords.length,
-          itemBuilder: (context, index) {
-            final record = controller.filteredRecords[index];
-            return _buildIncomeRecordCard(record);
-          },
-        );
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: controller.filteredRecords.length,
+      itemBuilder: (context, index) {
+        final record = controller.filteredRecords[index];
+        return _buildIncomeRecordCard(record);
       },
     );
   }
 
   // Individual income record card
-  Widget _buildIncomeRecordCard(dynamic record) {
+  Widget _buildIncomeRecordCard(Income record) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -561,7 +583,7 @@ class IncomeView extends GetView<IncomeController> {
                 ),
               ],
             ),
-            if (record.type == 'gift' && record.message != null) ...[
+            if (record.type == 'gift' && record.message != null && record.message!.isNotEmpty) ...[
               const SizedBox(height: 16),
               const Text(
                 'Message:',

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:payplus_mobile/app/modules/TopUpAmountPage/views/topupamount_page.dart';
 import 'package:payplus_mobile/app/routes/app_pages.dart';
 
 class TopUpPage extends StatefulWidget {
@@ -56,11 +55,15 @@ class _TopUpPageState extends State<TopUpPage> {
                 _buildBankOption('assets/images/BRI.png', 'BRI'),
                 _buildBankOption('assets/images/BCA.png', 'BCA'),
                 _buildBankOption('assets/images/BNI.png', 'BNI'),
-                _buildBankOption('assets/images/jatim.png', 'Bank Jatim', width: 100),
-                _buildBankOption('assets/images/bali.png', 'Bank Bali', width: 40),
+                _buildBankOption('assets/images/jatim.png', 'Bank Jatim',
+                    width: 100),
+                _buildBankOption('assets/images/bali.png', 'Bank Bali',
+                    width: 40),
                 _buildBankOption('assets/images/bjb.png', 'Bank BJB'),
-                _buildBankOption('assets/images/kalteng.png', 'Bank Kalteng', width: 100),
-                _buildBankOption('assets/images/sumsel.png', 'Bank Sumsel', width: 100),
+                _buildBankOption('assets/images/kalteng.png', 'Bank Kalteng',
+                    width: 100),
+                _buildBankOption('assets/images/sumsel.png', 'Bank Sumsel',
+                    width: 100),
               ],
             ),
           ),
@@ -69,7 +72,8 @@ class _TopUpPageState extends State<TopUpPage> {
     );
   }
 
-  Widget _buildBankOption(String imagePath, String bankName, {double width = 60}) {
+  Widget _buildBankOption(String imagePath, String bankName,
+      {double width = 60}) {
     return GestureDetector(
       onTap: () {
         Get.toNamed(Routes.TOPUPAMOUNT);

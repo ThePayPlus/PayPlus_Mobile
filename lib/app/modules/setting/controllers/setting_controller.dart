@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:payplus_mobile/services/settings_service.dart';
 
 class SettingController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -19,14 +20,12 @@ class SettingController extends GetxController {
   final RxString userRole = 'gold'.obs;
   final RxString errorMessage = ''.obs;
   final RxBool isError = false.obs;
+  final RxString phoneNumber = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    // Initialize with mock data
-    fullNameController.text = 'Fausta Akbar';
-    emailController.text = 'fausta@gmail.com';
-    userRole.value = 'gold';
+    loadUserProfile();
   }
 
   @override
@@ -38,6 +37,35 @@ class SettingController extends GetxController {
     newPasswordController.dispose();
     confirmPasswordController.dispose();
     super.onClose();
+  }
+
+  // Load user profile from API
+  Future<void> loadUserProfile() async {
+    isLoading.value = true;
+    try {
+      final result = await SettingsService.getProfileData();
+
+      if (result['success']) {
+        final data = result['data'];
+        fullNameController.text = data['name'] ?? '';
+        emailController.text = data['email'] ?? '';
+
+        // Make sure phone is handled as a string
+        if (data['phone'] != null) {
+          phoneNumber.value = data['phone'].toString();
+        } else {
+          phoneNumber.value = '';
+        }
+
+        // For now, keeping the default role
+      } else {
+        setErrorMessage(result['message'] ?? 'Failed to load profile');
+      }
+    } catch (e) {
+      setErrorMessage('Error loading profile: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   // Toggle password visibility
@@ -77,20 +105,14 @@ class SettingController extends GetxController {
       clearMessage();
 
       try {
-        // Mock API call delay
-        await Future.delayed(const Duration(seconds: 1));
+        // Check if password fields are filled
+        final bool isChangingPassword =
+            currentPasswordController.text.isNotEmpty &&
+                newPasswordController.text.isNotEmpty &&
+                confirmPasswordController.text.isNotEmpty;
 
-        // Password validation
-        if (currentPasswordController.text.isNotEmpty ||
-            newPasswordController.text.isNotEmpty ||
-            confirmPasswordController.text.isNotEmpty) {
-          // Check if current password is correct (mock validation)
-          if (currentPasswordController.text != '123456') {
-            setErrorMessage('Current password is incorrect');
-            isLoading.value = false;
-            return;
-          }
-
+        // Password validation if attempting to change password
+        if (isChangingPassword) {
           // Check if passwords match
           if (newPasswordController.text != confirmPasswordController.text) {
             setErrorMessage('New passwords do not match');
@@ -99,17 +121,30 @@ class SettingController extends GetxController {
           }
         }
 
-        // Success
-        setSuccessMessage('Profile updated successfully');
+        // Update profile using the service (with optional password)
+        final result = await SettingsService.updateSettings(
+            name: fullNameController.text,
+            email: emailController.text,
+            currentPassword:
+                isChangingPassword ? currentPasswordController.text : null,
+            newPassword:
+                isChangingPassword ? newPasswordController.text : null);
 
-        // Clear password fields after successful update
-        if (currentPasswordController.text.isNotEmpty) {
-          currentPasswordController.clear();
-          newPasswordController.clear();
-          confirmPasswordController.clear();
+        if (result['success']) {
+          // Clear password fields after successful update
+          if (isChangingPassword) {
+            currentPasswordController.clear();
+            newPasswordController.clear();
+            confirmPasswordController.clear();
+          }
+
+          setSuccessMessage(
+              result['message'] ?? 'Profile updated successfully');
+        } else {
+          setErrorMessage(result['message'] ?? 'Failed to update profile');
         }
       } catch (e) {
-        setErrorMessage('Failed to update profile: ${e.toString()}');
+        setErrorMessage('Error: ${e.toString()}');
       } finally {
         isLoading.value = false;
       }
