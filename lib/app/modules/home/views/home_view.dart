@@ -45,35 +45,41 @@ class HomeView extends GetView<HomeController> {
                   CircleAvatar(
                     radius: 24,
                     backgroundColor: primaryColor,
-                    child: const Text(
-                      'JD',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
+                    child: Obx(() => Text(
+                          controller.name.isNotEmpty
+                              ? controller.name.value
+                                  .substring(0, 2)
+                                  .toUpperCase()
+                              : '',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        )),
                   ),
                   const SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         'Welcome back,',
                         style: TextStyle(
                           fontSize: 14,
                           color: textMediumColor,
                         ),
                       ),
-                      SizedBox(height: 2),
-                      Text(
-                        'John Doe',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: textDarkColor,
-                        ),
-                      ),
+                      const SizedBox(height: 2),
+                      Obx(() => Text(
+                            controller.name.isNotEmpty
+                                ? controller.name.value
+                                : '-',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: textDarkColor,
+                            ),
+                          )),
                     ],
                   ),
                   const Spacer(),
@@ -217,12 +223,15 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Rp. 1,700,000',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  // You can add balance here if needed, or leave as is
+                  Obx(
+                    () => Text(
+                      'Rp. ${controller.balance.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
@@ -254,13 +263,17 @@ class HomeView extends GetView<HomeController> {
           Row(
             children: [
               Expanded(
-                child: _buildBalanceInfoGradient(
-                    'Income', 'Rp. 4,500,000', Icons.arrow_downward),
+                child: Obx(() => _buildBalanceInfoGradient(
+                    'Income',
+                    'Rp. ${controller.totalIncome.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                    Icons.arrow_downward)),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: _buildBalanceInfoGradient(
-                    'Expense', 'Rp. 2,800,000', Icons.arrow_upward),
+                child: Obx(() => _buildBalanceInfoGradient(
+                    'Expense',
+                    'Rp. ${controller.totalExpense.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                    Icons.arrow_upward)),
               ),
             ],
           ),
@@ -417,23 +430,25 @@ class HomeView extends GetView<HomeController> {
         Row(
           children: [
             Expanded(
-              child: _buildRecordCard(
-                title: 'Income Records',
-                amount: 'Rp. 4,500,000',
-                icon: Icons.arrow_downward_rounded,
-                iconColor: const Color(0xFF4CAF50),
-                onTap: () => Get.toNamed(Routes.INCOME),
-              ),
+              child: Obx(() => _buildRecordCard(
+                    title: 'Income Records',
+                    amount:
+                        'Rp. ${controller.totalIncome.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                    icon: Icons.arrow_downward_rounded,
+                    iconColor: const Color(0xFF4CAF50),
+                    onTap: () => Get.toNamed(Routes.INCOME),
+                  )),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: _buildRecordCard(
-                title: 'Outcome Records',
-                amount: 'Rp. 2,800,000',
-                icon: Icons.arrow_upward_rounded,
-                iconColor: const Color(0xFFFF6B6B),
-                onTap: () => Get.toNamed(Routes.OUTCOME),
-              ),
+              child: Obx(() => _buildRecordCard(
+                    title: 'Outcome Records',
+                    amount:
+                        'Rp. ${controller.totalExpense.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                    icon: Icons.arrow_upward_rounded,
+                    iconColor: const Color(0xFFFF6B6B),
+                    onTap: () => Get.toNamed(Routes.OUTCOME),
+                  )),
             ),
           ],
         ),

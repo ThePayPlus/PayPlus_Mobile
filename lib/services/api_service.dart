@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'https://localhost:3000/api';
+  static const String baseUrl = 'https://ws1qtsds-3000.asse.devtunnels.ms/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -197,14 +197,15 @@ class ApiService {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        // Ensure phone is a string
+        // Ensure phone is a string and include total_income and total_expense
         final processedData = {
           'phone': data['phone'].toString(),
           'name': data['name'],
           'email': data['email'],
           'balance': data['balance'],
+          'total_income': data['total_income'],
+          'total_expense': data['total_expense'],
         };
-
         return {'success': true, 'data': processedData};
       } else {
         return {
