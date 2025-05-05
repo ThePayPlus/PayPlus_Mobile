@@ -235,7 +235,9 @@ class BillView extends GetView<BillController> {
 
   Widget _getIconForBill(Bill bill) {
     IconData iconData;
-    switch (bill.icon) {
+    String iconName = controller.getCategoryIcon(bill.category);
+    
+    switch (iconName) {
       case 'home':
         iconData = Icons.home;
         break;

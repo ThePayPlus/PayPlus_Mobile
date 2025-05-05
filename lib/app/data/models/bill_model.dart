@@ -1,5 +1,5 @@
 class Bill {
-  final String id;
+  final int id;
   final String name;
   final double amount;
   final DateTime dueDate;
@@ -27,5 +27,29 @@ class Bill {
   int get daysOverdue {
     if (!isOverdue) return 0;
     return DateTime.now().difference(dueDate).inDays;
+  }
+  
+  // Factory method to create a Bill from JSON
+  factory Bill.fromJson(Map<String, dynamic> json) {
+    return Bill(
+      id: json['id'],
+      name: json['name'] ?? '',
+      amount: (json['amount'] ?? 0).toDouble(),
+      dueDate: json['dueDate'] != null 
+          ? DateTime.parse(json['dueDate']) 
+          : DateTime.now(),
+      category: json['category'] ?? 'Other',
+    );
+  }
+  
+  // Convert Bill to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'amount': amount,
+      'dueDate': dueDate.toIso8601String().split('T')[0],
+      'category': category,
+    };
   }
 }
