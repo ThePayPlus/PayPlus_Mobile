@@ -25,12 +25,14 @@ import '../modules/add_friend_dialog/views/add_friend_dialog_view.dart';
 import '../modules/bills/bindings/bill_binding.dart';
 import '../modules/bills/views/bill_view.dart';
 import '../modules/bills/views/edit_bill_view.dart';
+import '../modules/expense/bindings/expense_binding.dart';
+import '../modules/expense/views/expense_view.dart';
+import '../modules/history/bindings/history_binding.dart';
+import '../modules/history/views/history_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/income/bindings/income_binding.dart';
 import '../modules/income/views/income_view.dart';
-import '../modules/expense/bindings/expense_binding.dart';
-import '../modules/expense/views/expense_view.dart';
 import '../modules/setting/bindings/setting_binding.dart';
 import '../modules/setting/views/setting_view.dart';
 
@@ -120,6 +122,11 @@ class AppPages {
       name: _Paths.TOPUPAMOUNT,
       page: () => const TopUpAmountPage(),
       binding: TopUpAmountBinding(),
+    ),
+    GetPage(
+      name: _Paths.HISTORY,
+      page: () => const HistoryView(),
+      binding: HistoryBinding(),
     ),
   ];
 }

@@ -13,24 +13,18 @@ class _TopUpPageState extends State<TopUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F4F8),
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(top: 30),
-          child: const Text(
-            "Let's Top Up!",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
+        title: const Text("Let's Top Up",
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 24),
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Get.offAllNamed('/home'),
-          ),
+        foregroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.offAllNamed('/home'),
         ),
       ),
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

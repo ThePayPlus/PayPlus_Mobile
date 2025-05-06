@@ -1,111 +1,77 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:payplus_mobile/app/data/models/expense_record_model.dart';
+import 'package:payplus_mobile/services/api_service.dart';
 
 class ExpenseController extends GetxController {
-  // Observable variables
-  final RxList<ExpenseRecord> expenseRecords = <ExpenseRecord>[].obs;
-  final RxDouble totalExpense = 0.0.obs;
-  final RxInt totalTransactions = 0.obs;
-  final RxDouble normalExpense = 0.0.obs;
-  final RxDouble giftExpense = 0.0.obs;
-
-  // Current filter
-  final RxString currentFilter = 'all'.obs;
-
-  // Filtered records
-  final RxList<ExpenseRecord> filteredRecords = <ExpenseRecord>[].obs;
+  var isLoading = false.obs;
+  var expenseRecords = <ExpenseRecord>[].obs;
+  var filteredRecords = <ExpenseRecord>[].obs;
+  var errorMessage = ''.obs;
+  
+  // Nilai default untuk menghindari null
+  var totalExpense = "0".obs;
+  var normalExpense= "0".obs;
+  var giftExpense= "0".obs;
+  var totalTransactions = 0.obs;
+  var currentFilter = "all".obs;
 
   @override
   void onInit() {
     super.onInit();
-    // Load mock data when controller initializes
-    loadMockData();
+    fetchExpenseRecords();
   }
 
-  // Method to load mock expense data
-  void loadMockData() {
-    // Create some sample expense records
-    final mockData = [
-      ExpenseRecord(
-          id: 1,
-          amount: 1500000,
-          date: '2023-05-15',
-          type: 'normal',
-          receiverPhone: '081234567890',
-          receiverName: 'John Doe'),
-      ExpenseRecord(
-          id: 2,
-          amount: 500000,
-          date: '2023-05-14',
-          type: 'gift',
-          receiverPhone: '085678901234',
-          receiverName: 'Jane Smith',
-          message: 'Happy birthday!'),
-      ExpenseRecord(
-          id: 3,
-          amount: 2000000,
-          date: '2023-05-12',
-          type: 'normal',
-          receiverPhone: '089012345678',
-          receiverName: 'Bank Transfer'),
-      ExpenseRecord(
-          id: 4,
-          amount: 750000,
-          date: '2023-05-10',
-          type: 'normal',
-          receiverPhone: '081234567890',
-          receiverName: 'John Doe'),
-      ExpenseRecord(
-          id: 5,
-          amount: 1000000,
-          date: '2023-05-08',
-          type: 'gift',
-          receiverPhone: '087654321098',
-          receiverName: 'Sarah Connor',
-          message: 'For your new project!'),
-      ExpenseRecord(
-          id: 6,
-          amount: 3000000,
-          date: '2023-05-05',
-          type: 'normal',
-          receiverPhone: '089012345678',
-          receiverName: 'Bank Transfer'),
-    ];
-
-    // Set the expense records
-    expenseRecords.value = mockData;
-
-    // Calculate totals from the data
-    calculateTotals();
-
-    // Apply initial filter (all)
-    applyFilter('all');
+  Future<void> fetchExpenseRecords() async {
+    try {
+      isLoading(true);
+      errorMessage('');
+      
+      final result = await ApiService.getExpenseRecords();
+      
+      if (result['success'] == true) {
+        final List<dynamic> records = result['records'] ?? [];
+        expenseRecords.value = records.map((record) => ExpenseRecord.fromJson(record)).toList();
+        
+        // Terapkan filter default
+        applyFilter(currentFilter.value);
+        
+        // Hitung total dan kategori income
+        calculateExpenseStats();
+      } else {
+        errorMessage(result['message'] ?? 'Terjadi kesalahan');
+      }
+    } catch (e) {
+      errorMessage('Terjadi kesalahan: ${e.toString()}');
+    } finally {
+      isLoading(false);
+    }
   }
-
   // Calculate total expense, transactions and type-specific expenses
-  void calculateTotals() {
+  void calculateExpenseStats() {
     double total = 0;
     double normal = 0;
     double gift = 0;
 
-    for (var record in expenseRecords) {
-      total += record.amount;
+    for (var record in expenseRecords) {      
+      int amount = int.tryParse(record.amount) ?? 0;
+
+      total += amount;
 
       switch (record.type) {
         case 'normal':
-          normal += record.amount;
+          normal += amount;
           break;
         case 'gift':
-          gift += record.amount;
+          gift += amount;
           break;
       }
     }
 
-    totalExpense.value = total;
+    totalExpense.value = total.toString();
     totalTransactions.value = expenseRecords.length;
-    normalExpense.value = normal;
-    giftExpense.value = gift;
+    normalExpense.value = normal.toString();
+    giftExpense.value = gift.toString();
   }
 
   // Apply filter to expense records
@@ -115,14 +81,19 @@ class ExpenseController extends GetxController {
     if (filter == 'all') {
       filteredRecords.value = expenseRecords;
     } else {
-      filteredRecords.value =
-          expenseRecords.where((record) => record.type == filter).toList();
+      filteredRecords.value = expenseRecords.where((record) => record.type == filter).toList();
     }
   }
 
-  // Format currency to rupiah format
-  String formatCurrency(double amount) {
-    return 'Rp. ${amount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}';
+  String getExpenseTypeLabel(String type) {
+    switch (type) {
+      case 'normal':
+        return 'Transfer';
+      case 'gift':
+        return 'Hadiah';
+      default:
+        return 'Lainnya';
+    }
   }
 
   // Get the color for the expense type
@@ -146,6 +117,15 @@ class ExpenseController extends GetxController {
         return Colors.purple.shade100;
       default:
         return Colors.grey.shade100;
+    }
+  }
+
+  String formatCurrency(String amount) {
+    try {
+      final value = int.parse(amount);
+      return 'Rp ${value.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+    } catch (e) {
+      return 'Rp 0';
     }
   }
 }

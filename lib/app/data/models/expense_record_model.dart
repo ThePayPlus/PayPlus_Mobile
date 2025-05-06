@@ -1,8 +1,8 @@
 class ExpenseRecord {
   final int id;
-  final double amount;
+  final String amount;
   final String date;
-  final String type; // normal, gift
+  final String type;
   final String receiverPhone;
   final String receiverName;
   final String? message;
@@ -19,13 +19,25 @@ class ExpenseRecord {
 
   factory ExpenseRecord.fromJson(Map<String, dynamic> json) {
     return ExpenseRecord(
-      id: json['id'],
-      amount: json['amount'].toDouble(),
-      date: json['date'],
-      type: json['type'],
-      receiverPhone: json['receiverPhone'],
-      receiverName: json['receiverName'],
+      id: json['id'] ?? 0,
+      amount: json['amount'] ?? "0",
+      date: json['date'] ?? DateTime.now().toIso8601String().split('T')[0],
+      type: json['type'] ?? 'normal',
+      receiverPhone: json['receiver_phone'] ?? "",
+      receiverName: json['receiver_name'] ?? 'Unknown',
       message: json['message'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'amount': amount,
+      'date': date,
+      'type': type,
+      'receiver_phone': receiverPhone,
+      'receiver_name': receiverName,
+      'message': message,
+    };
   }
 }

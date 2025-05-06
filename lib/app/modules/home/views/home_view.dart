@@ -262,49 +262,8 @@ class HomeView extends GetView<HomeController> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: Obx(() => _buildBalanceInfoGradient(
-                    'Income',
-                    'Rp. ${controller.totalIncome.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
-                    Icons.arrow_downward)),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Obx(() => _buildBalanceInfoGradient(
-                    'Expense',
-                    'Rp. ${controller.totalExpense.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
-                    Icons.arrow_upward)),
-              ),
-            ],
-          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBalanceInfoGradient(String label, String amount, IconData icon) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: Colors.white,
-          size: 16,
-        ),
-        const SizedBox(width: 4),
-        Flexible(
-          child: Text(
-            '$label: $amount',
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
     );
   }
 
@@ -445,7 +404,7 @@ class HomeView extends GetView<HomeController> {
             const SizedBox(width: 16),
             Expanded(
               child: Obx(() => _buildRecordCard(
-                    title: 'Outcome Records',
+                    title: 'Expense Records',
                     amount:
                         'Rp. ${controller.totalExpense.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
                     icon: Icons.arrow_upward_rounded,
@@ -574,7 +533,7 @@ class HomeView extends GetView<HomeController> {
                 icon: _getIconForType(tx['type']),
                 title: tx['type'] ?? '-',
                 date: tx['date'] ?? '-',
-                amount: 'Rp. ${tx['amount'] ?? 0}',
+                amount: 'Rp. ${(tx['amount'] ?? 0).toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
                 isExpense: tx['transactionType'] == 'expense' ? true : false,
               );
             },
