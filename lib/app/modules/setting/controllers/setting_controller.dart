@@ -17,7 +17,6 @@ class SettingController extends GetxController {
   final RxBool isCurrentPasswordVisible = false.obs;
   final RxBool isNewPasswordVisible = false.obs;
   final RxBool isConfirmPasswordVisible = false.obs;
-  final RxString userRole = 'gold'.obs;
   final RxString errorMessage = ''.obs;
   final RxBool isError = false.obs;
   final RxString phoneNumber = ''.obs;
