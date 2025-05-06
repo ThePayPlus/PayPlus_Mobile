@@ -8,7 +8,7 @@ class IncomeController extends GetxController {
   var incomeRecords = <Income>[].obs;
   var filteredRecords = <Income>[].obs;
   var errorMessage = ''.obs;
-  
+
   // Nilai default untuk menghindari null
   var totalIncome = "0".obs;
   var normalIncome = "0".obs;
@@ -27,16 +27,17 @@ class IncomeController extends GetxController {
     try {
       isLoading(true);
       errorMessage('');
-      
+
       final result = await ApiService.getIncomeRecords();
-      
+
       if (result['success'] == true) {
         final List<dynamic> records = result['records'] ?? [];
-        incomeRecords.value = records.map((record) => Income.fromJson(record)).toList();
-        
+        incomeRecords.value =
+            records.map((record) => Income.fromJson(record)).toList();
+
         // Terapkan filter default
         applyFilter(currentFilter.value);
-        
+
         // Hitung total dan kategori income
         calculateIncomeStats();
       } else {
@@ -48,19 +49,19 @@ class IncomeController extends GetxController {
       isLoading(false);
     }
   }
-  
+
   void calculateIncomeStats() {
     int total = 0;
     int normal = 0;
     int gift = 0;
     int topup = 0;
-    
+
     for (var record in incomeRecords) {
       // Konversi amount ke int dengan aman
       int amount = int.tryParse(record.amount) ?? 0;
-      
+
       total += amount;
-      
+
       switch (record.type) {
         case 'normal':
           normal += amount;
@@ -73,21 +74,22 @@ class IncomeController extends GetxController {
           break;
       }
     }
-    
+
     totalIncome.value = total.toString();
     normalIncome.value = normal.toString();
     giftIncome.value = gift.toString();
     topupIncome.value = topup.toString();
     totalTransactions.value = incomeRecords.length;
   }
-  
+
   void applyFilter(String filter) {
     currentFilter.value = filter;
-    
+
     if (filter == 'all') {
       filteredRecords.value = incomeRecords;
     } else {
-      filteredRecords.value = incomeRecords.where((record) => record.type == filter).toList();
+      filteredRecords.value =
+          incomeRecords.where((record) => record.type == filter).toList();
     }
   }
 
@@ -103,7 +105,7 @@ class IncomeController extends GetxController {
         return 'Lainnya';
     }
   }
-  
+
   Color getIncomeTypeColor(String type) {
     switch (type) {
       case 'normal':
@@ -116,7 +118,7 @@ class IncomeController extends GetxController {
         return Colors.grey;
     }
   }
-  
+
   Color getIncomeTypeBackgroundColor(String type) {
     switch (type) {
       case 'normal':
