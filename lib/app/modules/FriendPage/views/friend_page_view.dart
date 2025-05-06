@@ -223,15 +223,17 @@ class FriendPageView extends StatelessWidget {
     );
   }
 
-  // Helper function to get initials from name
+  // Tambahkan fungsi _getInitials
   String _getInitials(String name) {
     if (name.isEmpty) return '';
 
-    List<String> nameParts = name.split(' ');
+    final nameParts = name.split(' ');
     if (nameParts.length > 1) {
-      return nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase();
+      return nameParts[0][0] + nameParts[1][0];
+    } else if (name.length > 1) {
+      return name.substring(0, 2);
     } else {
-      return name.substring(0, 1).toUpperCase();
+      return name;
     }
   }
 }

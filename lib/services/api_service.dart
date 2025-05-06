@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:math' show min; // Tambahkan import ini
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'http://10.0.2.2:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -124,12 +125,34 @@ class ApiService {
         return {'success': false, 'message': 'Anda belum login'};
       }
 
+      final headers = await _getAuthHeaders();
+
       final response = await http.get(
         Uri.parse('$baseUrl/friends'),
-        headers: _headers,
+        headers: headers,
       );
 
-      final data = jsonDecode(response.body);
+      // Periksa jika respons bukan JSON
+      if (response.headers['content-type'] != null &&
+          !response.headers['content-type']!.contains('application/json')) {
+        return {
+          'success': false,
+          'message':
+              'Server mengembalikan format yang tidak valid: ${response.headers['content-type']}'
+        };
+      }
+
+      // Coba parse JSON dengan penanganan error yang lebih baik
+      Map<String, dynamic> data;
+      try {
+        data = jsonDecode(response.body);
+      } catch (e) {
+        return {
+          'success': false,
+          'message':
+              'Format respons tidak valid: ${e.toString()}\nResponse: ${response.body.substring(0, min(100, response.body.length))}...'
+        };
+      }
 
       if (response.statusCode == 200) {
         return {'success': true, 'data': data};
@@ -145,26 +168,34 @@ class ApiService {
   }
 
   // Add friend by phone number
-  static Future<Map<String, dynamic>> addFriend(String phoneNumber) async {
+  // ... existing code ...
+
+  // Add friend method
+  static Future<Map<String, dynamic>> addFriend(String friendPhone) async {
     try {
-      // Pastikan token sudah ada
+      // Check if token exists
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
-        return {'success': false, 'message': 'Anda belum login'};
+        return {'success': false, 'message': 'Authentication required'};
       }
 
+      final headers = await _getAuthHeaders();
+
       final response = await http.post(
-        Uri.parse('$baseUrl/friends/add'),
-        headers: _headers,
+        Uri.parse('$baseUrl/friends'),
+        headers: headers,
         body: jsonEncode({
-          'phone': phoneNumber,
+          'friendPhone': friendPhone,
         }),
       );
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return {'success': true, 'data': data};
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return {
+          'success': true,
+          'message': data['message'] ?? 'Teman berhasil ditambahkan'
+        };
       } else {
         return {
           'success': false,
@@ -350,7 +381,7 @@ class ApiService {
   }
 
   // Bills methods
-  
+
   // Get all bills for the current user
   static Future<Map<String, dynamic>> getBills() async {
     try {
@@ -417,8 +448,8 @@ class ApiService {
   }
 
   // Update an existing bill
-  static Future<Map<String, dynamic>> updateBill(
-      int id, String name, double amount, String dueDate, String category) async {
+  static Future<Map<String, dynamic>> updateBill(int id, String name,
+      double amount, String dueDate, String category) async {
     try {
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
