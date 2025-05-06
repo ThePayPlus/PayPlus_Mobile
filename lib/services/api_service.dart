@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'https://localhost:3000/api';
+  static const String baseUrl = 'http://localhost:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -168,9 +168,6 @@ class ApiService {
   }
 
   // Add friend by phone number
-  // ... existing code ...
-
-  // Add friend method
   static Future<Map<String, dynamic>> addFriend(String friendPhone) async {
     try {
       // Check if token exists
@@ -510,4 +507,75 @@ class ApiService {
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }
+
+  static Future<Map<String, dynamic>> searchUser(String phone) async {
+    try {
+      // Check if token exists
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/search-user/$phone'),
+        headers: headers,
+      );
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data['data']};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Pengguna tidak ditemukan'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+  static Future<Map<String, dynamic>> transferMoney(
+      String receiverPhone, int amount, String type, String? message) async {
+    try {
+      // Check if token exists
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/transfer'),
+        headers: headers,
+        body: jsonEncode({
+          'receiverPhone': receiverPhone,
+          'amount': amount,
+          'type': type,
+          'message': message,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return {
+          'success': true,
+          'message': data['message'] ?? 'Transfer berhasil',
+          'data': data
+        };
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal melakukan transfer'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
 }
+
+  // Search user by phone number
+ 
