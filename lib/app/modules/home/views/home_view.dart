@@ -42,21 +42,24 @@ class HomeView extends GetView<HomeController> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: primaryColor,
-                    child: Obx(() => Text(
-                          controller.name.isNotEmpty
-                              ? controller.name.value
-                                  .substring(0, 2)
-                                  .toUpperCase()
-                              : '',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        )),
+                  GestureDetector(
+                    onTap: () => Get.offAllNamed(Routes.SETTING),
+                    child: CircleAvatar(
+                      radius: 24,
+                      backgroundColor: primaryColor,
+                      child: Obx(() => Text(
+                            controller.name.isNotEmpty
+                                ? controller.name.value
+                                    .substring(0, 2)
+                                    .toUpperCase()
+                                : '',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          )),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Column(

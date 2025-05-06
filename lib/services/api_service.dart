@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'https://localhost:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -350,7 +350,7 @@ class ApiService {
   }
 
   // Bills methods
-  
+
   // Get all bills for the current user
   static Future<Map<String, dynamic>> getBills() async {
     try {
@@ -417,8 +417,8 @@ class ApiService {
   }
 
   // Update an existing bill
-  static Future<Map<String, dynamic>> updateBill(
-      int id, String name, double amount, String dueDate, String category) async {
+  static Future<Map<String, dynamic>> updateBill(int id, String name,
+      double amount, String dueDate, String category) async {
     try {
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
