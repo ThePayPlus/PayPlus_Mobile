@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:payplus_mobile/app/data/models/savings_model.dart';
 import '../controllers/savings_controller.dart';
 
 // Hapus definisi kelas Saving di sini karena sudah diimpor dari controller
@@ -252,7 +253,7 @@ class SavingsPage extends GetView<SavingsController> {
     );
   }
 
-  Widget buildSavingCard(Saving saving, int index, VoidCallback onDelete) {
+  Widget buildSavingCard(Savings saving, int index, VoidCallback onDelete) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,

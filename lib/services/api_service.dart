@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'https://localhost:3000/api';
+  static const String baseUrl = 'http://localhost:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -168,9 +168,6 @@ class ApiService {
   }
 
   // Add friend by phone number
-  // ... existing code ...
-
-  // Add friend method
   static Future<Map<String, dynamic>> addFriend(String friendPhone) async {
     try {
       // Check if token exists
@@ -504,6 +501,195 @@ class ApiService {
         return {
           'success': false,
           'message': data['message'] ?? 'Failed to delete bill'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Savings methods
+
+  // Get all savings for the current user
+  static Future<Map<String, dynamic>> getSavings() async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/savings'),
+        headers: headers,
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal memuat data tabungan'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Create a new saving
+  static Future<Map<String, dynamic>> createSaving(
+      String title, String description, int target, int collected) async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+      final response = await http.post(
+        Uri.parse('$baseUrl/savings'),
+        headers: headers,
+        body: jsonEncode({
+          'nama': title,
+          'deskripsi': description,
+          'target': target,
+          'terkumpul': collected,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal membuat tabungan baru'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Update an existing saving
+  static Future<Map<String, dynamic>> updateSaving(
+      int id, String title, String description, int target, int collected) async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+      final response = await http.put(
+        Uri.parse('$baseUrl/savings/$id'),
+        headers: headers,
+        body: jsonEncode({
+          'nama': title,
+          'deskripsi': description,
+          'target': target,
+          'terkumpul': collected,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal memperbarui tabungan'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Add amount to saving
+  static Future<Map<String, dynamic>> addToSaving(int id, int amount) async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+      
+      // Tambahkan logging untuk debugging
+      print('Mengirim request ke: $baseUrl/savings/$id/add');
+      print('Headers: $headers');
+      print('Body: ${jsonEncode({'amount': amount})}');
+      
+      final response = await http.patch(
+        Uri.parse('$baseUrl/savings/$id/add'),
+        headers: headers,
+        body: jsonEncode({
+          'amount': amount,
+        }),
+      );
+      
+      // Tambahkan logging untuk response
+      print('Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      // Coba parse response body dengan penanganan error
+      Map<String, dynamic> data;
+      try {
+        data = jsonDecode(response.body);
+      } catch (e) {
+        return {
+          'success': false,
+          'message': 'Format respons tidak valid: ${e.toString()}\nResponse: ${response.body.substring(0, min(100, response.body.length))}...'
+        };
+      }
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal menambahkan dana ke tabungan'
+        };
+      }
+    } catch (e) {
+      // Tambahkan detail error yang lebih spesifik
+      print('Error pada addToSaving: ${e.toString()}');
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Delete a saving
+  static Future<Map<String, dynamic>> deleteSaving(int id) async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+      final response = await http.delete(
+        Uri.parse('$baseUrl/savings/$id'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 204 || response.statusCode == 200) {
+        return {'success': true};
+      } else {
+        Map<String, dynamic> data = {};
+        try {
+          data = jsonDecode(response.body);
+        } catch (e) {
+          // Jika response body tidak bisa di-decode sebagai JSON
+        }
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal menghapus tabungan'
         };
       }
     } catch (e) {
