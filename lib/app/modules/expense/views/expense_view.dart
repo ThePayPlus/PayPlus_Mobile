@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:payplus_mobile/app/data/models/expense_record_model.dart';
 import '../controllers/expense_controller.dart';
 
 class ExpenseView extends GetView<ExpenseController> {
@@ -11,7 +12,8 @@ class ExpenseView extends GetView<ExpenseController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F8),
       appBar: AppBar(
-        title: const Text('Expense Records', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Expense Records',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -20,41 +22,68 @@ class ExpenseView extends GetView<ExpenseController> {
           onPressed: () => Get.offAllNamed('/home'),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Expense Overview',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
-              ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        
+        if (controller.errorMessage.isNotEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  controller.errorMessage.value,
+                  style: const TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => controller.fetchExpenseRecords(),
+                  child: const Text('Coba Lagi'),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
+          );
+        }
+        
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Expense Overview',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF333333),
+                ),
+              ),
+              const SizedBox(height: 16),
 
-            // Expense Statistics Cards
-            _buildExpenseStatsGrid(),
-            const SizedBox(height: 24),
+              // Expense Statistics Cards
+              _buildExpenseStatsGrid(),
+              const SizedBox(height: 24),
 
-            // Expense Distribution Chart
-            _buildExpenseDistributionChart(),
-            const SizedBox(height: 24),
+              // Expense Distribution Chart
+              _buildExpenseDistributionChart(),
+              const SizedBox(height: 24),
 
-            // Recent Transactions
-            _buildRecentTransactionsHeader(),
-            const SizedBox(height: 16),
+              // Recent Transactions
+              _buildRecentTransactionsHeader(),
+              const SizedBox(height: 16),
 
-            // Expense Records Cards
-            _buildExpenseRecordsList(),
-          ],
-        ),
-      ),
+              // Expense Records Cards
+              _buildExpenseRecordsList(),
+            ],
+          ),
+        );
+      }),
     );
   }
 
+  // Grid of Expense stats cards
   Widget _buildExpenseStatsGrid() {
     return GridView.count(
       crossAxisCount: 2,
@@ -64,19 +93,18 @@ class ExpenseView extends GetView<ExpenseController> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       children: [
+        // Total Expense Card
         _buildStatCard(
           title: 'Total Expense',
           icon: Icons.account_balance_wallet,
           iconColor: Colors.green,
           iconBgColor: Colors.green.shade100,
-          valueWidget: GetX<ExpenseController>(
-            builder: (controller) => Text(
-              controller.formatCurrency(controller.totalExpense.value),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
-              ),
+          valueWidget: Text(
+            controller.formatCurrency(controller.totalExpense.value),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
             ),
           ),
         ),
@@ -87,14 +115,12 @@ class ExpenseView extends GetView<ExpenseController> {
           icon: Icons.people,
           iconColor: Colors.orange,
           iconBgColor: Colors.orange.shade100,
-          valueWidget: GetX<ExpenseController>(
-            builder: (controller) => Text(
-              controller.totalTransactions.toString(),
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
-              ),
+          valueWidget: Text(
+            controller.totalTransactions.toString(),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
             ),
           ),
         ),
@@ -105,14 +131,12 @@ class ExpenseView extends GetView<ExpenseController> {
           icon: Icons.pie_chart,
           iconColor: Colors.blue,
           iconBgColor: Colors.blue.shade100,
-          valueWidget: GetX<ExpenseController>(
-            builder: (controller) => Text(
-              controller.formatCurrency(controller.normalExpense.value),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
-              ),
+          valueWidget: Text(
+            controller.formatCurrency(controller.normalExpense.value),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
             ),
           ),
         ),
@@ -123,14 +147,12 @@ class ExpenseView extends GetView<ExpenseController> {
           icon: Icons.card_giftcard,
           iconColor: Colors.purple,
           iconBgColor: Colors.purple.shade100,
-          valueWidget: GetX<ExpenseController>(
-            builder: (controller) => Text(
-              controller.formatCurrency(controller.giftExpense.value),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
-              ),
+          valueWidget: Text(
+            controller.formatCurrency(controller.giftExpense.value),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
             ),
           ),
         ),
@@ -199,6 +221,16 @@ class ExpenseView extends GetView<ExpenseController> {
 
   // Expense distribution chart
   Widget _buildExpenseDistributionChart() {
+    // Konversi nilai string ke double untuk chart
+    double normalValue = double.tryParse(controller.normalExpense.value) ?? 0;
+    double giftValue = double.tryParse(controller.giftExpense.value) ?? 0;
+    
+    // Jika semua nilai 0, tambahkan nilai kecil untuk menghindari chart kosong
+    if (normalValue == 0 && giftValue == 0) {
+      normalValue = 1;
+      giftValue = 1;
+    }
+    
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -226,36 +258,34 @@ class ExpenseView extends GetView<ExpenseController> {
           const SizedBox(height: 20),
           SizedBox(
             height: 200,
-            child: GetX<ExpenseController>(
-              builder: (controller) => PieChart(
-                PieChartData(
-                  sectionsSpace: 2,
-                  centerSpaceRadius: 40,
-                  sections: [
-                    PieChartSectionData(
-                      color: Colors.blue,
-                      value: controller.normalExpense.value,
-                      title: 'Normal',
-                      radius: 60,
-                      titleStyle: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+            child: PieChart(
+              PieChartData(
+                sectionsSpace: 2,
+                centerSpaceRadius: 40,
+                sections: [
+                  PieChartSectionData(
+                    color: Colors.blue,
+                    value: normalValue,
+                    title: 'Normal',
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    PieChartSectionData(
-                      color: Colors.purple,
-                      value: controller.giftExpense.value,
-                      title: 'Gift',
-                      radius: 60,
-                      titleStyle: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                  ),
+                  PieChartSectionData(
+                    color: Colors.purple,
+                    value: giftValue,
+                    title: 'Gift',
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -330,65 +360,61 @@ class ExpenseView extends GetView<ExpenseController> {
 
   // Filter button
   Widget _buildFilterButton(String label, String filterValue) {
-    return GetX<ExpenseController>(
-      builder: (controller) => ElevatedButton(
-        onPressed: () => controller.applyFilter(filterValue),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: controller.currentFilter.value == filterValue
-              ? const Color(0xFF8E44AD)
-              : Colors.grey.shade200,
-          foregroundColor: controller.currentFilter.value == filterValue
-              ? Colors.white
-              : Colors.grey.shade700,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          elevation: controller.currentFilter.value == filterValue ? 2 : 0,
+    return ElevatedButton(
+      onPressed: () => controller.applyFilter(filterValue),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: controller.currentFilter.value == filterValue
+            ? const Color(0xFF8E44AD)
+            : Colors.grey.shade200,
+        foregroundColor: controller.currentFilter.value == filterValue
+            ? Colors.white
+            : Colors.grey.shade700,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(label),
+        elevation: controller.currentFilter.value == filterValue ? 2 : 0,
       ),
+      child: Text(label),
     );
   }
 
+  // List of Expense record cards
   Widget _buildExpenseRecordsList() {
-    return GetX<ExpenseController>(
-      builder: (controller) {
-        if (controller.filteredRecords.isEmpty) {
-          return Container(
-            padding: const EdgeInsets.all(32),
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.search_off, size: 48, color: Colors.grey.shade400),
-                const SizedBox(height: 16),
-                Text(
-                  'No expense records found',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ],
+    if (controller.filteredRecords.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(32),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search_off, size: 48, color: Colors.grey.shade400),
+            const SizedBox(height: 16),
+            Text(
+              'No expense records found',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade600,
+              ),
             ),
-          );
-        }
+          ],
+        ),
+      );
+    }
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: controller.filteredRecords.length,
-          itemBuilder: (context, index) {
-            final record = controller.filteredRecords[index];
-            return _buildExpenseRecordCard(record);
-          },
-        );
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: controller.filteredRecords.length,
+      itemBuilder: (context, index) {
+        final record = controller.filteredRecords[index];
+        return _buildExpenseRecordCard(record);
       },
     );
   }
 
-  Widget _buildExpenseRecordCard(dynamic record) {
+  // Individual Expense record card
+  Widget _buildExpenseRecordCard(ExpenseRecord record) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -432,7 +458,7 @@ class ExpenseView extends GetView<ExpenseController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Receiver:',
+                  'Sender:',
                   style: TextStyle(
                     fontSize: 14,
                     color: Color(0xFF666666),
@@ -461,7 +487,7 @@ class ExpenseView extends GetView<ExpenseController> {
                 ),
                 Container(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: controller.getExpenseTypeBackgroundColor(record.type),
                     borderRadius: BorderRadius.circular(4),
@@ -478,7 +504,7 @@ class ExpenseView extends GetView<ExpenseController> {
                 ),
               ],
             ),
-            if (record.type == 'gift' && record.message != null) ...[
+            if (record.type == 'gift' && record.message != null && record.message!.isNotEmpty) ...[
               const SizedBox(height: 16),
               const Text(
                 'Message:',

@@ -432,6 +432,46 @@ class ApiService {
     }
   }
 
+  static Future<Map<String, dynamic>> getExpenseRecords() async {
+    try {
+      // Check if token exists
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/expense-record'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return {
+          'success': true,
+          'message': data['message'] ?? 'Data pengeluaran berhasil diambil',
+          'records': data['records'] ?? []
+        };
+      } else {
+        Map<String, dynamic> data = {};
+        try {
+          data = jsonDecode(response.body);
+        } catch (e) {
+          // Jika response body tidak bisa di-decode sebagai JSON
+        }
+
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal mengambil data pengeluaran'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
   static Future<List<Map<String, dynamic>>> getRecentTransactions() async {
     final headers = await _getAuthHeaders();
     final response = await http.get(

@@ -10,8 +10,10 @@ class BillView extends GetView<BillController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F4F8),
       appBar: AppBar(
-        title: const Text('Upcoming Bills', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text("Upcoming Bills",
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,

@@ -20,6 +20,7 @@ abstract class Routes {
   static const TOPUP = _Paths.TOPUP;
   static const TOPUPAMOUNT = _Paths.TOPUPAMOUNT;
   static const ADD_FRIEND_DIALOG = _Paths.ADD_FRIEND_DIALOG;
+  static const HISTORY = _Paths.HISTORY;
 }
 
 abstract class _Paths {
@@ -42,4 +43,5 @@ abstract class _Paths {
   static const TOPUP = '/topup';
   static const TOPUPAMOUNT = '/topupamount';
   static const ADD_FRIEND_DIALOG = '/add-friend-dialog';
+  static const HISTORY = '/history';
 }

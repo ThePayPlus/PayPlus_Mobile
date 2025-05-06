@@ -9,20 +9,16 @@ class TransferView extends GetView<TransferPageController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF4F4F8),
       appBar: AppBar(
+        title: const Text("Transfer Money",
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.offAllNamed('/home'),
-        ),
-        title: const Text(
-          'Transfer Money',
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-          ),
         ),
       ),
       body: SingleChildScrollView(
