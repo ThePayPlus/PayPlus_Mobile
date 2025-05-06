@@ -1,4 +1,4 @@
-class OutcomeRecord {
+class ExpenseRecord {
   final int id;
   final double amount;
   final String date;
@@ -7,7 +7,7 @@ class OutcomeRecord {
   final String receiverName;
   final String? message;
 
-  OutcomeRecord({
+  ExpenseRecord({
     required this.id,
     required this.amount,
     required this.date,
@@ -17,8 +17,8 @@ class OutcomeRecord {
     this.message,
   });
 
-  factory OutcomeRecord.fromJson(Map<String, dynamic> json) {
-    return OutcomeRecord(
+  factory ExpenseRecord.fromJson(Map<String, dynamic> json) {
+    return ExpenseRecord(
       id: json['id'],
       amount: json['amount'].toDouble(),
       date: json['date'],

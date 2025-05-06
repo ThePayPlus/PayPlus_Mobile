@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../controllers/outcome_controller.dart';
+import '../controllers/expense_controller.dart';
 
-class OutcomeView extends GetView<OutcomeController> {
-  const OutcomeView({super.key});
+class ExpenseView extends GetView<ExpenseController> {
+  const ExpenseView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F8),
       appBar: AppBar(
-        title: const Text('Outcome Records', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Expense Records', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -26,7 +26,7 @@ class OutcomeView extends GetView<OutcomeController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Outcome Overview',
+              'Expense Overview',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -35,28 +35,27 @@ class OutcomeView extends GetView<OutcomeController> {
             ),
             const SizedBox(height: 16),
 
-            // Outcome Statistics Cards
-            _buildOutcomeStatsGrid(),
+            // Expense Statistics Cards
+            _buildExpenseStatsGrid(),
             const SizedBox(height: 24),
 
-            // Outcome Distribution Chart
-            _buildOutcomeDistributionChart(),
+            // Expense Distribution Chart
+            _buildExpenseDistributionChart(),
             const SizedBox(height: 24),
 
             // Recent Transactions
             _buildRecentTransactionsHeader(),
             const SizedBox(height: 16),
 
-            // Outcome Records Cards
-            _buildOutcomeRecordsList(),
+            // Expense Records Cards
+            _buildExpenseRecordsList(),
           ],
         ),
       ),
     );
   }
 
-  // Grid of outcome stats cards
-  Widget _buildOutcomeStatsGrid() {
+  Widget _buildExpenseStatsGrid() {
     return GridView.count(
       crossAxisCount: 2,
       mainAxisSpacing: 16,
@@ -66,13 +65,13 @@ class OutcomeView extends GetView<OutcomeController> {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         _buildStatCard(
-          title: 'Total Outcome',
+          title: 'Total Expense',
           icon: Icons.account_balance_wallet,
           iconColor: Colors.green,
           iconBgColor: Colors.green.shade100,
-          valueWidget: GetX<OutcomeController>(
+          valueWidget: GetX<ExpenseController>(
             builder: (controller) => Text(
-              controller.formatCurrency(controller.totalOutcome.value),
+              controller.formatCurrency(controller.totalExpense.value),
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -88,7 +87,7 @@ class OutcomeView extends GetView<OutcomeController> {
           icon: Icons.people,
           iconColor: Colors.orange,
           iconBgColor: Colors.orange.shade100,
-          valueWidget: GetX<OutcomeController>(
+          valueWidget: GetX<ExpenseController>(
             builder: (controller) => Text(
               controller.totalTransactions.toString(),
               style: const TextStyle(
@@ -100,15 +99,15 @@ class OutcomeView extends GetView<OutcomeController> {
           ),
         ),
 
-        // Normal Outcome Card
+        // Normal Expense Card
         _buildStatCard(
-          title: 'Normal Outcome',
+          title: 'Normal Expense',
           icon: Icons.pie_chart,
           iconColor: Colors.blue,
           iconBgColor: Colors.blue.shade100,
-          valueWidget: GetX<OutcomeController>(
+          valueWidget: GetX<ExpenseController>(
             builder: (controller) => Text(
-              controller.formatCurrency(controller.normalOutcome.value),
+              controller.formatCurrency(controller.normalExpense.value),
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -118,15 +117,15 @@ class OutcomeView extends GetView<OutcomeController> {
           ),
         ),
 
-        // Gift Outcome Card
+        // Gift Expense Card
         _buildStatCard(
-          title: 'Gift Outcome',
+          title: 'Gift Expense',
           icon: Icons.card_giftcard,
           iconColor: Colors.purple,
           iconBgColor: Colors.purple.shade100,
-          valueWidget: GetX<OutcomeController>(
+          valueWidget: GetX<ExpenseController>(
             builder: (controller) => Text(
-              controller.formatCurrency(controller.giftOutcome.value),
+              controller.formatCurrency(controller.giftExpense.value),
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -198,8 +197,8 @@ class OutcomeView extends GetView<OutcomeController> {
     );
   }
 
-  // Outcome distribution chart
-  Widget _buildOutcomeDistributionChart() {
+  // Expense distribution chart
+  Widget _buildExpenseDistributionChart() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -217,7 +216,7 @@ class OutcomeView extends GetView<OutcomeController> {
       child: Column(
         children: [
           const Text(
-            'Outcome Distribution',
+            'Expense Distribution',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -227,7 +226,7 @@ class OutcomeView extends GetView<OutcomeController> {
           const SizedBox(height: 20),
           SizedBox(
             height: 200,
-            child: GetX<OutcomeController>(
+            child: GetX<ExpenseController>(
               builder: (controller) => PieChart(
                 PieChartData(
                   sectionsSpace: 2,
@@ -235,7 +234,7 @@ class OutcomeView extends GetView<OutcomeController> {
                   sections: [
                     PieChartSectionData(
                       color: Colors.blue,
-                      value: controller.normalOutcome.value,
+                      value: controller.normalExpense.value,
                       title: 'Normal',
                       radius: 60,
                       titleStyle: const TextStyle(
@@ -246,7 +245,7 @@ class OutcomeView extends GetView<OutcomeController> {
                     ),
                     PieChartSectionData(
                       color: Colors.purple,
-                      value: controller.giftOutcome.value,
+                      value: controller.giftExpense.value,
                       title: 'Gift',
                       radius: 60,
                       titleStyle: const TextStyle(
@@ -331,7 +330,7 @@ class OutcomeView extends GetView<OutcomeController> {
 
   // Filter button
   Widget _buildFilterButton(String label, String filterValue) {
-    return GetX<OutcomeController>(
+    return GetX<ExpenseController>(
       builder: (controller) => ElevatedButton(
         onPressed: () => controller.applyFilter(filterValue),
         style: ElevatedButton.styleFrom(
@@ -352,9 +351,8 @@ class OutcomeView extends GetView<OutcomeController> {
     );
   }
 
-  // List of outcome record cards
-  Widget _buildOutcomeRecordsList() {
-    return GetX<OutcomeController>(
+  Widget _buildExpenseRecordsList() {
+    return GetX<ExpenseController>(
       builder: (controller) {
         if (controller.filteredRecords.isEmpty) {
           return Container(
@@ -366,7 +364,7 @@ class OutcomeView extends GetView<OutcomeController> {
                 Icon(Icons.search_off, size: 48, color: Colors.grey.shade400),
                 const SizedBox(height: 16),
                 Text(
-                  'No outcome records found',
+                  'No expense records found',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey.shade600,
@@ -383,15 +381,14 @@ class OutcomeView extends GetView<OutcomeController> {
           itemCount: controller.filteredRecords.length,
           itemBuilder: (context, index) {
             final record = controller.filteredRecords[index];
-            return _buildOutcomeRecordCard(record);
+            return _buildExpenseRecordCard(record);
           },
         );
       },
     );
   }
 
-  // Individual outcome record card
-  Widget _buildOutcomeRecordCard(dynamic record) {
+  Widget _buildExpenseRecordCard(dynamic record) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -466,7 +463,7 @@ class OutcomeView extends GetView<OutcomeController> {
                   padding:
                   const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: controller.getOutcomeTypeBackgroundColor(record.type),
+                    color: controller.getExpenseTypeBackgroundColor(record.type),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -475,7 +472,7 @@ class OutcomeView extends GetView<OutcomeController> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: controller.getOutcomeTypeColor(record.type),
+                      color: controller.getExpenseTypeColor(record.type),
                     ),
                   ),
                 ),

@@ -450,7 +450,7 @@ class HomeView extends GetView<HomeController> {
                         'Rp. ${controller.totalExpense.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
                     icon: Icons.arrow_upward_rounded,
                     iconColor: const Color(0xFFFF6B6B),
-                    onTap: () => Get.toNamed(Routes.OUTCOME),
+                    onTap: () => Get.toNamed(Routes.EXPENSE),
                   )),
             ),
           ],
