@@ -1,23 +1,41 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:payplus_mobile/services/api_service.dart';
 
 class AddFriendDialogController extends GetxController {
-  //TODO: Implement AddFriendDialogController
-
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  final phoneController = TextEditingController();
+  final isLoading = false.obs;
+  final errorMessage = ''.obs;
 
   @override
   void onClose() {
+    phoneController.dispose();
     super.onClose();
   }
 
-  void increment() => count.value++;
+  Future<bool> addFriend() async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      if (phoneController.text.isEmpty) {
+        errorMessage.value = 'Nomor telepon tidak boleh kosong';
+        return false;
+      }
+
+      final result = await ApiService.addFriend(phoneController.text);
+
+      if (result['success']) {
+        return true;
+      } else {
+        errorMessage.value = result['message'] ?? 'Gagal menambahkan teman';
+        return false;
+      }
+    } catch (e) {
+      errorMessage.value = 'Terjadi kesalahan: ${e.toString()}';
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

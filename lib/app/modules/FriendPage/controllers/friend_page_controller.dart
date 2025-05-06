@@ -30,7 +30,8 @@ class FriendPageController extends GetxController {
       if (result['success']) {
         // Perbaikan: Penanganan data yang lebih baik
         if (result['data'] != null && result['data']['friends'] != null) {
-          friends.value = List<Map<String, dynamic>>.from(result['data']['friends']);
+          friends.value =
+              List<Map<String, dynamic>>.from(result['data']['friends']);
         } else if (result['data'] != null) {
           // Jika struktur data berbeda (mungkin langsung array)
           try {
@@ -45,7 +46,12 @@ class FriendPageController extends GetxController {
         errorMessage.value = result['message'] ?? 'Gagal memuat daftar teman';
       }
     } catch (e) {
-      errorMessage.value = 'Terjadi kesalahan: ${e.toString()}';
+      // Perbaikan: Tambahkan penanganan khusus untuk error format
+      if (e.toString().contains('text/html') || e.toString().contains('format yang tidak valid')) {
+        errorMessage.value = 'Server sedang bermasalah. Silakan coba lagi nanti.';
+      } else {
+        errorMessage.value = 'Terjadi kesalahan: ${e.toString()}';
+      }
     } finally {
       isLoading.value = false;
     }
@@ -53,7 +59,22 @@ class FriendPageController extends GetxController {
 
   // Fungsi untuk mencari teman berdasarkan nama
   void searchFriends(String query) {
-    // Implementasi pencarian akan ditambahkan nanti
+    if (query.isEmpty) {
+      fetchFriends(); // Refresh daftar teman jika query kosong
+      return;
+    }
+
+    // Filter daftar teman berdasarkan nama atau nomor telepon
+    final filteredFriends = friends.where((friend) {
+      final name = friend['name']?.toString().toLowerCase() ?? '';
+      final phone = friend['phone']?.toString() ?? '';
+      final searchLower = query.toLowerCase();
+
+      return name.contains(searchLower) || phone.contains(query);
+    }).toList();
+
+    // Update daftar teman yang ditampilkan
+    friends.value = filteredFriends;
   }
 
   // Fungsi untuk menambahkan teman baru
