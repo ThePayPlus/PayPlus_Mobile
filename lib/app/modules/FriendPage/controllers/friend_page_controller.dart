@@ -4,14 +4,17 @@ import 'package:payplus_mobile/services/api_service.dart';
 
 class FriendPageController extends GetxController {
   final searchController = TextEditingController();
-  final friends = <Map<String, dynamic>>[].obs;
+  final friends = [].obs;
+  final friendRequests = [].obs;
   final isLoading = false.obs;
-  final errorMessage = ''.obs;
+  final isLoadingRequests = false.obs;
+  final errorMessage = ''.obs; // Menambahkan properti errorMessage sebagai Rx
 
   @override
   void onInit() {
     super.onInit();
     fetchFriends();
+    fetchFriendRequests();
   }
 
   @override
@@ -20,83 +23,115 @@ class FriendPageController extends GetxController {
     super.onClose();
   }
 
+  // Fetch friends list
   Future<void> fetchFriends() async {
-    try {
-      isLoading.value = true;
-      errorMessage.value = '';
+    isLoading.value = true;
+    errorMessage.value = ''; // Reset error message
+    final result = await ApiService.getFriends();
+    isLoading.value = false;
 
-      final result = await ApiService.getFriends();
-
-      if (result['success']) {
-        // Perbaikan: Penanganan data yang lebih baik
-        if (result['data'] != null && result['data']['friends'] != null) {
-          friends.value =
-              List<Map<String, dynamic>>.from(result['data']['friends']);
-        } else if (result['data'] != null) {
-          // Jika struktur data berbeda (mungkin langsung array)
-          try {
-            friends.value = List<Map<String, dynamic>>.from(result['data']);
-          } catch (e) {
-            errorMessage.value = 'Format data tidak sesuai: ${e.toString()}';
-          }
-        } else {
-          friends.value = [];
-        }
-      } else {
-        errorMessage.value = result['message'] ?? 'Gagal memuat daftar teman';
-      }
-    } catch (e) {
-      // Perbaikan: Tambahkan penanganan khusus untuk error format
-      if (e.toString().contains('text/html') || e.toString().contains('format yang tidak valid')) {
-        errorMessage.value = 'Server sedang bermasalah. Silakan coba lagi nanti.';
-      } else {
-        errorMessage.value = 'Terjadi kesalahan: ${e.toString()}';
-      }
-    } finally {
-      isLoading.value = false;
+    if (result['success']) {
+      friends.value = result['data']['friends'] ?? [];
+    } else {
+      errorMessage.value = result['message'] ??
+          'Terjadi kesalahan saat mengambil data teman'; // Set error message
+      Get.snackbar(
+        'Error',
+        result['message'],
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+      );
     }
   }
 
-  // Fungsi untuk mencari teman berdasarkan nama
-  void searchFriends(String query) {
-    if (query.isEmpty) {
-      fetchFriends(); // Refresh daftar teman jika query kosong
-      return;
-    }
+  // Add friend
+  Future<bool> addFriend(String phone) async {
+    isLoading.value = true;
+    final result = await ApiService.addFriend(phone);
+    isLoading.value = false;
 
-    // Filter daftar teman berdasarkan nama atau nomor telepon
-    final filteredFriends = friends.where((friend) {
-      final name = friend['name']?.toString().toLowerCase() ?? '';
-      final phone = friend['phone']?.toString() ?? '';
-      final searchLower = query.toLowerCase();
-
-      return name.contains(searchLower) || phone.contains(query);
-    }).toList();
-
-    // Update daftar teman yang ditampilkan
-    friends.value = filteredFriends;
-  }
-
-  // Fungsi untuk menambahkan teman baru
-  Future<bool> addFriend(String phoneNumber) async {
-    try {
-      isLoading.value = true;
-      errorMessage.value = '';
-
-      final result = await ApiService.addFriend(phoneNumber);
-
-      if (result['success']) {
-        await fetchFriends(); // Refresh daftar teman
-        return true;
-      } else {
-        errorMessage.value = result['message'] ?? 'Gagal menambahkan teman';
-        return false;
-      }
-    } catch (e) {
-      errorMessage.value = 'Terjadi kesalahan: ${e.toString()}';
+    if (result['success']) {
+      fetchFriends(); // Refresh the friends list
+      fetchFriendRequests(); // Tambahkan ini untuk refresh permintaan pertemanan juga
+      return true;
+    } else {
+      Get.snackbar(
+        'Error',
+        result['message'],
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+      );
       return false;
-    } finally {
-      isLoading.value = false;
+    }
+  }
+
+  // Fetch friend requests
+  Future<void> fetchFriendRequests() async {
+    isLoadingRequests.value = true;
+    final result = await ApiService.getFriendRequests();
+    isLoadingRequests.value = false;
+
+    if (result['success']) {
+      // Periksa struktur data yang benar
+      print("Friend Requests Response: ${result['data']}"); // Tambahkan log untuk debugging
+      
+      // Coba akses data dengan beberapa kemungkinan struktur
+      if (result['data'] != null) {
+        if (result['data']['data'] != null) {
+          friendRequests.value = result['data']['data'];
+        } else if (result['data']['requests'] != null) {
+          friendRequests.value = result['data']['requests'];
+        } else if (result['data'] is List) {
+          friendRequests.value = result['data'];
+        } else {
+          // Jika tidak ada struktur yang cocok, coba ambil kunci pertama yang berisi array
+          final dataMap = result['data'];
+          if (dataMap is Map) {
+            for (var key in dataMap.keys) {
+              if (dataMap[key] is List) {
+                friendRequests.value = dataMap[key];
+                break;
+              }
+            }
+          }
+        }
+      }
+      
+      print("Friend Requests Parsed: ${friendRequests.length}"); // Log jumlah permintaan yang diproses
+    } else {
+      Get.snackbar(
+        'Error',
+        result['message'],
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  // Respond to friend request
+  Future<bool> respondToFriendRequest(String requestId, String action) async {
+    final result = await ApiService.respondToFriendRequest(requestId, action);
+
+    if (result['success']) {
+      // Refresh friend requests and friends list
+      fetchFriendRequests();
+      fetchFriends();
+
+      Get.snackbar(
+        'Berhasil',
+        result['message'],
+        backgroundColor: Colors.green.withOpacity(0.7),
+        colorText: Colors.white,
+      );
+      return true;
+    } else {
+      Get.snackbar(
+        'Error',
+        result['message'],
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+      );
+      return false;
     }
   }
 }

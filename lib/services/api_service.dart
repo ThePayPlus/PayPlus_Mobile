@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'https://localhost:3000/api';
+  static const String baseUrl = 'http://10.0.2.2:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -504,6 +504,77 @@ class ApiService {
         return {
           'success': false,
           'message': data['message'] ?? 'Failed to delete bill'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+  // ... existing code ...
+
+  // Get friend requests
+  static Future<Map<String, dynamic>> getFriendRequests() async {
+    try {
+      // Check if token exists
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/friends/requests'),
+        headers: headers,
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal memuat permintaan pertemanan'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Respond to friend request (accept/reject)
+  static Future<Map<String, dynamic>> respondToFriendRequest(
+      String requestId, String action) async {
+    try {
+      // Check if token exists
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+
+      final response = await http.patch(
+        Uri.parse('$baseUrl/friends/respond/$requestId'),
+        headers: headers,
+        body: jsonEncode({
+          'action': action, // 'accept' or 'reject'
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'message':
+              data['message'] ?? 'Permintaan pertemanan berhasil diproses'
+        };
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal memproses permintaan pertemanan'
         };
       }
     } catch (e) {
