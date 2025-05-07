@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'http://10.0.2.2:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -349,18 +349,17 @@ class ApiService {
 
   // Update friend
   static Future<Map<String, dynamic>> updateFriend(
-      String friendId, String name, String phone) async {
+      String friendPhone, String name, String phone) async {
     try {
       final token = await getAuthToken();
       final response = await http.put(
-        Uri.parse('$baseUrl/friends/$friendId'),
+        Uri.parse('$baseUrl/friends/edit/$friendPhone'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
         body: json.encode({
-          'name': name,
-          'phone': phone,
+          'nickname': name,
         }),
       );
 
