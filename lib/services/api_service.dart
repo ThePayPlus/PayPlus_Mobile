@@ -373,6 +373,99 @@ class ApiService {
       };
     }
   }
+  
+  // Cari pengguna berdasarkan nomor telepon atau nama
+  static Future<Map<String, dynamic>> searchUser(String query) async {
+    try {
+      // Pastikan token sudah ada
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/users/search?query=$query'),
+        headers: headers,
+      );
+
+      // Periksa jika respons bukan JSON
+      if (response.headers['content-type'] != null &&
+          !response.headers['content-type']!.contains('application/json')) {
+        return {
+          'success': false,
+          'message':
+              'Server mengembalikan format yang tidak valid: ${response.headers['content-type']}'
+        };
+      }
+
+      // Parse JSON dengan penanganan error
+      Map<String, dynamic> data;
+      try {
+        data = jsonDecode(response.body);
+      } catch (e) {
+        return {
+          'success': false,
+          'message':
+              'Format respons tidak valid: ${e.toString()}\nResponse: ${response.body.substring(0, min(100, response.body.length))}...'
+        };
+      }
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal mencari pengguna'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+  
+  // Transfer uang ke pengguna lain
+  static Future<Map<String, dynamic>> transferMoney(
+      String receiverPhone, int amount, String type, String? message) async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+      
+      final body = {
+        'receiverPhone': receiverPhone,
+        'amount': amount,
+        'type': type,
+      };
+      
+      if (message != null) {
+        body['message'] = message;
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/transfer'),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal melakukan transfer'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
 
 //## GET Profile Data
   static Future<Map<String, dynamic>> getProfile() async {
@@ -954,74 +1047,7 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> searchUser(String phone) async {
-    try {
-      // Check if token exists
-      final token = await getAuthToken();
-      if (token == null || token.isEmpty) {
-        return {'success': false, 'message': 'Authentication required'};
-      }
-
-      final headers = await _getAuthHeaders();
-
-      final response = await http.get(
-        Uri.parse('$baseUrl/search-user/$phone'),
-        headers: headers,
-      );
-      final data = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        return {'success': true, 'data': data['data']};
-      } else {
-        return {
-          'success': false,
-          'message': data['message'] ?? 'Pengguna tidak ditemukan'
-        };
-      }
-    } catch (e) {
-      return {'success': false, 'message': 'Network error: ${e.toString()}'};
-    }
-  }
-
-  static Future<Map<String, dynamic>> transferMoney(
-      String receiverPhone, int amount, String type, String? message) async {
-    try {
-      // Check if token exists
-      final token = await getAuthToken();
-      if (token == null || token.isEmpty) {
-        return {'success': false, 'message': 'Authentication required'};
-      }
-
-      final headers = await _getAuthHeaders();
-
-      final response = await http.post(
-        Uri.parse('$baseUrl/transfer'),
-        headers: headers,
-        body: jsonEncode({
-          'receiverPhone': receiverPhone,
-          'amount': amount,
-          'type': type,
-          'message': message,
-        }),
-      );
-
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return {
-          'success': true,
-          'message': data['message'] ?? 'Transfer berhasil',
-          'data': data
-        };
-      } else {
-        return {
-          'success': false,
-          'message': data['message'] ?? 'Gagal melakukan transfer'
-        };
-      }
-    } catch (e) {
-      return {'success': false, 'message': 'Network error: ${e.toString()}'};
-    }
-  }
+  // Metode searchUser sudah diimplementasikan di atas
 
   //## LOGOUT
   static Future<Map<String, dynamic>> logout() async {

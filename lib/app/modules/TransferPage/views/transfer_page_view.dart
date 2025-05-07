@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../controllers/transfer_page_controller.dart';
+import '../../../theme/app_theme.dart';
 
 class TransferView extends GetView<TransferPageController> {
   const TransferView({super.key});
@@ -36,75 +37,112 @@ class TransferView extends GetView<TransferPageController> {
                 ),
               ),
               const SizedBox(height: 24),
-
-              // Search for a Number
-              const Text(
-                'Search for a Number',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+              
+              // Transfer Method Tabs
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 3,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
                 ),
+                child: Obx(() => Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => controller.transferMethod.value = 0,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: controller.transferMethod.value == 0
+                                ? const Color(0xFF6C63FF)
+                                : Colors.white,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              bottomLeft: Radius.circular(8),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Nomor Telepon',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: controller.transferMethod.value == 0
+                                    ? Colors.white
+                                    : Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => controller.transferMethod.value = 1,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: controller.transferMethod.value == 1
+                                ? const Color(0xFF6C63FF)
+                                : Colors.white,
+                            borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(8),
+                              bottomRight: Radius.circular(8),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Daftar Teman',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: controller.transferMethod.value == 1
+                                    ? Colors.white
+                                    : Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
               ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: controller.searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter name or phone number',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: const Color(0xFF6C63FF)),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: () => controller.searchUser(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6C63FF),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'Search',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-
+              const SizedBox(height: 24),
+              
+              // Transfer Method Content
+              Obx(() => controller.transferMethod.value == 0
+                ? _buildPhoneNumberSearch(controller)
+                : _buildFriendsList(controller)),
+              
               // Selected User
               Obx(() => controller.selectedUser.value.isNotEmpty
-                  ? Text(
-                      controller.selectedUser.value,
-                      style: const TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w500,
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 8, bottom: 16),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.green.withOpacity(0.3)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.check_circle, color: Colors.green),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              controller.selectedUser.value,
+                              style: const TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     )
                   : const SizedBox.shrink()),
@@ -175,24 +213,25 @@ class TransferView extends GetView<TransferPageController> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade300),
                 ),
                 child: DropdownButtonHideUnderline(
-                  child: Obx(() => DropdownButton<String>(
-                        value: controller.transferType.value,
-                        isExpanded: true,
-                        items: controller.transferTypes.map((String type) {
-                          return DropdownMenuItem<String>(
-                            value: type,
-                            child: Text(type),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            controller.transferType.value = newValue;
-                          }
-                        },
-                      )),
-                ),
+                  child: DropdownButton<String>(
+                    value: controller.transferType.value,
+                    isExpanded: true,
+                    icon: const Icon(Icons.arrow_drop_down, color: Color(0xFF6C63FF)),
+                    items: controller.transferTypes.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        controller.transferType.value = newValue;
+                      }
+                    },
+                  )),
               ),
               const SizedBox(height: 16),
               
@@ -270,5 +309,172 @@ class TransferView extends GetView<TransferPageController> {
         ),
       ),
     );
+  }
+  
+  // Widget untuk pencarian nomor telepon
+  Widget _buildPhoneNumberSearch(TransferPageController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Cari Nomor Telepon',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: controller.searchController,
+                decoration: InputDecoration(
+                  hintText: 'Masukkan nama atau nomor telepon',
+                  hintStyle: TextStyle(color: Colors.grey[400]),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: const Color(0xFF6C63FF)),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () => controller.searchUser(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6C63FF),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Cari',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+  
+  // Widget untuk daftar teman
+  Widget _buildFriendsList(TransferPageController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Pilih Teman',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          
+          if (controller.friends.isEmpty) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(Icons.people_outline, size: 48, color: Colors.grey),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Belum ada teman',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () => Get.toNamed('/friend-page'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6C63FF),
+                      ),
+                      child: const Text('Tambah Teman'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            constraints: const BoxConstraints(maxHeight: 200),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: controller.friends.length,
+              itemBuilder: (context, index) {
+                final friend = controller.friends[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: const Color(0xFF6C63FF).withOpacity(0.2),
+                    child: Text(
+                      _getInitials(friend['name'] ?? ''),
+                      style: const TextStyle(color: Color(0xFF6C63FF)),
+                    ),
+                  ),
+                  title: Text(friend['name'] ?? 'Tidak ada nama'),
+                  subtitle: Text('${friend['phone'] ?? ''}'),
+                  onTap: () => controller.selectFriend(friend),
+                );
+              },
+            ),
+          );
+        }),
+      ],
+    );
+  }
+  
+  // Mendapatkan inisial dari nama
+  String _getInitials(String name) {
+    if (name.isEmpty) return '';
+    final nameParts = name.split(' ');
+    if (nameParts.length > 1) {
+      return nameParts[0][0] + nameParts[1][0];
+    } else if (name.length > 1) {
+      return name.substring(0, 2);
+    } else {
+      return name;
+    }
   }
 }

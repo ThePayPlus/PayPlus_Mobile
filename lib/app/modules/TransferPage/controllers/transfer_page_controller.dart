@@ -12,8 +12,61 @@ class TransferPageController extends GetxController {
   final RxString transferType = 'Normal'.obs;
   final RxBool isLoading = false.obs;
   final RxList<Map<String, dynamic>> searchResults = <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> friends = <Map<String, dynamic>>[].obs;
+  final RxInt transferMethod = 0.obs; // 0 = nomor telepon, 1 = daftar teman
   
   final List<String> transferTypes = ['Normal', 'Gift'];
+  
+  @override
+  void onInit() {
+    super.onInit();
+    // Muat daftar teman saat controller diinisialisasi
+    fetchFriends();
+  }
+  
+  // Fungsi untuk mengambil daftar teman dari API
+  Future<void> fetchFriends() async {
+    isLoading.value = true;
+    try {
+      final result = await ApiService.getFriends();
+      if (result['success']) {
+        if (result['data'] != null && result['data']['friends'] != null) {
+          friends.value = List<Map<String, dynamic>>.from(result['data']['friends']);
+        } else {
+          friends.clear();
+        }
+      } else {
+        Get.snackbar(
+          'Error', 
+          result['message'] ?? 'Gagal memuat daftar teman',
+          backgroundColor: Colors.red.withOpacity(0.7),
+          colorText: Colors.white
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error', 
+        'Terjadi kesalahan: ${e.toString()}',
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
+  // Fungsi untuk memilih teman dari daftar
+  void selectFriend(Map<String, dynamic> friend) {
+    selectedUser.value = 'User: ${friend['name']}';
+    selectedUserPhone.value = friend['phone'].toString();
+    
+    Get.snackbar(
+      'Sukses', 
+      'Pengguna dipilih: ${friend['name']}',
+      backgroundColor: Colors.green.withOpacity(0.7),
+      colorText: Colors.white
+    );
+  }
   
   Future<void> searchUser() async {
     if (searchController.text.isEmpty) {
