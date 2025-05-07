@@ -45,7 +45,7 @@ class SavingsController extends GetxController {
     descriptionController.dispose();
     targetController.dispose();
     collectedController.dispose();
-    editTargetController.dispose(); // Tambahkan ini
+    editTargetController.dispose();
     super.onClose();
   }
 
@@ -71,15 +71,13 @@ class SavingsController extends GetxController {
           } else {
             // Jika tidak ada kunci yang berisi List, kosongkan savings
             savingsList.clear();
-            print('Data diterima tetapi tidak dalam format yang diharapkan: $savingsData');
           }
         } else {
           // Jika data bukan List atau Map, kosongkan savings
           savingsList.clear();
-          print('Tipe data tidak dikenali: ${savingsData.runtimeType}');
         }
       } else {
-        errorMessage.value = result['message'] ?? 'Gagal memuat data tabungan';
+        errorMessage.value = result['message'] ?? 'Failed to load savings data';
         savingsList.clear();
         Get.snackbar(
           'Error',
@@ -94,12 +92,11 @@ class SavingsController extends GetxController {
       savingsList.clear();
       Get.snackbar(
         'Error',
-        'Gagal terhubung ke server: ${e.toString()}',
+        'Failed to connect to the server: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
         duration: const Duration(seconds: 3),
       );
-      print('Error detail: $e');
     } finally {
       isLoading.value = false;
     }
@@ -121,7 +118,7 @@ class SavingsController extends GetxController {
     if (title.isEmpty) {
       Get.snackbar(
         'Error',
-        'Judul tabungan tidak boleh kosong',
+        'Savings title cannot be empty',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -131,7 +128,7 @@ class SavingsController extends GetxController {
     if (target <= 0) {
       Get.snackbar(
         'Error',
-        'Target tabungan harus lebih dari 0',
+        'Savings target must be more than 0',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -153,13 +150,13 @@ class SavingsController extends GetxController {
         // Refresh savings list after adding
         await fetchSavings();
         Get.snackbar(
-          'Sukses',
-          'Tabungan baru berhasil dibuat',
+          'Success',
+          'New savings created successfully',
           backgroundColor: Colors.green.shade100,
           colorText: Colors.green.shade900,
         );
       } else {
-        errorMessage.value = result['message'] ?? 'Gagal membuat tabungan baru';
+        errorMessage.value = result['message'] ?? 'Failed to create new savings';
         Get.snackbar(
           'Error',
           errorMessage.value,
@@ -171,7 +168,7 @@ class SavingsController extends GetxController {
       errorMessage.value = 'Error: ${e.toString()}';
       Get.snackbar(
         'Error',
-        'Gagal terhubung ke server: ${e.toString()}',
+        'Failed to connect to the server: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -184,7 +181,7 @@ class SavingsController extends GetxController {
     if (index < 0 || index >= savingsList.length || amount <= 0) {
       Get.snackbar(
         'Error',
-        'Data tidak valid',
+        'Invalid data',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -195,7 +192,7 @@ class SavingsController extends GetxController {
     if (saving.id == null) {
       Get.snackbar(
         'Error',
-        'ID tabungan tidak valid',
+        'Invalid savings ID',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -211,13 +208,13 @@ class SavingsController extends GetxController {
         // Refresh savings list after adding
         await fetchSavings();
         Get.snackbar(
-          'Sukses',
-          'Dana berhasil ditambahkan ke tabungan',
+          'Success',
+          'Funds are successfully added to savings',
           backgroundColor: Colors.green.shade100,
           colorText: Colors.green.shade900,
         );
       } else {
-        errorMessage.value = result['message'] ?? 'Gagal menambahkan dana ke tabungan';
+        errorMessage.value = result['message'] ?? 'Failed to add funds to savings';
         Get.snackbar(
           'Error',
           errorMessage.value,
@@ -229,7 +226,7 @@ class SavingsController extends GetxController {
       errorMessage.value = 'Error: ${e.toString()}';
       Get.snackbar(
         'Error',
-        'Gagal terhubung ke server: ${e.toString()}',
+        'Failed to connect to the server: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -247,7 +244,7 @@ class SavingsController extends GetxController {
     if (saving.id == null) {
       Get.snackbar(
         'Error',
-        'ID tabungan tidak valid',
+        'Invalid savings ID',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -264,13 +261,13 @@ class SavingsController extends GetxController {
         // Refresh savings list after withdrawing
         await fetchSavings();
         Get.snackbar(
-          'Sukses',
-          'Dana tabungan berhasil ditarik ke saldo utama',
+          'Success',
+          'Savings funds are successfully withdrawn to the main balance',
           backgroundColor: Colors.green.shade100,
           colorText: Colors.green.shade900,
         );
       } else {
-        errorMessage.value = result['message'] ?? 'Gagal menarik dana tabungan';
+        errorMessage.value = result['message'] ?? 'Failure to withdraw savings funds';
         Get.snackbar(
           'Error',
           errorMessage.value,
@@ -282,7 +279,7 @@ class SavingsController extends GetxController {
       errorMessage.value = 'Error: ${e.toString()}';
       Get.snackbar(
         'Error',
-        'Gagal terhubung ke server: ${e.toString()}',
+        'Failed to connect to the server: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -300,7 +297,7 @@ class SavingsController extends GetxController {
     if (saving.id == null) {
       Get.snackbar(
         'Error',
-        'ID tabungan tidak valid',
+        'Invalid savings ID',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -317,13 +314,13 @@ class SavingsController extends GetxController {
         // Refresh savings list after deleting
         await fetchSavings();
         Get.snackbar(
-          'Sukses',
-          'Tabungan berhasil dihapus',
+          'Success',
+          'Savings successfully deleted',
           backgroundColor: Colors.green.shade100,
           colorText: Colors.green.shade900,
         );
       } else {
-        errorMessage.value = result['message'] ?? 'Gagal menghapus tabungan';
+        errorMessage.value = result['message'] ?? 'Failed to delete savings';
         Get.snackbar(
           'Error',
           errorMessage.value,
@@ -335,7 +332,7 @@ class SavingsController extends GetxController {
       errorMessage.value = 'Error: ${e.toString()}';
       Get.snackbar(
         'Error',
-        'Gagal terhubung ke server: ${e.toString()}',
+        'Failed to connect to the server: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -352,7 +349,7 @@ class SavingsController extends GetxController {
     if (index < 0 || index >= savingsList.length || newTarget <= 0) {
       Get.snackbar(
         'Error',
-        'Data tidak valid',
+        'Invalid data',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -363,7 +360,7 @@ class SavingsController extends GetxController {
     if (saving.id == null) {
       Get.snackbar(
         'Error',
-        'ID tabungan tidak valid',
+        'Invalid savings ID',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -383,13 +380,13 @@ class SavingsController extends GetxController {
         // Refresh savings list after updating
         await fetchSavings();
         Get.snackbar(
-          'Sukses',
-          'Target tabungan berhasil diperbarui',
+          'Success',
+          'Savings target updated successfully',
           backgroundColor: Colors.green.shade100,
           colorText: Colors.green.shade900,
         );
       } else {
-        errorMessage.value = result['message'] ?? 'Gagal memperbarui target tabungan';
+        errorMessage.value = result['message'] ?? 'Failed to update savings target';
         Get.snackbar(
           'Error',
           errorMessage.value,
@@ -401,7 +398,7 @@ class SavingsController extends GetxController {
       errorMessage.value = 'Error: ${e.toString()}';
       Get.snackbar(
         'Error',
-        'Gagal terhubung ke server: ${e.toString()}',
+        'Failed to connect to the server: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
