@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:payplus_mobile/app/modules/FriendPage/views/friend_request_widget.dart';
 import 'package:payplus_mobile/app/modules/add_friend_dialog/views/add_friend_dialog_view.dart';
 import '../controllers/friend_page_controller.dart';
-import '../../../theme/app_theme.dart'; // Menggunakan AppTheme untuk styling
+import '../../../theme/app_theme.dart';
 
 class FriendPageView extends StatelessWidget {
   const FriendPageView({Key? key}) : super(key: key);
@@ -13,29 +13,23 @@ class FriendPageView extends StatelessWidget {
     final controller = Get.put(FriendPageController());
 
     return Scaffold(
-      backgroundColor:
-          AppTheme.background, // Menggunakan background dari AppTheme
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
         title: Text(
           'PayPlus Friend',
-          style: AppTheme.headingStyle.copyWith(
-              color: AppTheme
-                  .primaryPurple), // Menggunakan headingStyle dari AppTheme
+          style: AppTheme.headingStyle.copyWith(color: AppTheme.primaryPurple),
         ),
         backgroundColor: AppTheme.background,
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.add,
-                color: AppTheme
-                    .primaryPurple), // Menggunakan primaryPurple dari AppTheme
+            icon: Icon(Icons.add, color: AppTheme.primaryPurple),
             onPressed: () => Get.dialog(AddFriendDialog()),
           ),
         ],
       ),
       body: Stack(
         children: [
-          // Konten utama
           Column(
             children: [
               // Search bar
@@ -71,8 +65,6 @@ class FriendPageView extends StatelessWidget {
                                 color: AppTheme.primaryPurple.withOpacity(0.4),
                               ),
                               border: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
                             ),
                             style: TextStyle(
                               color: AppTheme.primaryPurple.withOpacity(0.8),
@@ -107,7 +99,6 @@ class FriendPageView extends StatelessWidget {
               // Friend list
               Expanded(
                 child: Obx(() {
-                  // Tampilkan loading indicator
                   if (controller.isLoading.value) {
                     return Center(
                       child: CircularProgressIndicator(
@@ -116,17 +107,13 @@ class FriendPageView extends StatelessWidget {
                     );
                   }
 
-                  // Tampilkan pesan error jika ada
                   if (controller.errorMessage.value.isNotEmpty) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.error_outline,
-                            color: Colors.red,
-                            size: 48,
-                          ),
+                          Icon(Icons.error_outline,
+                              color: Colors.red, size: 48),
                           SizedBox(height: 16),
                           Text(
                             controller.errorMessage.value,
@@ -146,7 +133,6 @@ class FriendPageView extends StatelessWidget {
                     );
                   }
 
-                  // Tampilkan pesan jika tidak ada teman
                   if (controller.friends.isEmpty) {
                     return Center(
                       child: Column(
@@ -178,7 +164,6 @@ class FriendPageView extends StatelessWidget {
                     );
                   }
 
-                  // Tampilkan daftar teman
                   return ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: controller.friends.length,
@@ -222,26 +207,57 @@ class FriendPageView extends StatelessWidget {
                   );
                 }),
               ),
-
-              // Tambahkan Friend Request Widget di sini jika ingin menampilkannya langsung
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: FriendRequestWidget(controller: controller),
-              ),
             ],
           ),
-
-          // Floating action button
-          // ... existing code ...
         ],
       ),
+      // friend request button
+      floatingActionButton: Obx(() => FloatingActionButton(
+            backgroundColor: AppTheme.primaryPurple,
+            onPressed: () {
+              Get.dialog(
+                Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  insetPadding: EdgeInsets.all(16),
+                  backgroundColor: Colors.white,
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height * 0.6,
+                    ),
+                    padding: EdgeInsets.all(16),
+                    child: FriendRequestWidget(controller: controller),
+                  ),
+                ),
+                barrierDismissible: true,
+              );
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Icon(Icons.group_add, size: 28),
+                if (controller.friendRequests.isNotEmpty)
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          )),
     );
   }
 
-  // Tambahkan fungsi _getInitials
   String _getInitials(String name) {
     if (name.isEmpty) return '';
-
     final nameParts = name.split(' ');
     if (nameParts.length > 1) {
       return nameParts[0][0] + nameParts[1][0];

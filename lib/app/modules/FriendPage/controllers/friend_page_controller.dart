@@ -73,8 +73,9 @@ class FriendPageController extends GetxController {
 
     if (result['success']) {
       // Periksa struktur data yang benar
-      print("Friend Requests Response: ${result['data']}"); // Tambahkan log untuk debugging
-      
+      print(
+          "Friend Requests Response: ${result['data']}"); // Tambahkan log untuk debugging
+
       // Coba akses data dengan beberapa kemungkinan struktur
       if (result['data'] != null) {
         if (result['data']['data'] != null) {
@@ -96,8 +97,9 @@ class FriendPageController extends GetxController {
           }
         }
       }
-      
-      print("Friend Requests Parsed: ${friendRequests.length}"); // Log jumlah permintaan yang diproses
+
+      print(
+          "Friend Requests Parsed: ${friendRequests.length}"); // Log jumlah permintaan yang diproses
     } else {
       Get.snackbar(
         'Error',

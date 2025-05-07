@@ -63,11 +63,18 @@ class FriendRequestWidget extends StatelessWidget {
             itemCount: controller.friendRequests.length,
             itemBuilder: (context, index) {
               final request = controller.friendRequests[index];
-              return Card(
+              return Container(
                 margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -77,8 +84,9 @@ class FriendRequestWidget extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
+                            radius: 24,
                             backgroundColor:
-                                AppTheme.primaryYellow.withOpacity(0.3),
+                                AppTheme.primaryYellow.withOpacity(0.4),
                             child: Text(
                               request['requester_name'] != null
                                   ? request['requester_name']
@@ -89,10 +97,11 @@ class FriendRequestWidget extends StatelessWidget {
                               style: TextStyle(
                                 color: AppTheme.primaryPurple,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 20,
                               ),
                             ),
                           ),
-                          SizedBox(width: 12),
+                          SizedBox(width: 14),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,16 +111,15 @@ class FriendRequestWidget extends StatelessWidget {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
-                                    color: AppTheme.primaryPurple,
+                                    color: Colors.black, // hitam bold
                                   ),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  request['user_phone'] != null
-                                      ? request['user_phone'].toString()
-                                      : 'Tidak ada nomor',
+                                  (request['user_phone'] ?? 'Tidak ada nomor')
+                                      .toString(),
                                   style: TextStyle(
-                                    color: Colors.grey.shade600,
+                                    color: Colors.grey[600],
                                     fontSize: 14,
                                   ),
                                 ),
@@ -133,7 +141,7 @@ class FriendRequestWidget extends StatelessWidget {
                               foregroundColor: Colors.red,
                               side: BorderSide(color: Colors.red),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(30),
                               ),
                             ),
                             child: Text('Tolak'),
@@ -148,7 +156,7 @@ class FriendRequestWidget extends StatelessWidget {
                               backgroundColor: AppTheme.primaryPurple,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(30),
                               ),
                             ),
                             child: Text('Terima'),
