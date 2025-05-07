@@ -205,9 +205,6 @@ class SavingsController extends GetxController {
     try {
       isLoading.value = true;
       
-      // Tambahkan logging untuk debugging
-      print('Menambahkan dana ke tabungan dengan ID: ${saving.id}, jumlah: $amount');
-      
       final result = await ApiService.addToSaving(saving.id!, amount);
       
       if (result['success']) {
