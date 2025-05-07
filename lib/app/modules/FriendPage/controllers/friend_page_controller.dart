@@ -168,14 +168,17 @@ class FriendPageController extends GetxController {
   }
 
   // Delete friend
-  Future<void> deleteFriend(String friendId) async {
+  Future<void> deleteFriend(String friendPhone) async {
+    // Ganti friendId menjadi friendPhone
     isLoading.value = true;
-    final result = await ApiService.deleteFriend(friendId);
+    final result =
+        await ApiService.deleteFriend(friendPhone); // Kirim friendPhone ke API
     isLoading.value = false;
 
     if (result['success']) {
       // Hapus teman dari daftar
-      friends.removeWhere((friend) => friend['id'].toString() == friendId);
+      friends.removeWhere((friend) =>
+          friend['phone'].toString() == friendPhone); // Cek berdasarkan phone
       Get.snackbar(
         'Sukses',
         'Teman berhasil dihapus',
@@ -183,6 +186,18 @@ class FriendPageController extends GetxController {
         colorText: Colors.white,
       );
     } else {
+      // Tambahkan pesan error ke errorMessage
+      errorMessage.value = result['message'] ?? 'Gagal menghapus teman';
+
+      // Jika error karena teman tidak ditemukan, refresh daftar teman
+      if (result['message']
+              ?.toString()
+              .toLowerCase()
+              .contains('tidak ditemukan') ??
+          false) {
+        fetchFriends();
+      }
+
       Get.snackbar(
         'Error',
         result['message'] ?? 'Gagal menghapus teman',
@@ -193,19 +208,20 @@ class FriendPageController extends GetxController {
   }
 
   // Update friend
-  Future<void> updateFriend(String friendId, String name, String phone) async {
+  Future<void> updateFriend(
+      String friendPhone, String name, String phone) async {
     isLoading.value = true;
-    final result = await ApiService.updateFriend(friendId, name, phone);
+    final result = await ApiService.updateFriend(friendPhone, name, phone);
     isLoading.value = false;
 
     if (result['success']) {
       // Update teman di daftar
-      final index =
-          friends.indexWhere((friend) => friend['id'].toString() == friendId);
+      final index = friends
+          .indexWhere((friend) => friend['phone'].toString() == friendPhone);
       if (index != -1) {
         friends[index]['name'] = name;
         friends[index]['phone'] = phone;
-        friends.refresh(); // Refresh list untuk memperbarui UI
+        friends.refresh();
       }
       Get.snackbar(
         'Sukses',

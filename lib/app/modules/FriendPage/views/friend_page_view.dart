@@ -320,7 +320,7 @@ class FriendPageView extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     final controller = Get.find<FriendPageController>();
-                    controller.deleteFriend(friend['id'].toString());
+                    controller.deleteFriend(friend['phone'].toString());
                     Navigator.of(context).pop(true);
                   },
                   style: TextButton.styleFrom(
@@ -378,7 +378,8 @@ class FriendPageView extends StatelessWidget {
                     onPressed: () {
                       final controller = Get.find<FriendPageController>();
                       controller.updateFriend(
-                        friend['id'].toString(),
+                        friend['phone']
+                            .toString(), // Gunakan friendPhone, bukan friendId
                         nameController.text,
                         friend['phone']?.toString() ?? '',
                       );
