@@ -20,8 +20,6 @@ import '../modules/TopUpPage/bindings/topup_binding.dart';
 import '../modules/TopUpPage/views/topup_page.dart';
 import '../modules/TransferPage/bindings/transfer_page_binding.dart';
 import '../modules/TransferPage/views/transfer_page_view.dart';
-import '../modules/add_friend_dialog/bindings/add_friend_dialog_binding.dart';
-import '../modules/add_friend_dialog/views/add_friend_dialog_view.dart';
 import '../modules/bills/bindings/bill_binding.dart';
 import '../modules/bills/views/bill_view.dart';
 import '../modules/bills/views/edit_bill_view.dart';

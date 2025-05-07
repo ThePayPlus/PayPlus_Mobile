@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:payplus_mobile/app/routes/app_pages.dart';
 import 'package:payplus_mobile/services/api_service.dart';
 import 'package:payplus_mobile/services/settings_service.dart';
 
@@ -133,6 +134,31 @@ class SettingController extends GetxController {
       } finally {
         isLoading.value = false;
       }
+    }
+  }
+
+  Future<void> logout() async {
+    isLoading.value = true;
+    clearMessage();
+    try {
+      final result = await ApiService.logout();
+      if (result['success']) {
+        // Tampilkan pesan sukses
+        Get.snackbar(
+          'Berhasil',
+          result['message'],
+          backgroundColor: Colors.green.withOpacity(0.7),
+          colorText: Colors.white,
+        );
+        // Redirect ke halaman login
+        Get.offAllNamed(Routes.LOGIN);
+      } else {
+        setErrorMessage(result['message'] ?? 'Logout gagal');
+      }
+    } catch (e) {
+      setErrorMessage('Error: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
     }
   }
 }

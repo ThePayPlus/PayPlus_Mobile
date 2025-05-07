@@ -579,8 +579,7 @@ class SettingView extends GetView<SettingController> {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // Add your logout logic here
-                Get.offAllNamed('/login'); // Navigate to login screen
+                controller.logout();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFDC2626),
