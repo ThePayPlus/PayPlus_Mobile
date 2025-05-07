@@ -751,6 +751,7 @@ class ApiService {
           'deskripsi': description,
           'target': target,
           'terkumpul': collected,
+          'deductFromBalance': collected > 0, // Parameter baru untuk menandakan apakah perlu mengurangi saldo
         }),
       );
 
@@ -853,6 +854,7 @@ class ApiService {
         headers: headers,
         body: jsonEncode({
           'amount': amount,
+          'deductFromBalance': true, // Tambahkan parameter ini untuk mengurangi saldo
         }),
       );
 

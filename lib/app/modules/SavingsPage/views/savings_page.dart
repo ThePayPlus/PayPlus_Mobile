@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import 'package:payplus_mobile/app/data/models/savings_model.dart';
 import '../controllers/savings_controller.dart';
 
-// Hapus definisi kelas Saving di sini karena sudah diimpor dari controller
-
 class SavingsPage extends GetView<SavingsController> {
   const SavingsPage({super.key});
 
@@ -293,7 +291,6 @@ class SavingsPage extends GetView<SavingsController> {
         ? (saving.collected / saving.target * 100).clamp(0, 100).toDouble()
         : 0;
 
-    // Cek apakah tabungan sudah mencapai atau melebihi target
     final bool isCompleted = saving.collected >= saving.target;
 
     return Container(
