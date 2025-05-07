@@ -273,6 +273,105 @@ class ApiService {
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }
+  
+  // Endpoint baru: Cari teman berdasarkan nama atau nomor telepon
+  static Future<Map<String, dynamic>> searchFriends(String query) async {
+    try {
+      // Pastikan token sudah ada
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Anda belum login'};
+      }
+
+      final headers = await _getAuthHeaders();
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/friends/search?query=$query'),
+        headers: headers,
+      );
+
+      // Periksa jika respons bukan JSON
+      if (response.headers['content-type'] != null &&
+          !response.headers['content-type']!.contains('application/json')) {
+        return {
+          'success': false,
+          'message':
+              'Server mengembalikan format yang tidak valid: ${response.headers['content-type']}'
+        };
+      }
+
+      // Parse JSON dengan penanganan error
+      Map<String, dynamic> data;
+      try {
+        data = jsonDecode(response.body);
+      } catch (e) {
+        return {
+          'success': false,
+          'message':
+              'Format respons tidak valid: ${e.toString()}\nResponse: ${response.body.substring(0, min(100, response.body.length))}...'
+        };
+      }
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal mencari teman'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+  
+  // Endpoint baru: Hapus teman
+  static Future<Map<String, dynamic>> deleteFriend(String friendId) async {
+    try {
+      final token = await getAuthToken();
+      final response = await http.delete(
+        Uri.parse('$baseUrl/friends/$friendId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      final data = json.decode(response.body);
+      return data;
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Terjadi kesalahan: $e',
+      };
+    }
+  }
+
+  // Update friend
+  static Future<Map<String, dynamic>> updateFriend(String friendId, String name, String phone) async {
+    try {
+      final token = await getAuthToken();
+      final response = await http.put(
+        Uri.parse('$baseUrl/friends/$friendId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'name': name,
+          'phone': phone,
+        }),
+      );
+
+      final data = json.decode(response.body);
+      return data;
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Terjadi kesalahan: $e',
+      };
+    }
+  }
 
   // Profile methods
 

@@ -6,8 +6,10 @@ class FriendPageController extends GetxController {
   final searchController = TextEditingController();
   final friends = [].obs;
   final friendRequests = [].obs;
+  final searchResults = [].obs;
   final isLoading = false.obs;
   final isLoadingRequests = false.obs;
+  final isSearching = false.obs;
   final errorMessage = ''.obs; // Menambahkan properti errorMessage sebagai Rx
 
   @override
@@ -134,6 +136,90 @@ class FriendPageController extends GetxController {
         colorText: Colors.white,
       );
       return false;
+    }
+  }
+
+  // Fungsi baru: Cari teman
+  Future<void> searchFriends(String query) async {
+    if (query.isEmpty) {
+      searchResults.clear();
+      return;
+    }
+
+    isSearching.value = true;
+    final result = await ApiService.searchFriends(query);
+    isSearching.value = false;
+
+    if (result['success']) {
+      if (result['data'] != null && result['data']['friends'] != null) {
+        searchResults.value = result['data']['friends'];
+      } else {
+        searchResults.clear();
+      }
+    } else {
+      Get.snackbar(
+        'Error',
+        result['message'],
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+      );
+      searchResults.clear();
+    }
+  }
+
+  // Delete friend
+  Future<void> deleteFriend(String friendId) async {
+    isLoading.value = true;
+    final result = await ApiService.deleteFriend(friendId);
+    isLoading.value = false;
+
+    if (result['success']) {
+      // Hapus teman dari daftar
+      friends.removeWhere((friend) => friend['id'].toString() == friendId);
+      Get.snackbar(
+        'Sukses',
+        'Teman berhasil dihapus',
+        backgroundColor: Colors.green.withOpacity(0.7),
+        colorText: Colors.white,
+      );
+    } else {
+      Get.snackbar(
+        'Error',
+        result['message'] ?? 'Gagal menghapus teman',
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  // Update friend
+  Future<void> updateFriend(String friendId, String name, String phone) async {
+    isLoading.value = true;
+    final result = await ApiService.updateFriend(friendId, name, phone);
+    isLoading.value = false;
+
+    if (result['success']) {
+      // Update teman di daftar
+      final index =
+          friends.indexWhere((friend) => friend['id'].toString() == friendId);
+      if (index != -1) {
+        friends[index]['name'] = name;
+        friends[index]['phone'] = phone;
+        friends.refresh(); // Refresh list untuk memperbarui UI
+      }
+      Get.snackbar(
+        'Sukses',
+        'Data teman berhasil diperbarui',
+        backgroundColor: Colors.green.withOpacity(0.7),
+        colorText: Colors.white,
+      );
+    } else {
+      Get.snackbar(
+        'Error',
+        result['message'] ?? 'Gagal memperbarui data teman',
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+      );
     }
   }
 }
