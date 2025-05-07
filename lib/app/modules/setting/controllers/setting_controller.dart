@@ -48,7 +48,7 @@ class SettingController extends GetxController {
         final data = result['data'];
         fullNameController.text = data['name'];
         emailController.text = data['email'];
-        phoneNumber.value = data['phone'];
+        phoneNumber.value = data['phone'].toString();
       } else {
         setErrorMessage(result['message'] ?? 'Failed to load profile');
       }

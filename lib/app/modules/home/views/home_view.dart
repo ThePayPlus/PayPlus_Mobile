@@ -171,8 +171,8 @@ class HomeView extends GetView<HomeController> {
               elevation: 0,
               items: [
                 _buildBottomNavItem(Icons.home_rounded, 'Home'),
+                _buildBottomNavItem(Icons.send_rounded, 'Transfer'),
                 _buildBottomNavItem(Icons.chat_bubble_rounded, 'Chatbot'),
-                _buildBottomNavItem(Icons.person_rounded, 'Profile'),
               ],
             ),
           ),
@@ -226,10 +226,10 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  // You can add balance here if needed, or leave as is
                   Obx(
                     () => Text(
-                      'Rp. ${controller.balance.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                      controller
+                          .formatCurrency(controller.balance.value.toString()),
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -394,8 +394,8 @@ class HomeView extends GetView<HomeController> {
             Expanded(
               child: Obx(() => _buildRecordCard(
                     title: 'Income Records',
-                    amount:
-                        'Rp. ${controller.totalIncome.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                    amount: controller.formatCurrency(
+                        controller.totalIncome.value.toString()),
                     icon: Icons.arrow_downward_rounded,
                     iconColor: const Color(0xFF4CAF50),
                     onTap: () => Get.toNamed(Routes.INCOME),
@@ -405,8 +405,8 @@ class HomeView extends GetView<HomeController> {
             Expanded(
               child: Obx(() => _buildRecordCard(
                     title: 'Expense Records',
-                    amount:
-                        'Rp. ${controller.totalExpense.value.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                    amount: controller.formatCurrency(
+                        controller.totalExpense.value.toString()),
                     icon: Icons.arrow_upward_rounded,
                     iconColor: const Color(0xFFFF6B6B),
                     onTap: () => Get.toNamed(Routes.EXPENSE),
@@ -526,15 +526,15 @@ class HomeView extends GetView<HomeController> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: transactions.length,
+            itemCount: controller.recentTransactions.length,
             itemBuilder: (context, index) {
-              final tx = transactions[index];
+              final data = controller.recentTransactions[index];
               return _buildTransactionItem(
-                icon: _getIconForType(tx['type']),
-                title: tx['type'] ?? '-',
-                date: tx['date'] ?? '-',
-                amount: 'Rp. ${(tx['amount'] ?? 0).toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
-                isExpense: tx['transactionType'] == 'expense' ? true : false,
+                icon: _getIconForType(data.type),
+                title: data.type,
+                date: data.date,
+                amount: controller.formatCurrency(data.amount),
+                isExpense: data.transactionType == 'expense' ? true : false,
               );
             },
           ),
