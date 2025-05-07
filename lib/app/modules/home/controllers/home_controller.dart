@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:payplus_mobile/app/models/recent_transaction.dart';
 import 'package:payplus_mobile/app/routes/app_pages.dart';
 import 'package:payplus_mobile/services/api_service.dart';
 
@@ -14,8 +16,7 @@ class HomeController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
 
-  final RxList<Map<String, dynamic>> recentTransactions =
-      <Map<String, dynamic>>[].obs;
+  var recentTransactions = <RecentTransaction>[].obs;
 
   @override
   void onInit() {
@@ -24,13 +25,24 @@ class HomeController extends GetxController {
     fetchRecentTransactions();
   }
 
-  void fetchRecentTransactions() async {
+  Future<void> fetchRecentTransactions() async {
     try {
+      isLoading(true);
+      errorMessage('');
+
       final result = await ApiService.getRecentTransactions();
-      recentTransactions.assignAll(result);
+      if (result['success'] == true) {
+        final List<dynamic> records = result['records'] ?? [];
+        recentTransactions.value = records
+            .map((record) => RecentTransaction.fromJson(record))
+            .toList();
+      } else {
+        errorMessage(result['message'] ?? 'Terjadi kesalahan');
+      }
     } catch (e) {
-      // Handle error jika perlu
-      recentTransactions.clear();
+      errorMessage('Terjadi kesalahan: ${e.toString()}');
+    } finally {
+      isLoading(false);
     }
   }
 
@@ -57,18 +69,20 @@ class HomeController extends GetxController {
 
   void changeTabIndex(int index) {
     selectedIndex.value = index;
-    // Handle navigation if needed
     if (index == 0) {
-      // Navigate to settings when home is clicked
+      Get.toNamed(Routes.HOME);
     } else if (index == 1) {
-      // Navigate to profile/settings
-      // Get.toNamed(Routes.SETTING);
-      Get.toNamed(Routes.CHAT_BOT);
+      Get.toNamed(Routes.TRANSFER);
     } else if (index == 2) {
-      // Navigate to chatbot
-      // Get.toNamed(Routes.CHATBOT);
-      Get.toNamed(Routes.SETTING);
+      Get.toNamed(Routes.CHAT_BOT);
     }
+  }
+
+  String formatCurrency(String amount) {
+    final value = int.tryParse(amount) ?? 0;
+    final formatter =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    return formatter.format(value);
   }
 
   final count = 0.obs;

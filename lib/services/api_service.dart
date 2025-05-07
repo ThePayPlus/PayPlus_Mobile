@@ -541,19 +541,34 @@ class ApiService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> getRecentTransactions() async {
-    final headers = await _getAuthHeaders();
-    final response = await http.get(
-      Uri.parse('$baseUrl/recent-transactions'),
-      headers: headers,
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      if (data['success'] == true) {
-        return List<Map<String, dynamic>>.from(data['data'] ?? data);
+//## GET RECENT TRANSACTIONS
+  static Future<Map<String, dynamic>> getRecentTransactions() async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
       }
+      final headers = await _getAuthHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/recent-transactions'),
+        headers: headers,
+      );
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'message': data['message'],
+          'records': data['records']
+        };
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal mengambil data pemasukan'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
-    return [];
   }
 
   // Bills methods

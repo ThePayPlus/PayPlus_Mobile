@@ -28,16 +28,4 @@ class Income {
       message: json['message'],
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'amount': amount,
-      'sender_phone': senderPhone,
-      'sender_name': senderName,
-      'type': type,
-      'date': date,
-      'message': message,
-    };
-  }
 }
