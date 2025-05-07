@@ -805,6 +805,38 @@ class ApiService {
     }
   }
 
+  // Update savings target
+  static Future<Map<String, dynamic>> updateSavingTarget(int id, int target) async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+      final response = await http.patch(
+        Uri.parse('$baseUrl/savings/$id/update-target'),
+        headers: headers,
+        body: jsonEncode({
+          'target': target,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal memperbarui target tabungan'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
   // Add amount to saving
   static Future<Map<String, dynamic>> addToSaving(int id, int amount) async {
     try {
@@ -815,10 +847,6 @@ class ApiService {
 
       final headers = await _getAuthHeaders();
 
-      // Tambahkan logging untuk debugging
-      print('Mengirim request ke: $baseUrl/savings/$id/add');
-      print('Headers: $headers');
-      print('Body: ${jsonEncode({'amount': amount})}');
 
       final response = await http.patch(
         Uri.parse('$baseUrl/savings/$id/add'),
@@ -828,9 +856,6 @@ class ApiService {
         }),
       );
 
-      // Tambahkan logging untuk response
-      print('Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       // Coba parse response body dengan penanganan error
       Map<String, dynamic> data;
@@ -853,8 +878,6 @@ class ApiService {
         };
       }
     } catch (e) {
-      // Tambahkan detail error yang lebih spesifik
-      print('Error pada addToSaving: ${e.toString()}');
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }

@@ -29,7 +29,6 @@ class TransferPageController extends GetxController {
     isLoading.value = true;
     try {
       final result = await ApiService.searchUser(searchController.text);
-      final users = result['data'];
       if (result['success']) {
         // Periksa jika respons bukan JSON
         if (result['data'] != null) {

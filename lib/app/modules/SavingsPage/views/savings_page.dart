@@ -192,6 +192,48 @@ class SavingsPage extends GetView<SavingsController> {
     );
   }
 
+  void showEditTargetDialog(int index) {
+    final saving = controller.savingsList[index];
+    controller.editTargetController.text = saving.target.toString();
+
+    showDialog(
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        title: const Text("Edit Target Tabungan"),
+        content: TextField(
+          controller: controller.editTargetController,
+          decoration: const InputDecoration(labelText: "Target Baru"),
+          keyboardType: TextInputType.number,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Batal"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newTarget = int.tryParse(controller.editTargetController.text) ?? 0;
+              if (newTarget > 0) {
+                controller.updateSavingTarget(index, newTarget);
+                Navigator.pop(context);
+              } else {
+                Get.snackbar(
+                  'Error',
+                  'Target harus lebih dari 0',
+                  backgroundColor: Colors.red.shade100,
+                  colorText: Colors.red.shade900,
+                );
+              }
+            },
+            child: const Text("Simpan"),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget buildSummaryCard({
     required IconData icon,
     required String title,
@@ -341,6 +383,28 @@ class SavingsPage extends GetView<SavingsController> {
                 ),
                 child: const Text(
                   'Add to Savings',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 5),
+              // Tambahkan tombol Edit di sini
+              ElevatedButton(
+                onPressed: () => showEditTargetDialog(index),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 20,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'Edit Target',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,

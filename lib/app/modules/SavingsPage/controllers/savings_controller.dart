@@ -36,12 +36,16 @@ class SavingsController extends GetxController {
     fetchSavings();
   }
 
+  // Tambahkan controller untuk edit target
+  final editTargetController = TextEditingController();
+
   @override
   void onClose() {
     titleController.dispose();
     descriptionController.dispose();
     targetController.dispose();
     collectedController.dispose();
+    editTargetController.dispose(); // Tambahkan ini
     super.onClose();
   }
 
@@ -292,5 +296,67 @@ class SavingsController extends GetxController {
 
   String formatCurrency(int amount) {
     return 'Rp ${amount.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+  }
+
+  Future<void> updateSavingTarget(int index, int newTarget) async {
+    if (index < 0 || index >= savingsList.length || newTarget <= 0) {
+      Get.snackbar(
+        'Error',
+        'Data tidak valid',
+        backgroundColor: Colors.red.shade100,
+        colorText: Colors.red.shade900,
+      );
+      return;
+    }
+
+    final saving = savingsList[index];
+    if (saving.id == null) {
+      Get.snackbar(
+        'Error',
+        'ID tabungan tidak valid',
+        backgroundColor: Colors.red.shade100,
+        colorText: Colors.red.shade900,
+      );
+      return;
+    }
+
+    isLoading.value = true;
+    errorMessage.value = '';
+    
+    try {
+      final result = await ApiService.updateSavingTarget(
+        saving.id!,
+        newTarget,
+      );
+      
+      if (result['success']) {
+        // Refresh savings list after updating
+        await fetchSavings();
+        Get.snackbar(
+          'Sukses',
+          'Target tabungan berhasil diperbarui',
+          backgroundColor: Colors.green.shade100,
+          colorText: Colors.green.shade900,
+        );
+      } else {
+        errorMessage.value = result['message'] ?? 'Gagal memperbarui target tabungan';
+        Get.snackbar(
+          'Error',
+          errorMessage.value,
+          backgroundColor: Colors.red.shade100,
+          colorText: Colors.red.shade900,
+        );
+      }
+    } catch (e) {
+      errorMessage.value = 'Error: ${e.toString()}';
+      Get.snackbar(
+        'Error',
+        'Gagal terhubung ke server: ${e.toString()}',
+        backgroundColor: Colors.red.shade100,
+        colorText: Colors.red.shade900,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 }
