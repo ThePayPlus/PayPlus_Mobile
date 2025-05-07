@@ -62,8 +62,6 @@ class SavingsPage extends GetView<SavingsController> {
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.add, color: Colors.white),
-                      SizedBox(width: 8),
                       Text(
                         'Add New Saving',
                         style: TextStyle(
@@ -105,7 +103,7 @@ class SavingsPage extends GetView<SavingsController> {
 
   void _addNewSaving() {
     controller.clearInputFields();
-    
+
     showDialog(
       context: Get.context!,
       builder: (context) => AlertDialog(
@@ -214,7 +212,8 @@ class SavingsPage extends GetView<SavingsController> {
           ),
           ElevatedButton(
             onPressed: () {
-              final newTarget = int.tryParse(controller.editTargetController.text) ?? 0;
+              final newTarget =
+                  int.tryParse(controller.editTargetController.text) ?? 0;
               if (newTarget > 0) {
                 controller.updateSavingTarget(index, newTarget);
                 Navigator.pop(context);
@@ -289,7 +288,17 @@ class SavingsPage extends GetView<SavingsController> {
   }
 
   Widget buildSavingCard(Savings saving, int index, VoidCallback onDelete) {
+    // Hitung persentase tabungan
+    final double percentage = saving.target > 0
+        ? (saving.collected / saving.target * 100).clamp(0, 100).toDouble()
+        : 0;
+
+    // Cek apakah tabungan sudah mencapai atau melebihi target
+    final bool isCompleted = saving.collected >= saving.target;
+
     return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -301,67 +310,89 @@ class SavingsPage extends GetView<SavingsController> {
           ),
         ],
       ),
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                saving.title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                '${((saving.collected / saving.target) * 100).toStringAsFixed(1)}%',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-            ],
+          Text(
+            saving.title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             saving.description,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: Colors.grey,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Target',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          Text(
+            controller.formatCurrency(saving.target),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Text(
+            'Amount Collected',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          Text(
+            controller.formatCurrency(saving.collected),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
             ),
           ),
           const SizedBox(height: 16),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
-              value: saving.collected / saving.target,
-              backgroundColor: Colors.grey[200],
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+              value: saving.target > 0 ? saving.collected / saving.target : 0,
               minHeight: 10,
+              backgroundColor: Colors.grey.shade200,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                isCompleted ? Colors.green : Colors.blue,
+              ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                controller.formatCurrency(saving.collected),
-                style: const TextStyle(
-                  fontSize: 16,
+                '${percentage.toStringAsFixed(1)}%',
+                style: TextStyle(
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  color: isCompleted ? Colors.green : Colors.blue,
                 ),
               ),
               Text(
-                controller.formatCurrency(saving.target),
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                '${controller.formatCurrency(saving.collected)} / ${controller.formatCurrency(saving.target)}',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade700,
                 ),
               ),
             ],
@@ -369,28 +400,54 @@ class SavingsPage extends GetView<SavingsController> {
           const SizedBox(height: 10),
           Row(
             children: [
-              ElevatedButton(
-                onPressed: () => showAddToSavingDialog(index),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 20,
+              // Tampilkan tombol yang berbeda berdasarkan status tabungan
+              if (!isCompleted) ...[
+                // Tombol Add to Savings hanya ditampilkan jika belum mencapai target
+                ElevatedButton(
+                  onPressed: () => showAddToSavingDialog(index),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 20,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                  child: const Text(
+                    'Add to Savings',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-                child: const Text(
-                  'Add to Savings',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+              ] else ...[
+                // Tombol Withdraw hanya ditampilkan jika sudah mencapai target
+                ElevatedButton(
+                  onPressed: () => controller.withdrawSaving(index),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 20,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'Withdraw',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
+              ],
               const SizedBox(width: 5),
-              // Tambahkan tombol Edit di sini
+              // Tombol Edit selalu ditampilkan
               ElevatedButton(
                 onPressed: () => showEditTargetDialog(index),
                 style: ElevatedButton.styleFrom(
@@ -412,26 +469,28 @@ class SavingsPage extends GetView<SavingsController> {
                 ),
               ),
               const SizedBox(width: 5),
-              ElevatedButton(
-                onPressed: onDelete,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 20,
+              // Tombol Delete hanya ditampilkan jika belum mencapai target
+              if (!isCompleted)
+                ElevatedButton(
+                  onPressed: onDelete,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 20,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                  child: const Text(
+                    'Delete',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-                child: const Text(
-                  'Delete',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
             ],
           ),
         ],

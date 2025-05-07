@@ -241,6 +241,59 @@ class SavingsController extends GetxController {
     }
   }
 
+  Future<void> withdrawSaving(int index) async {
+    if (index < 0 || index >= savingsList.length) {
+      return;
+    }
+
+    final saving = savingsList[index];
+    if (saving.id == null) {
+      Get.snackbar(
+        'Error',
+        'ID tabungan tidak valid',
+        backgroundColor: Colors.red.shade100,
+        colorText: Colors.red.shade900,
+      );
+      return;
+    }
+
+    isLoading.value = true;
+    errorMessage.value = '';
+    
+    try {
+      final result = await ApiService.withdrawSaving(saving.id!);
+      
+      if (result['success']) {
+        // Refresh savings list after withdrawing
+        await fetchSavings();
+        Get.snackbar(
+          'Sukses',
+          'Dana tabungan berhasil ditarik ke saldo utama',
+          backgroundColor: Colors.green.shade100,
+          colorText: Colors.green.shade900,
+        );
+      } else {
+        errorMessage.value = result['message'] ?? 'Gagal menarik dana tabungan';
+        Get.snackbar(
+          'Error',
+          errorMessage.value,
+          backgroundColor: Colors.red.shade100,
+          colorText: Colors.red.shade900,
+        );
+      }
+    } catch (e) {
+      errorMessage.value = 'Error: ${e.toString()}';
+      Get.snackbar(
+        'Error',
+        'Gagal terhubung ke server: ${e.toString()}',
+        backgroundColor: Colors.red.shade100,
+        colorText: Colors.red.shade900,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> deleteSaving(int index) async {
     if (index < 0 || index >= savingsList.length) {
       return;

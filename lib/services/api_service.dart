@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'http://10.0.2.2:3000/api';
+  static const String baseUrl = 'http://localhost:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -349,17 +349,18 @@ class ApiService {
 
   // Update friend
   static Future<Map<String, dynamic>> updateFriend(
-      String friendPhone, String name, String phone) async {
+      String friendId, String name, String phone) async {
     try {
       final token = await getAuthToken();
       final response = await http.put(
-        Uri.parse('$baseUrl/friends/edit/$friendPhone'),
+        Uri.parse('$baseUrl/friends/$friendId'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
         body: json.encode({
-          'nickname': name,
+          'name': name,
+          'phone': phone,
         }),
       );
 
@@ -907,6 +908,45 @@ class ApiService {
         return {
           'success': false,
           'message': data['message'] ?? 'Gagal menghapus tabungan'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Withdraw saving (move to balance and delete saving)
+  static Future<Map<String, dynamic>> withdrawSaving(int id) async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+      final response = await http.post(
+        Uri.parse('$baseUrl/savings/$id/withdraw'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = {};
+        try {
+          data = jsonDecode(response.body);
+        } catch (e) {
+          // Jika response body tidak bisa di-decode sebagai JSON
+        }
+        return {'success': true, 'data': data};
+      } else {
+        Map<String, dynamic> data = {};
+        try {
+          data = jsonDecode(response.body);
+        } catch (e) {
+          // Jika response body tidak bisa di-decode sebagai JSON
+        }
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal menarik dana tabungan'
         };
       }
     } catch (e) {
