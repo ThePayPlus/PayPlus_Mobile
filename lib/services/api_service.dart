@@ -960,4 +960,33 @@ class ApiService {
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }
+
+  //## LOGOUT
+  static Future<Map<String, dynamic>> logout() async {
+    try {
+      final headers = await _getAuthHeaders();
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/logout'),
+        headers: headers,
+      );
+
+      final data = jsonDecode(response.body);
+
+      // Clear token regardless of response
+      await clearAuthToken();
+
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'message': data['message'] ?? 'Logout berhasil'
+        };
+      } else {
+        return {'success': false, 'message': data['message'] ?? 'Logout gagal'};
+      }
+    } catch (e) {
+      // Clear token even if there's an error
+      await clearAuthToken();
+      return {'success': true, 'message': 'Logout berhasil'};
+    }
+  }
 }
