@@ -41,8 +41,8 @@ class FriendPageView extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(AppTheme.borderRadius),
                     border: Border.all(
-                      color: AppTheme.primaryPurple.withOpacity(0.2),
-                      width: 1,
+                      color: AppTheme.textDark.withOpacity(0.2),
+                      width: 2,
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -67,7 +67,7 @@ class FriendPageView extends StatelessWidget {
                               border: InputBorder.none,
                             ),
                             style: TextStyle(
-                              color: AppTheme.primaryPurple.withOpacity(0.8),
+                              color: AppTheme.textDark,
                               fontSize: 14,
                             ),
                             cursorColor: AppTheme.primaryPurple,
