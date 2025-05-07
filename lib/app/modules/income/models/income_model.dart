@@ -19,12 +19,12 @@ class Income {
 
   factory Income.fromJson(Map<String, dynamic> json) {
     return Income(
-      id: json['id'] ?? 0,
-      amount: json['amount'] ?? "0",
-      senderPhone: json['sender_phone'] ?? "",
-      senderName: json['sender_name'] ?? 'Unknown',
-      type: json['type'] ?? 'normal',
-      date: json['date'] ?? DateTime.now().toIso8601String().split('T')[0],
+      id: json['id'],
+      amount: json['amount'],
+      senderPhone: json['sender_phone'],
+      senderName: json['sender_name'],
+      type: json['type'],
+      date: json['date'],
       message: json['message'],
     );
   }

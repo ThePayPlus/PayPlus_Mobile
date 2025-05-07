@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:payplus_mobile/services/api_service.dart';
 import 'package:payplus_mobile/services/settings_service.dart';
 
 class SettingController extends GetxController {
@@ -38,25 +39,16 @@ class SettingController extends GetxController {
     super.onClose();
   }
 
-  // Load user profile from API
+  // Ambil data profile dari API
   Future<void> loadUserProfile() async {
     isLoading.value = true;
     try {
-      final result = await SettingsService.getProfileData();
-
+      final result = await ApiService.getProfile();
       if (result['success']) {
         final data = result['data'];
-        fullNameController.text = data['name'] ?? '';
-        emailController.text = data['email'] ?? '';
-
-        // Make sure phone is handled as a string
-        if (data['phone'] != null) {
-          phoneNumber.value = data['phone'].toString();
-        } else {
-          phoneNumber.value = '';
-        }
-
-        // For now, keeping the default role
+        fullNameController.text = data['name'];
+        emailController.text = data['email'];
+        phoneNumber.value = data['phone'];
       } else {
         setErrorMessage(result['message'] ?? 'Failed to load profile');
       }
@@ -102,25 +94,21 @@ class SettingController extends GetxController {
     if (formKey.currentState!.validate()) {
       isLoading.value = true;
       clearMessage();
-
       try {
-        // Check if password fields are filled
+        //Cek apakah ingin ganti password atau tidak
         final bool isChangingPassword =
             currentPasswordController.text.isNotEmpty &&
                 newPasswordController.text.isNotEmpty &&
                 confirmPasswordController.text.isNotEmpty;
-
-        // Password validation if attempting to change password
+        // Validasi password ketika ingin mengganti password
         if (isChangingPassword) {
-          // Check if passwords match
           if (newPasswordController.text != confirmPasswordController.text) {
             setErrorMessage('New passwords do not match');
             isLoading.value = false;
             return;
           }
         }
-
-        // Update profile using the service (with optional password)
+        // Update settings dan cek apakah user ingin ganti password juga
         final result = await SettingsService.updateSettings(
             name: fullNameController.text,
             email: emailController.text,
@@ -128,15 +116,13 @@ class SettingController extends GetxController {
                 isChangingPassword ? currentPasswordController.text : null,
             newPassword:
                 isChangingPassword ? newPasswordController.text : null);
-
         if (result['success']) {
-          // Clear password fields after successful update
+          // Hapus formfield password jika sudah diupdate
           if (isChangingPassword) {
             currentPasswordController.clear();
             newPasswordController.clear();
             confirmPasswordController.clear();
           }
-
           setSuccessMessage(
               result['message'] ?? 'Profile updated successfully');
         } else {

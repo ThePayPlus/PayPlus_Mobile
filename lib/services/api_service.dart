@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'http://10.0.2.2:3000/api';
+  static const String baseUrl = 'http://localhost:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -273,7 +273,7 @@ class ApiService {
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }
-  
+
   // Endpoint baru: Cari teman berdasarkan nama atau nomor telepon
   static Future<Map<String, dynamic>> searchFriends(String query) async {
     try {
@@ -324,7 +324,7 @@ class ApiService {
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }
-  
+
   // Endpoint baru: Hapus teman
   static Future<Map<String, dynamic>> deleteFriend(String friendId) async {
     try {
@@ -348,7 +348,8 @@ class ApiService {
   }
 
   // Update friend
-  static Future<Map<String, dynamic>> updateFriend(String friendId, String name, String phone) async {
+  static Future<Map<String, dynamic>> updateFriend(
+      String friendId, String name, String phone) async {
     try {
       final token = await getAuthToken();
       final response = await http.put(
@@ -373,37 +374,21 @@ class ApiService {
     }
   }
 
-  // Profile methods
-
-  // Get profile data
+//## GET Profile Data
   static Future<Map<String, dynamic>> getProfile() async {
     try {
-      // Check if token exists
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
       }
-
       final headers = await _getAuthHeaders();
-
       final response = await http.get(
         Uri.parse('$baseUrl/profile'),
         headers: headers,
       );
-
       final data = jsonDecode(response.body);
-
       if (response.statusCode == 200) {
-        // Ensure phone is a string and include total_income and total_expense
-        final processedData = {
-          'phone': data['phone'].toString(),
-          'name': data['name'],
-          'email': data['email'],
-          'balance': data['balance'],
-          'total_income': data['total_income'],
-          'total_expense': data['total_expense'],
-        };
-        return {'success': true, 'data': processedData};
+        return {'success': true, 'data': data};
       } else {
         return {
           'success': false,
@@ -415,11 +400,10 @@ class ApiService {
     }
   }
 
-  // Update profile (name and email only)
+  //## UPDATE PROFILE
   static Future<Map<String, dynamic>> updateProfile(
       String name, String email) async {
     try {
-      // Check if token exists
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
@@ -439,7 +423,9 @@ class ApiService {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        return {'success': true, 'data': data};
+        return {
+          'success': true,
+        };
       } else {
         return {
           'success': false,
@@ -451,18 +437,15 @@ class ApiService {
     }
   }
 
-  // Change password
+  //## GANTI PASSWORD
   static Future<Map<String, dynamic>> changePassword(
       String oldPassword, String newPassword) async {
     try {
-      // Check if token exists
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
       }
-
       final headers = await _getAuthHeaders();
-
       final response = await http.patch(
         Uri.parse('$baseUrl/change-password'),
         headers: headers,
@@ -473,12 +456,8 @@ class ApiService {
       );
 
       final data = jsonDecode(response.body);
-
       if (response.statusCode == 200) {
-        return {
-          'success': true,
-          'message': data['message'] ?? 'Password changed successfully'
-        };
+        return {'success': true, 'message': data['message']};
       } else {
         return {
           'success': false,
@@ -490,37 +469,28 @@ class ApiService {
     }
   }
 
-  // Get income records
+  //## GET Income Record
   static Future<Map<String, dynamic>> getIncomeRecords() async {
     try {
-      // Check if token exists
+      // Cek kalau token masih ada
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
       }
-
+      // Kalau token ada, kita ambil headersnya
       final headers = await _getAuthHeaders();
-
       final response = await http.get(
         Uri.parse('$baseUrl/income-record'),
         headers: headers,
       );
-
+      final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
         return {
           'success': true,
-          'message': data['message'] ?? 'Data pemasukan berhasil diambil',
-          'records': data['records'] ?? []
+          'message': data['message'],
+          'records': data['records']
         };
       } else {
-        Map<String, dynamic> data = {};
-        try {
-          data = jsonDecode(response.body);
-        } catch (e) {
-          // Jika response body tidak bisa di-decode sebagai JSON
-        }
-
         return {
           'success': false,
           'message': data['message'] ?? 'Gagal mengambil data pemasukan'

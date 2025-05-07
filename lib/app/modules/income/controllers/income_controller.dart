@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/income_model.dart';
 import 'package:payplus_mobile/services/api_service.dart';
+import 'package:intl/intl.dart';
 
 class IncomeController extends GetxController {
   var isLoading = false.obs;
@@ -93,19 +94,6 @@ class IncomeController extends GetxController {
     }
   }
 
-  String getIncomeTypeLabel(String type) {
-    switch (type) {
-      case 'normal':
-        return 'Transfer';
-      case 'gift':
-        return 'Hadiah';
-      case 'topup':
-        return 'Top Up';
-      default:
-        return 'Lainnya';
-    }
-  }
-
   Color getIncomeTypeColor(String type) {
     switch (type) {
       case 'normal':
@@ -133,11 +121,9 @@ class IncomeController extends GetxController {
   }
 
   String formatCurrency(String amount) {
-    try {
-      final value = int.parse(amount);
-      return 'Rp ${value.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
-    } catch (e) {
-      return 'Rp 0';
-    }
+    final value = int.tryParse(amount) ?? 0;
+    final formatter =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    return formatter.format(value);
   }
 }
