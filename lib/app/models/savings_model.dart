@@ -1,5 +1,3 @@
-import 'package:get/get.dart';
-
 class Savings {
   final int? id;
   final String title;

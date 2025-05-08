@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'http://10.0.2.2:3000/api';
+  static const String baseUrl = 'http://localhost:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -349,17 +349,18 @@ class ApiService {
 
   // Update friend
   static Future<Map<String, dynamic>> updateFriend(
-      String friendPhone, String name, String phone) async {
+      String friendId, String name, String phone) async {
     try {
       final token = await getAuthToken();
       final response = await http.put(
-        Uri.parse('$baseUrl/friends/edit/$friendPhone'),
+        Uri.parse('$baseUrl/friends/$friendId'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
         body: json.encode({
-          'nickname': name,
+          'name': name,
+          'phone': phone,
         }),
       );
 
@@ -370,6 +371,99 @@ class ApiService {
         'success': false,
         'message': 'Terjadi kesalahan: $e',
       };
+    }
+  }
+  
+  // Cari pengguna berdasarkan nomor telepon atau nama
+  static Future<Map<String, dynamic>> searchUser(String query) async {
+    try {
+      // Pastikan token sudah ada
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/users/search?query=$query'),
+        headers: headers,
+      );
+
+      // Periksa jika respons bukan JSON
+      if (response.headers['content-type'] != null &&
+          !response.headers['content-type']!.contains('application/json')) {
+        return {
+          'success': false,
+          'message':
+              'Server mengembalikan format yang tidak valid: ${response.headers['content-type']}'
+        };
+      }
+
+      // Parse JSON dengan penanganan error
+      Map<String, dynamic> data;
+      try {
+        data = jsonDecode(response.body);
+      } catch (e) {
+        return {
+          'success': false,
+          'message':
+              'Format respons tidak valid: ${e.toString()}\nResponse: ${response.body.substring(0, min(100, response.body.length))}...'
+        };
+      }
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal mencari pengguna'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+  
+  // Transfer uang ke pengguna lain
+  static Future<Map<String, dynamic>> transferMoney(
+      String receiverPhone, int amount, String type, String? message) async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+      
+      final body = {
+        'receiverPhone': receiverPhone,
+        'amount': amount,
+        'type': type,
+      };
+      
+      if (message != null) {
+        body['message'] = message;
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/transfer'),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal melakukan transfer'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }
 
@@ -625,7 +719,36 @@ class ApiService {
       } else {
         return {
           'success': false,
-          'message': data['message'] ?? 'Gagal mengambil data pemasukan'
+          'message': data['message'] ?? 'Gagal mengambil data transaksi'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> getTransactionHistory() async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+      final headers = await _getAuthHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/transaction-history'),
+        headers: headers,
+      );
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'message': data['message'],
+          'records': data['records']
+        };
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal mengambil data transaksi'
         };
       }
     } catch (e) {
@@ -813,6 +936,7 @@ class ApiService {
           'deskripsi': description,
           'target': target,
           'terkumpul': collected,
+          'deductFromBalance': collected > 0, // Parameter baru untuk menandakan apakah perlu mengurangi saldo
         }),
       );
 
@@ -867,6 +991,38 @@ class ApiService {
     }
   }
 
+  // Update savings target
+  static Future<Map<String, dynamic>> updateSavingTarget(int id, int target) async {
+    try {
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+      final response = await http.patch(
+        Uri.parse('$baseUrl/savings/$id/update-target'),
+        headers: headers,
+        body: jsonEncode({
+          'target': target,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal memperbarui target tabungan'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
   // Add amount to saving
   static Future<Map<String, dynamic>> addToSaving(int id, int amount) async {
     try {
@@ -877,22 +1033,16 @@ class ApiService {
 
       final headers = await _getAuthHeaders();
 
-      // Tambahkan logging untuk debugging
-      print('Mengirim request ke: $baseUrl/savings/$id/add');
-      print('Headers: $headers');
-      print('Body: ${jsonEncode({'amount': amount})}');
 
       final response = await http.patch(
         Uri.parse('$baseUrl/savings/$id/add'),
         headers: headers,
         body: jsonEncode({
           'amount': amount,
+          'deductFromBalance': true, // Tambahkan parameter ini untuk mengurangi saldo
         }),
       );
 
-      // Tambahkan logging untuk response
-      print('Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       // Coba parse response body dengan penanganan error
       Map<String, dynamic> data;
@@ -915,8 +1065,6 @@ class ApiService {
         };
       }
     } catch (e) {
-      // Tambahkan detail error yang lebih spesifik
-      print('Error pada addToSaving: ${e.toString()}');
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }
@@ -954,27 +1102,38 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> searchUser(String phone) async {
+  // Withdraw saving (move to balance and delete saving)
+  static Future<Map<String, dynamic>> withdrawSaving(int id) async {
     try {
-      // Check if token exists
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
       }
 
       final headers = await _getAuthHeaders();
-
-      final response = await http.get(
-        Uri.parse('$baseUrl/search-user/$phone'),
+      final response = await http.post(
+        Uri.parse('$baseUrl/savings/$id/withdraw'),
         headers: headers,
       );
-      final data = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
-        return {'success': true, 'data': data['data']};
+        Map<String, dynamic> data = {};
+        try {
+          data = jsonDecode(response.body);
+        } catch (e) {
+          // Jika response body tidak bisa di-decode sebagai JSON
+        }
+        return {'success': true, 'data': data};
       } else {
+        Map<String, dynamic> data = {};
+        try {
+          data = jsonDecode(response.body);
+        } catch (e) {
+          // Jika response body tidak bisa di-decode sebagai JSON
+        }
         return {
           'success': false,
-          'message': data['message'] ?? 'Pengguna tidak ditemukan'
+          'message': data['message'] ?? 'Gagal menarik dana tabungan'
         };
       }
     } catch (e) {
@@ -982,8 +1141,10 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> transferMoney(
-      String receiverPhone, int amount, String type, String? message) async {
+  // Metode searchUser sudah diimplementasikan di atas
+
+  // Top Up method
+  static Future<Map<String, dynamic>> topUp(String amount) async {
     try {
       // Check if token exists
       final token = await getAuthToken();
@@ -994,28 +1155,25 @@ class ApiService {
       final headers = await _getAuthHeaders();
 
       final response = await http.post(
-        Uri.parse('$baseUrl/transfer'),
+        Uri.parse('$baseUrl/topup'),
         headers: headers,
         body: jsonEncode({
-          'receiverPhone': receiverPhone,
           'amount': amount,
-          'type': type,
-          'message': message,
         }),
       );
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return {
-          'success': true,
-          'message': data['message'] ?? 'Transfer berhasil',
+          'success': true, 
+          'message': data['message'] ?? 'Top up berhasil',
           'data': data
         };
       } else {
         return {
           'success': false,
-          'message': data['message'] ?? 'Gagal melakukan transfer'
+          'message': data['message'] ?? 'Gagal melakukan top up'
         };
       }
     } catch (e) {

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:payplus_mobile/app/data/models/savings_model.dart';
+import 'package:payplus_mobile/app/models/savings_model.dart';
 import '../controllers/savings_controller.dart';
-
-// Hapus definisi kelas Saving di sini karena sudah diimpor dari controller
 
 class SavingsPage extends GetView<SavingsController> {
   const SavingsPage({super.key});
@@ -62,8 +60,6 @@ class SavingsPage extends GetView<SavingsController> {
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.add, color: Colors.white),
-                      SizedBox(width: 8),
                       Text(
                         'Add New Saving',
                         style: TextStyle(
@@ -105,7 +101,7 @@ class SavingsPage extends GetView<SavingsController> {
 
   void _addNewSaving() {
     controller.clearInputFields();
-    
+
     showDialog(
       context: Get.context!,
       builder: (context) => AlertDialog(
@@ -192,6 +188,49 @@ class SavingsPage extends GetView<SavingsController> {
     );
   }
 
+  void showEditTargetDialog(int index) {
+    final saving = controller.savingsList[index];
+    controller.editTargetController.text = saving.target.toString();
+
+    showDialog(
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        title: const Text("Edit Target Tabungan"),
+        content: TextField(
+          controller: controller.editTargetController,
+          decoration: const InputDecoration(labelText: "Target Baru"),
+          keyboardType: TextInputType.number,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Batal"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newTarget =
+                  int.tryParse(controller.editTargetController.text) ?? 0;
+              if (newTarget > 0) {
+                controller.updateSavingTarget(index, newTarget);
+                Navigator.pop(context);
+              } else {
+                Get.snackbar(
+                  'Error',
+                  'Target harus lebih dari 0',
+                  backgroundColor: Colors.red.shade100,
+                  colorText: Colors.red.shade900,
+                );
+              }
+            },
+            child: const Text("Simpan"),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget buildSummaryCard({
     required IconData icon,
     required String title,
@@ -247,7 +286,16 @@ class SavingsPage extends GetView<SavingsController> {
   }
 
   Widget buildSavingCard(Savings saving, int index, VoidCallback onDelete) {
+    // Hitung persentase tabungan
+    final double percentage = saving.target > 0
+        ? (saving.collected / saving.target * 100).clamp(0, 100).toDouble()
+        : 0;
+
+    final bool isCompleted = saving.collected >= saving.target;
+
     return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -259,67 +307,89 @@ class SavingsPage extends GetView<SavingsController> {
           ),
         ],
       ),
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                saving.title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                '${((saving.collected / saving.target) * 100).toStringAsFixed(1)}%',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-            ],
+          Text(
+            saving.title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             saving.description,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: Colors.grey,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Target',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          Text(
+            controller.formatCurrency(saving.target),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Text(
+            'Amount Collected',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          Text(
+            controller.formatCurrency(saving.collected),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
             ),
           ),
           const SizedBox(height: 16),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
-              value: saving.collected / saving.target,
-              backgroundColor: Colors.grey[200],
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+              value: saving.target > 0 ? saving.collected / saving.target : 0,
               minHeight: 10,
+              backgroundColor: Colors.grey.shade200,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                isCompleted ? Colors.green : Colors.blue,
+              ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                controller.formatCurrency(saving.collected),
-                style: const TextStyle(
-                  fontSize: 16,
+                '${percentage.toStringAsFixed(1)}%',
+                style: TextStyle(
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  color: isCompleted ? Colors.green : Colors.blue,
                 ),
               ),
               Text(
-                controller.formatCurrency(saving.target),
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                '${controller.formatCurrency(saving.collected)} / ${controller.formatCurrency(saving.target)}',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade700,
                 ),
               ),
             ],
@@ -327,10 +397,58 @@ class SavingsPage extends GetView<SavingsController> {
           const SizedBox(height: 10),
           Row(
             children: [
+              // Tampilkan tombol yang berbeda berdasarkan status tabungan
+              if (!isCompleted) ...[
+                // Tombol Add to Savings hanya ditampilkan jika belum mencapai target
+                ElevatedButton(
+                  onPressed: () => showAddToSavingDialog(index),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 20,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'Add to Savings',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ] else ...[
+                // Tombol Withdraw hanya ditampilkan jika sudah mencapai target
+                ElevatedButton(
+                  onPressed: () => controller.withdrawSaving(index),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 20,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'Withdraw',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(width: 5),
+              // Tombol Edit selalu ditampilkan
               ElevatedButton(
-                onPressed: () => showAddToSavingDialog(index),
+                onPressed: () => showEditTargetDialog(index),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.blue,
                   padding: const EdgeInsets.symmetric(
                     vertical: 12,
                     horizontal: 20,
@@ -340,7 +458,7 @@ class SavingsPage extends GetView<SavingsController> {
                   ),
                 ),
                 child: const Text(
-                  'Add to Savings',
+                  'Edit Target',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -348,26 +466,28 @@ class SavingsPage extends GetView<SavingsController> {
                 ),
               ),
               const SizedBox(width: 5),
-              ElevatedButton(
-                onPressed: onDelete,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 20,
+              // Tombol Delete hanya ditampilkan jika belum mencapai target
+              if (!isCompleted)
+                ElevatedButton(
+                  onPressed: onDelete,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 20,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                  child: const Text(
+                    'Delete',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-                child: const Text(
-                  'Delete',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
             ],
           ),
         ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/bill_controller.dart';
-import '../../../data/models/bill_model.dart';
+import '../../../models/bill_model.dart';
 
 class EditBillView extends GetView<BillController> {
   const EditBillView({super.key});

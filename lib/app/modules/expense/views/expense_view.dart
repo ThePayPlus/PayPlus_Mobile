@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:payplus_mobile/app/data/models/expense_record_model.dart';
+import 'package:payplus_mobile/app/models/expense_record_model.dart';
 import '../controllers/expense_controller.dart';
 
 class ExpenseView extends GetView<ExpenseController> {
