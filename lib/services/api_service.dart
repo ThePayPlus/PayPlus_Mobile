@@ -5,9 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'https://ws1qtsds-3000.asse.devtunnels.ms/api';
+  static const String baseUrl = 'https://localhost:3000/api';
 
-  // Token storage key
+  // Token storage keyd
   static const String tokenKey = 'auth_token';
 
   // Headers for API requests
