@@ -222,7 +222,7 @@ class BillView extends GetView<BillController> {
                       onTap: () => controller.deleteBill(bill.id),
                       child: const Padding(
                         padding: EdgeInsets.all(4),
-                        child: Icon(Icons.delete, color: Colors.red, size: 18),
+                        child: Icon(Icons.task_alt, color: Colors.green, size: 19),
                       ),
                     ),
                   ],
@@ -320,7 +320,7 @@ class BillView extends GetView<BillController> {
                 borderSide: BorderSide(color: Colors.grey.shade300),
               ),
               labelText: 'Amount',
-              prefixIcon: const Icon(Icons.attach_money, color: Colors.deepPurple),
+              prefixIcon: const Icon(Icons.money, color: Colors.deepPurple),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(color: Colors.deepPurple),
