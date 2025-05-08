@@ -458,7 +458,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // List of income record cards
+  //## List income record cards
   Widget _buildIncomeRecordsList() {
     if (controller.filteredRecords.isEmpty) {
       return Container(
@@ -480,7 +480,6 @@ class IncomeView extends GetView<IncomeController> {
         ),
       );
     }
-
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -492,7 +491,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // Individual income record card
+  //## Incomee record card
   Widget _buildIncomeRecordCard(Income record) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
