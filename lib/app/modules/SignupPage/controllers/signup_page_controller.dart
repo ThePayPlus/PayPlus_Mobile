@@ -25,7 +25,7 @@ class SignupPageController extends GetxController {
     // Validate inputs
     if (nameController.text.isEmpty) {
       Get.snackbar(
-        'Error', 
+        'Error',
         'Please enter your name',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white,
@@ -35,7 +35,7 @@ class SignupPageController extends GetxController {
 
     if (phoneController.text.isEmpty) {
       Get.snackbar(
-        'Error', 
+        'Error',
         'Please enter your phone number',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white,
@@ -45,7 +45,7 @@ class SignupPageController extends GetxController {
 
     if (emailController.text.isEmpty) {
       Get.snackbar(
-        'Error', 
+        'Error',
         'Please enter your email address',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white,
@@ -55,7 +55,7 @@ class SignupPageController extends GetxController {
 
     if (!GetUtils.isEmail(emailController.text)) {
       Get.snackbar(
-        'Error', 
+        'Error',
         'Please enter a valid email address',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white,
@@ -65,7 +65,7 @@ class SignupPageController extends GetxController {
 
     if (passwordController.text.isEmpty) {
       Get.snackbar(
-        'Error', 
+        'Error',
         'Please enter your password',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white,
@@ -75,7 +75,7 @@ class SignupPageController extends GetxController {
 
     if (confirmPasswordController.text.isEmpty) {
       Get.snackbar(
-        'Error', 
+        'Error',
         'Please confirm your password',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white,
@@ -85,7 +85,7 @@ class SignupPageController extends GetxController {
 
     if (passwordController.text != confirmPasswordController.text) {
       Get.snackbar(
-        'Error', 
+        'Error',
         'Passwords do not match',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white,
@@ -95,30 +95,26 @@ class SignupPageController extends GetxController {
 
     try {
       isLoading.value = true;
-      
+
       // Call the API service to register
-      final result = await ApiService.register(
-        nameController.text,
-        phoneController.text,
-        emailController.text,
-        passwordController.text
-      );
-      
+      final result = await ApiService.register(nameController.text,
+          phoneController.text, emailController.text, passwordController.text);
+
       if (result['success']) {
         // Registration successful
         Get.snackbar(
-          'Success', 
+          'Success',
           'Registration successful! Please login.',
           backgroundColor: Colors.green.withOpacity(0.7),
           colorText: Colors.white,
         );
-        
+
         // Navigate to login page
-        Get.offAllNamed('/login');
+        Get.toNamed('/login');
       } else {
         // Registration failed
         Get.snackbar(
-          'Error', 
+          'Error',
           result['message'] ?? 'Registration failed',
           backgroundColor: Colors.red.withOpacity(0.7),
           colorText: Colors.white,
@@ -126,7 +122,7 @@ class SignupPageController extends GetxController {
       }
     } catch (e) {
       Get.snackbar(
-        'Error', 
+        'Error',
         'Registration failed: ${e.toString()}',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white,
