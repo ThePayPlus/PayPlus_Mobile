@@ -374,19 +374,19 @@ class ApiService {
     }
   }
   
-  // Cari pengguna berdasarkan nomor telepon atau nama
-  static Future<Map<String, dynamic>> searchUser(String query) async {
+  // Search user by phone
+  static Future<Map<String, dynamic>> searchUser(String phone) async {
     try {
       // Pastikan token sudah ada
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
-        return {'success': false, 'message': 'Authentication required'};
+        return {'success': false, 'message': 'Anda belum login'};
       }
 
       final headers = await _getAuthHeaders();
 
       final response = await http.get(
-        Uri.parse('$baseUrl/users/search?query=$query'),
+        Uri.parse('$baseUrl/users/search?phone=$phone'),
         headers: headers,
       );
 
@@ -400,7 +400,7 @@ class ApiService {
         };
       }
 
-      // Parse JSON dengan penanganan error
+      // Coba parse JSON dengan penanganan error yang lebih baik
       Map<String, dynamic> data;
       try {
         data = jsonDecode(response.body);

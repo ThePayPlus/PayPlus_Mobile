@@ -83,8 +83,10 @@ class TransferPageController extends GetxController {
     try {
       final result = await ApiService.searchUser(searchController.text);
       if (result['success']) {
+        print('Data: ${result['data']}');
         // Periksa jika respons bukan JSON
         if (result['data'] != null) {
+          print('Data: ${result['data']}');
           // Coba parse data users dari respons
           try {
             if (result['data']['name'] != null) {
