@@ -9,19 +9,18 @@ class ChatScreenController extends GetxController {
   RxList<Map<String, dynamic>> messages = <Map<String, dynamic>>[].obs;
   RxBool isLoading = false.obs;
   TextEditingController messageController = TextEditingController();
-  RxString myPhone = "".obs; // Ubah menjadi RxString dan kosongkan nilainya
+  RxString myPhone = "".obs;
 
-  // Constructor untuk menerima friendPhone
   ChatScreenController(this.friendPhone);
 
-  late WebSocketChannel channel; // WebSocketChannel instance
+  late WebSocketChannel channel;
 
   @override
   void onInit() {
     super.onInit();
-    getUserPhone(); // Tambahkan fungsi untuk mendapatkan nomor telepon pengguna
-    fetchMessages(); // Ambil pesan saat halaman dibuka
-    connectToWebSocket(); // Menghubungkan ke WebSocket server
+    getUserPhone();
+    fetchMessages();
+    connectToWebSocket();
   }
 
   // Fungsi untuk mendapatkan nomor telepon pengguna dari profil
@@ -35,8 +34,7 @@ class ChatScreenController extends GetxController {
   // Fungsi untuk menghubungkan ke WebSocket
   void connectToWebSocket() {
     channel = WebSocketChannel.connect(
-      Uri.parse(
-          'ws://10.0.2.2:3000'), // Ganti dengan URL WebSocket backend kamu
+      Uri.parse('ws://10.0.2.2:3000'),
     );
 
     // Menerima pesan dari WebSocket
@@ -46,11 +44,9 @@ class ChatScreenController extends GetxController {
         messages.add(decodedMessage); // Menambahkan pesan baru ke list
       },
       onDone: () {
-        // Jika WebSocket terputus, lakukan fetch untuk mengambil pesan
         fetchMessages();
       },
       onError: (error) {
-        // Handle error jika WebSocket gagal
         print('WebSocket error: $error');
       },
     );
@@ -78,7 +74,7 @@ class ChatScreenController extends GetxController {
     if (message.isEmpty) return;
 
     final messageData = {
-      'sender_phone': myPhone.value, // Ubah myPhone menjadi myPhone.value
+      'sender_phone': myPhone.value,
       'receiver_phone': friendPhone,
       'message': message,
       'sent_at': DateTime.now().toIso8601String()
@@ -91,7 +87,6 @@ class ChatScreenController extends GetxController {
     final result = await ApiService.sendMessage(friendPhone, message);
 
     if (result['success'] == true) {
-      // Tambahkan pesan ke daftar pesan lokal agar langsung muncul di UI
       messages.add(messageData);
 
       messageController.clear();
@@ -103,6 +98,6 @@ class ChatScreenController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    channel.sink.close(); // Pastikan menutup koneksi WebSocket
+    channel.sink.close();
   }
 }

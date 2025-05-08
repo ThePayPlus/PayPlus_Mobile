@@ -105,32 +105,103 @@ class SavingsPage extends GetView<SavingsController> {
     showDialog(
       context: Get.context!,
       builder: (context) => AlertDialog(
-        title: const Text("Add New Saving"),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.lightBlueAccent.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.savings_outlined,
+                color: Colors.lightBlueAccent,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              "Add New Saving",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
         content: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: controller.titleController,
-                decoration: const InputDecoration(labelText: "Title"),
+                decoration: InputDecoration(
+                  labelText: "Title",
+                  prefixIcon: const Icon(Icons.title, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Colors.lightBlueAccent, width: 2),
+                  ),
+                ),
               ),
+              const SizedBox(height: 16),
               TextField(
                 controller: controller.descriptionController,
-                decoration: const InputDecoration(labelText: "Description"),
+                decoration: InputDecoration(
+                  labelText: "Description",
+                  prefixIcon: const Icon(Icons.description, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Colors.lightBlueAccent, width: 2),
+                  ),
+                ),
+                maxLines: 2,
               ),
+              const SizedBox(height: 16),
               TextField(
                 controller: controller.targetController,
-                decoration: const InputDecoration(
-                  labelText: "Target (e.g. 7000000)",
+                decoration: InputDecoration(
+                  labelText: "Target Amount",
+                  hintText: "e.g. 7000000",
+                  prefixIcon: const Icon(Icons.flag, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Colors.lightBlueAccent, width: 2),
+                  ),
                 ),
                 keyboardType: TextInputType.number,
               ),
+              const SizedBox(height: 16),
               TextField(
                 controller: controller.collectedController,
-                decoration: const InputDecoration(
-                  labelText: "Collected (e.g. 500000)",
+                decoration: InputDecoration(
+                  labelText: "Initial Amount",
+                  hintText: "e.g. 500000",
+                  prefixIcon: const Icon(Icons.account_balance_wallet, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Colors.lightBlueAccent, width: 2),
+                  ),
                 ),
                 keyboardType: TextInputType.number,
               ),
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -140,6 +211,9 @@ class SavingsPage extends GetView<SavingsController> {
               Navigator.pop(context);
               controller.clearInputFields();
             },
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey[700],
+            ),
             child: const Text("Cancel"),
           ),
           ElevatedButton(
@@ -147,30 +221,108 @@ class SavingsPage extends GetView<SavingsController> {
               controller.addNewSaving();
               Navigator.pop(context);
             },
-            child: const Text("Add"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.lightBlueAccent,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+            child: const Text(
+              "Add",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
+        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
       ),
     );
   }
 
   void showAddToSavingDialog(int index) {
     final amountController = TextEditingController();
+    final saving = controller.savingsList[index];
 
     showDialog(
       context: Get.context!,
       builder: (context) => AlertDialog(
-        title: const Text("Add to Savings"),
-        content: TextField(
-          controller: amountController,
-          decoration: const InputDecoration(labelText: "Amount to add"),
-          keyboardType: TextInputType.number,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.add_circle_outline,
+                color: Colors.green,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              "Add to Savings",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              saving.title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "Current: ${controller.formatCurrency(saving.collected)} / ${controller.formatCurrency(saving.target)}",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: amountController,
+              decoration: InputDecoration(
+                labelText: "Amount to add",
+                hintText: "Enter amount",
+                prefixIcon: const Icon(Icons.attach_money, color: Colors.grey),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.green, width: 2),
+                ),
+              ),
+              keyboardType: TextInputType.number,
+              autofocus: true,
+            ),
+            const SizedBox(height: 16),
+          ],
         ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey[700],
+            ),
             child: const Text("Cancel"),
           ),
           ElevatedButton(
@@ -179,11 +331,32 @@ class SavingsPage extends GetView<SavingsController> {
               if (amount > 0) {
                 controller.addToSaving(index, amount);
                 Navigator.pop(context);
+              } else {
+                // Show error for invalid amount
+                Get.snackbar(
+                  'Invalid Amount',
+                  'Please enter an amount greater than 0',
+                  backgroundColor: Colors.red.shade100,
+                  colorText: Colors.red.shade900,
+                  snackPosition: SnackPosition.BOTTOM,
+                );
               }
             },
-            child: const Text("Add"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+            child: const Text(
+              "Add",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
+        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
       ),
     );
   }
@@ -195,18 +368,83 @@ class SavingsPage extends GetView<SavingsController> {
     showDialog(
       context: Get.context!,
       builder: (context) => AlertDialog(
-        title: const Text("Edit Target Tabungan"),
-        content: TextField(
-          controller: controller.editTargetController,
-          decoration: const InputDecoration(labelText: "Target Baru"),
-          keyboardType: TextInputType.number,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.edit,
+                color: Colors.blue,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              "Edit Target",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              saving.title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "Current Target: ${controller.formatCurrency(saving.target)}",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller.editTargetController,
+              decoration: InputDecoration(
+                labelText: "New Target",
+                hintText: "Enter new target amount",
+                prefixIcon: const Icon(Icons.flag, color: Colors.grey),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.blue, width: 2),
+                ),
+              ),
+              keyboardType: TextInputType.number,
+              autofocus: true,
+            ),
+            const SizedBox(height: 16),
+          ],
         ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text("Batal"),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey[700],
+            ),
+            child: const Text("Cancel"),
           ),
           ElevatedButton(
             onPressed: () {
@@ -218,15 +456,28 @@ class SavingsPage extends GetView<SavingsController> {
               } else {
                 Get.snackbar(
                   'Error',
-                  'Target harus lebih dari 0',
+                  'Target must be greater than 0',
                   backgroundColor: Colors.red.shade100,
                   colorText: Colors.red.shade900,
+                  snackPosition: SnackPosition.BOTTOM,
                 );
               }
             },
-            child: const Text("Simpan"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+            child: const Text(
+              "Save",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
+        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
       ),
     );
   }
