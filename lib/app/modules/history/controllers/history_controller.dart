@@ -24,9 +24,7 @@ class HistoryController extends GetxController {
       final result = await ApiService.getTransactionHistory();
       if (result['success'] == true) {
         final List<dynamic> records = result['records'] ?? [];
-        historyRecords.value =
-            records.map((record) => RecentTransaction.fromJson(record)).toList();
-        calculateStats();
+        historyRecords.value = records.map((record) => RecentTransaction.fromJson(record)).toList();
       } else {
         errorMessage(result['message'] ?? 'Terjadi kesalahan');
       }
@@ -35,15 +33,6 @@ class HistoryController extends GetxController {
     } finally {
       isLoading(false);
     }
-  }
-
-  void calculateStats() {
-    int total = 0;
-    for (var record in historyRecords) {
-      total += int.tryParse(record.amount) ?? 0;
-    }
-    totalAmount.value = total.toString();
-    totalHistory.value = historyRecords.length;
   }
 
   String formatCurrency(String amount) {
