@@ -23,7 +23,7 @@ class ChatScreenController extends GetxController {
     connectToWebSocket();
   }
 
-  // Fungsi untuk mendapatkan nomor telepon pengguna dari profil
+  // ambil nomor telepon
   Future<void> getUserPhone() async {
     final result = await ApiService.getProfile();
     if (result['success'] == true && result['data'] != null) {
@@ -34,7 +34,7 @@ class ChatScreenController extends GetxController {
   // Fungsi untuk menghubungkan ke WebSocket
   void connectToWebSocket() {
     channel = WebSocketChannel.connect(
-      Uri.parse('ws://10.0.2.2:3000'),
+      Uri.parse('ws://192.168.18.4:3000'),
     );
 
     // Menerima pesan dari WebSocket
