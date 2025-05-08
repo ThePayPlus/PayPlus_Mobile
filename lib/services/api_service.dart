@@ -530,18 +530,20 @@ class ApiService {
     }
   }
 
-//## GET Profile Data
+  // Get user profile
   static Future<Map<String, dynamic>> getProfile() async {
     try {
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
       }
+
       final headers = await _getAuthHeaders();
       final response = await http.get(
         Uri.parse('$baseUrl/profile'),
         headers: headers,
       );
+      
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         return {'success': true, 'data': data};

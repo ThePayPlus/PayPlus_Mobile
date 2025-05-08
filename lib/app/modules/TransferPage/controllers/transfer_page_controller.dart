@@ -14,6 +14,7 @@ class TransferPageController extends GetxController {
   final RxList<Map<String, dynamic>> searchResults = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> friends = <Map<String, dynamic>>[].obs;
   final RxInt transferMethod = 0.obs; // 0 = nomor telepon, 1 = daftar teman
+  final RxString currentUserPhone = ''.obs; // Tambahkan variabel untuk menyimpan nomor telepon pengguna saat ini
   
   final List<String> transferTypes = ['Normal', 'Gift'];
   
@@ -22,6 +23,20 @@ class TransferPageController extends GetxController {
     super.onInit();
     // Muat daftar teman saat controller diinisialisasi
     fetchFriends();
+    // Ambil data profil pengguna saat ini
+    getCurrentUserProfile();
+  }
+  
+  // Fungsi untuk mengambil profil pengguna saat ini
+  Future<void> getCurrentUserProfile() async {
+    try {
+      final result = await ApiService.getProfile();
+      if (result['success'] && result['data'] != null) {
+        currentUserPhone.value = result['data']['phone']?.toString() ?? '';
+      }
+    } catch (e) {
+      print('Error mengambil profil pengguna: ${e.toString()}');
+    }
   }
   
   // Fungsi untuk mengambil daftar teman dari API
@@ -57,6 +72,17 @@ class TransferPageController extends GetxController {
   
   // Fungsi untuk memilih teman dari daftar
   void selectFriend(Map<String, dynamic> friend) {
+    // Cek apakah nomor telepon teman sama dengan nomor telepon pengguna saat ini
+    if (friend['phone'].toString() == currentUserPhone.value) {
+      Get.snackbar(
+        'Error', 
+        'Anda tidak dapat melakukan transfer ke diri sendiri',
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white
+      );
+      return;
+    }
+    
     selectedUser.value = 'User: ${friend['name']}';
     selectedUserPhone.value = friend['phone'].toString();
     
@@ -83,13 +109,22 @@ class TransferPageController extends GetxController {
     try {
       final result = await ApiService.searchUser(searchController.text);
       if (result['success']) {
-        print('Data: ${result['data']}');
         // Periksa jika respons bukan JSON
-        if (result['data'] != null) {
-          print('Data: ${result['data']}');
+        if (result['data'] != null) { 
           // Coba parse data users dari respons
           try {
             if (result['data']['name'] != null) {
+              // Cek apakah pengguna mencari dirinya sendiri
+              if (result['data']['phone'].toString() == currentUserPhone.value) {
+                Get.snackbar(
+                  'Error', 
+                  'Anda tidak dapat melakukan transfer ke diri sendiri',
+                  backgroundColor: Colors.red.withOpacity(0.7),
+                  colorText: Colors.white
+                );
+                return;
+              }
+              
               selectedUser.value = 'User: ${result['data']['name']}';
               selectedUserPhone.value = result['data']['phone'].toString();
               
@@ -149,6 +184,17 @@ class TransferPageController extends GetxController {
       Get.snackbar(
         'Error', 
         'Silakan cari dan pilih penerima',
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white
+      );
+      return;
+    }
+    
+    // Validasi transfer ke diri sendiri
+    if (selectedUserPhone.value == currentUserPhone.value) {
+      Get.snackbar(
+        'Error', 
+        'Anda tidak dapat melakukan transfer ke diri sendiri',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white
       );
