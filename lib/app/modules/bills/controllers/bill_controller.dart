@@ -90,18 +90,16 @@ class BillController extends GetxController {
           } else {
             // Jika tidak ada kunci yang berisi List, kosongkan bills
             bills.clear();
-            print('Data diterima tetapi tidak dalam format yang diharapkan: $billsData');
           }
         } else {
           // Jika data bukan List atau Map, kosongkan bills
           bills.clear();
-          print('Tipe data tidak dikenali: ${billsData.runtimeType}');
         }
         
         // Sort bills by due date
         bills.sort((a, b) => a.dueDate.compareTo(b.dueDate));
       } else {
-        errorMessage.value = result['message'] ?? 'Gagal memuat tagihan';
+        errorMessage.value = result['message'] ?? 'Failed to load invoice';
         bills.clear();
         Get.snackbar(
           'Error',
@@ -116,7 +114,7 @@ class BillController extends GetxController {
       bills.clear();
       Get.snackbar(
         'Error',
-        'Gagal terhubung ke server: ${e.toString()}',
+        'Failed to connect to server: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
         duration: const Duration(seconds: 3),
@@ -160,12 +158,12 @@ class BillController extends GetxController {
     );
 
     Get.snackbar(
-      'Tagihan Jatuh Tempo Besok',
-      'Tagihan Anda untuk "${bill.name}" (${currencyFormat.format(bill.amount)}) jatuh tempo besok!',
+      'Bill Due Tomorrow',
+      'Your bill for "${bill.name}" (${currencyFormat.format(bill.amount)}) is due tomorrow!',
       backgroundColor: Colors.amber.shade100,
       colorText: Colors.amber.shade900,
       duration: const Duration(seconds: 5),
-      snackPosition: SnackPosition.TOP,
+      snackPosition: SnackPosition.BOTTOM,
       isDismissible: true,
       dismissDirection: DismissDirection.horizontal,
       icon: const Icon(Icons.access_time, color: Colors.amber),
@@ -181,12 +179,12 @@ class BillController extends GetxController {
 
   void showOverdueNotification(Bill bill) {
     Get.snackbar(
-      'Tagihan Terlambat',
-      'Tagihan Anda untuk "${bill.name}" telah jatuh tempo ${bill.daysOverdue} hari yang lalu!',
+      'Bill has been Ovedue',
+      'Your bill for "${bill.name}" was due ${bill.daysOverdue} days ago!',
       backgroundColor: Colors.red.shade100,
       colorText: Colors.red.shade900,
       duration: const Duration(seconds: 5),
-      snackPosition: SnackPosition.TOP,
+      snackPosition: SnackPosition.BOTTOM,
       isDismissible: true,
       dismissDirection: DismissDirection.horizontal,
       icon: const Icon(Icons.warning, color: Colors.red),
@@ -211,13 +209,13 @@ class BillController extends GetxController {
         await fetchBills();
         Get.snackbar(
           'Sukses',
-          'Tagihan berhasil ditambahkan',
+          'Bill added successfully',
           backgroundColor: Colors.green.shade100,
           colorText: Colors.green.shade900,
         );
         return;
       } else {
-        errorMessage.value = result['message'] ?? 'Gagal menambahkan tagihan';
+        errorMessage.value = result['message'] ?? 'Failed to add bill';
         Get.snackbar(
           'Error',
           errorMessage.value,
@@ -229,7 +227,7 @@ class BillController extends GetxController {
       errorMessage.value = 'Error: ${e.toString()}';
       Get.snackbar(
         'Error',
-        'Gagal terhubung ke server: ${e.toString()}',
+        'Failed to connect to server: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -267,13 +265,13 @@ class BillController extends GetxController {
       if (result['success']) {
         bills.removeWhere((bill) => bill.id == id);
         Get.snackbar(
-          'Sukses',
-          'Tagihan berhasil dihapus',
+          'Success',
+          'Bill has been paid successfully',
           backgroundColor: Colors.green.shade100,
           colorText: Colors.green.shade900,
         );
       } else {
-        errorMessage.value = result['message'] ?? 'Gagal menghapus tagihan';
+        errorMessage.value = result['message'] ?? 'Failed to delete bill';
         Get.snackbar(
           'Error',
           errorMessage.value,
@@ -285,7 +283,7 @@ class BillController extends GetxController {
       errorMessage.value = 'Error: ${e.toString()}';
       Get.snackbar(
         'Error',
-        'Gagal terhubung ke server: ${e.toString()}',
+        'Failed to connect to server: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -312,13 +310,13 @@ class BillController extends GetxController {
         // Refresh bills list after updating
         await fetchBills();
         Get.snackbar(
-          'Sukses',
-          'Tagihan berhasil diperbarui',
+          'Success',
+          'Bill updated successfully',
           backgroundColor: Colors.green.shade100,
           colorText: Colors.green.shade900,
         );
       } else {
-        errorMessage.value = result['message'] ?? 'Gagal memperbarui tagihan';
+        errorMessage.value = result['message'] ?? 'Failed to update bill';
         Get.snackbar(
           'Error',
           errorMessage.value,
@@ -330,7 +328,7 @@ class BillController extends GetxController {
       errorMessage.value = 'Error: ${e.toString()}';
       Get.snackbar(
         'Error',
-        'Gagal terhubung ke server: ${e.toString()}',
+        'Failed to connect to server: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -380,7 +378,7 @@ class BillController extends GetxController {
         selectedDate.value == null) {
       Get.snackbar(
         'Error',
-        'Mohon isi semua kolom',
+        'Please fill in all fields',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );
@@ -401,7 +399,7 @@ class BillController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Error',
-        'Gagal menambahkan tagihan: ${e.toString()}',
+        'Failed to add bill: ${e.toString()}',
         backgroundColor: Colors.red.shade100,
         colorText: Colors.red.shade900,
       );

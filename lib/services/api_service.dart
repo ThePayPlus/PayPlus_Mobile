@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'http://10.0.2.2:3000/api';
 
   // Token storage key
   static const String tokenKey = 'auth_token';
@@ -50,6 +50,43 @@ class ApiService {
       _headers['Authorization'] = 'Bearer $token';
     }
     return _headers;
+  }
+
+// Metode untuk mengirim pesan ke chatbot
+  static Future<Map<String, dynamic>> sendChatbotMessage(String message) async {
+    try {
+      // Check if token exists
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/chatbot'),
+        headers: headers,
+        body: jsonEncode({
+          'message': message,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'response': data['response'],
+        };
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal mendapatkan respons dari chatbot'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
   }
 
   // Login method
