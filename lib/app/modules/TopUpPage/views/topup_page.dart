@@ -49,6 +49,7 @@ class _TopUpPageState extends State<TopUpPage> {
                 _buildBankOption('assets/images/BRI.png', 'BRI'),
                 _buildBankOption('assets/images/BCA.png', 'BCA'),
                 _buildBankOption('assets/images/BNI.png', 'BNI'),
+                _buildBankOption('assets/images/mandiri.png', 'Mandiri'),
                 _buildBankOption('assets/images/jatim.png', 'Bank Jatim',
                     width: 100),
                 _buildBankOption('assets/images/bali.png', 'Bank Bali',
