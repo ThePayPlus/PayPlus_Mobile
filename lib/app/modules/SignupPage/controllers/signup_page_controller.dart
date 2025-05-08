@@ -147,6 +147,7 @@ class SignupPageController extends GetxController {
   }
 
   void goToLogin() {
-    Get.offAllNamed('/login');
+    // Navigasi ke halaman login
+    Get.toNamed('/login');
   }
 }
