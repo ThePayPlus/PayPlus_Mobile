@@ -373,6 +373,69 @@ class ApiService {
     }
   }
 
+  // Mengambil pesan antara dua teman
+  static Future<Map<String, dynamic>> getMessages(String friendPhone) async {
+    try {
+      final token = await getAuthToken(); // Ambil token untuk autentikasi
+      final response = await http.get(
+        Uri.parse(
+            '$baseUrl/messages/$friendPhone'), // Endpoint untuk mengambil pesan
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      // Parse response JSON
+      final data = json.decode(response.body);
+      return data;
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Terjadi kesalahan: $e',
+      };
+    }
+  }
+
+  // Fungsi untuk mengirim pesan
+  static Future<Map<String, dynamic>> sendMessage(
+      String receiverPhone, String message) async {
+    try {
+      final token = await getAuthToken();
+      final response = await http.post(
+        Uri.parse('$baseUrl/messages'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'receiverPhone': receiverPhone,
+          'message': message,
+        }),
+      );
+
+      // Jika status code adalah 201, berarti berhasil
+      if (response.statusCode == 201) {
+        final data = json.decode(response.body);
+
+        return {
+          'success': true,
+          'message': data['message'] ?? 'Pesan berhasil dikirim',
+        };
+      } else {
+        return {
+          'success': false,
+          'message': 'Server error: ${response.statusCode}',
+        };
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Terjadi kesalahan saat mengirim pesan: $e',
+      };
+    }
+  }
+
 //## GET Profile Data
   static Future<Map<String, dynamic>> getProfile() async {
     try {

@@ -1,11 +1,8 @@
 import 'package:get/get.dart';
-
-import '../modules/Chat/bindings/chat_binding.dart';
-import '../modules/Chat/views/chat_view.dart';
 import '../modules/ChatBot/bindings/chat_bot_binding.dart';
 import '../modules/ChatBot/views/chat_bot_view.dart';
-import '../modules/ChatList/bindings/chat_list_binding.dart';
-import '../modules/ChatList/views/chat_list_view.dart';
+import '../modules/ChatScreen/bindings/chat_screen_binding.dart';
+import '../modules/ChatScreen/views/chat_screen_view.dart';
 import '../modules/FriendPage/bindings/friend_page_binding.dart';
 import '../modules/FriendPage/views/friend_page_view.dart';
 import '../modules/LoginPage/bindings/login_page_binding.dart';
@@ -97,16 +94,6 @@ class AppPages {
       binding: FriendPageBinding(),
     ),
     GetPage(
-      name: _Paths.CHAT,
-      page: () => const ChatView(),
-      binding: ChatBinding(),
-    ),
-    GetPage(
-      name: _Paths.CHAT_LIST,
-      page: () => const ChatListView(),
-      binding: ChatListBinding(),
-    ),
-    GetPage(
       name: _Paths.CHAT_BOT,
       page: () => const ChatBotView(),
       binding: ChatBotBinding(),
@@ -125,6 +112,13 @@ class AppPages {
       name: _Paths.HISTORY,
       page: () => const HistoryView(),
       binding: HistoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHAT_SCREEN,
+      page: () => ChatScreenView(
+          friendName: Get.arguments['friendName'],
+          friendPhone: Get.arguments['friendPhone']),
+      binding: ChatScreenBinding(),
     ),
   ];
 }

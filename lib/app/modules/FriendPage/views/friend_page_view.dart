@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:payplus_mobile/app/modules/ChatScreen/views/chat_screen_view.dart';
 import 'package:payplus_mobile/app/modules/FriendPage/views/friend_request_widget.dart';
 import 'package:payplus_mobile/app/modules/add_friend_dialog/views/add_friend_dialog_view.dart';
 import '../controllers/friend_page_controller.dart';
@@ -96,6 +97,7 @@ class FriendPageView extends StatelessWidget {
                   ),
                 ),
               ),
+
               // Friend list
               Expanded(
                 child: Obx(() {
@@ -245,6 +247,17 @@ class FriendPageView extends StatelessWidget {
                               style: TextStyle(
                                 color: AppTheme.textLight,
                               ),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.chat_bubble), // Ikon chat
+                              onPressed: () {
+                                // Arahkan ke UI obrolan dengan teman ini
+                                Get.to(() => ChatScreenView(
+                                      friendPhone:
+                                          friend['phone']?.toString() ?? '',
+                                      friendName: friend['name'] ?? '',
+                                    ));
+                              },
                             ),
                           ),
                         ),
