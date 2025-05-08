@@ -373,7 +373,7 @@ class ApiService {
       };
     }
   }
-  
+
   // Search user by phone
   static Future<Map<String, dynamic>> searchUser(String phone) async {
     try {
@@ -424,7 +424,7 @@ class ApiService {
       return {'success': false, 'message': 'Network error: ${e.toString()}'};
     }
   }
-  
+
   // Transfer uang ke pengguna lain
   static Future<Map<String, dynamic>> transferMoney(
       String receiverPhone, int amount, String type, String? message) async {
@@ -435,13 +435,13 @@ class ApiService {
       }
 
       final headers = await _getAuthHeaders();
-      
+
       final body = {
         'receiverPhone': receiverPhone,
         'amount': amount,
         'type': type,
       };
-      
+
       if (message != null) {
         body['message'] = message;
       }
@@ -543,7 +543,7 @@ class ApiService {
         Uri.parse('$baseUrl/profile'),
         headers: headers,
       );
-      
+
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         return {'success': true, 'data': data};
@@ -938,7 +938,8 @@ class ApiService {
           'deskripsi': description,
           'target': target,
           'terkumpul': collected,
-          'deductFromBalance': collected > 0, // Parameter baru untuk menandakan apakah perlu mengurangi saldo
+          'deductFromBalance': collected >
+              0, // Parameter baru untuk menandakan apakah perlu mengurangi saldo
         }),
       );
 
@@ -994,7 +995,8 @@ class ApiService {
   }
 
   // Update savings target
-  static Future<Map<String, dynamic>> updateSavingTarget(int id, int target) async {
+  static Future<Map<String, dynamic>> updateSavingTarget(
+      int id, int target) async {
     try {
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
@@ -1035,16 +1037,15 @@ class ApiService {
 
       final headers = await _getAuthHeaders();
 
-
       final response = await http.patch(
         Uri.parse('$baseUrl/savings/$id/add'),
         headers: headers,
         body: jsonEncode({
           'amount': amount,
-          'deductFromBalance': true, // Tambahkan parameter ini untuk mengurangi saldo
+          'deductFromBalance':
+              true, // Tambahkan parameter ini untuk mengurangi saldo
         }),
       );
-
 
       // Coba parse response body dengan penanganan error
       Map<String, dynamic> data;
@@ -1168,7 +1169,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         return {
-          'success': true, 
+          'success': true,
           'message': data['message'] ?? 'Top up berhasil',
           'data': data
         };
