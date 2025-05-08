@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../../data/models/bill_model.dart';
+import '../../../models/bill_model.dart';
 import 'package:payplus_mobile/services/api_service.dart';
 
 class BillController extends GetxController {

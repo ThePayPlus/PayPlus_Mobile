@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:payplus_mobile/app/data/models/expense_record_model.dart';
+import 'package:payplus_mobile/app/models/expense_record_model.dart';
 import 'package:payplus_mobile/services/api_service.dart';
 
 class ExpenseController extends GetxController {

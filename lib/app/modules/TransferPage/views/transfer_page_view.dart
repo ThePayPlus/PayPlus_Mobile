@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../controllers/transfer_page_controller.dart';
-import '../../../theme/app_theme.dart';
 
 class TransferView extends GetView<TransferPageController> {
   const TransferView({super.key});

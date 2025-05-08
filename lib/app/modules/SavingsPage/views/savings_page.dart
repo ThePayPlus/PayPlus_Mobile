@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:payplus_mobile/app/data/models/savings_model.dart';
+import 'package:payplus_mobile/app/models/savings_model.dart';
 import '../controllers/savings_controller.dart';
 
 class SavingsPage extends GetView<SavingsController> {
