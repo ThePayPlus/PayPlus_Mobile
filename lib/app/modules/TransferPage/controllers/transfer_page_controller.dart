@@ -53,7 +53,7 @@ class TransferPageController extends GetxController {
       } else {
         Get.snackbar(
           'Error', 
-          result['message'] ?? 'Gagal memuat daftar teman',
+          result['message'] ?? 'Failed to load friends list',
           backgroundColor: Colors.red.withOpacity(0.7),
           colorText: Colors.white
         );
@@ -61,7 +61,7 @@ class TransferPageController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Error', 
-        'Terjadi kesalahan: ${e.toString()}',
+        'An error occurred: ${e.toString()}',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white
       );
@@ -76,7 +76,7 @@ class TransferPageController extends GetxController {
     if (friend['phone'].toString() == currentUserPhone.value) {
       Get.snackbar(
         'Error', 
-        'Anda tidak dapat melakukan transfer ke diri sendiri',
+        'You cannot transfer to yourself',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white
       );
@@ -87,8 +87,8 @@ class TransferPageController extends GetxController {
     selectedUserPhone.value = friend['phone'].toString();
     
     Get.snackbar(
-      'Sukses', 
-      'Pengguna dipilih: ${friend['name']}',
+      'Success', 
+      'User selected: ${friend['name']}',
       backgroundColor: Colors.green.withOpacity(0.7),
       colorText: Colors.white
     );
@@ -98,7 +98,7 @@ class TransferPageController extends GetxController {
     if (searchController.text.isEmpty) {
       Get.snackbar(
         'Error', 
-        'Silakan masukkan nama atau nomor telepon',
+        'Please enter a name or phone number',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white
       );
@@ -118,7 +118,7 @@ class TransferPageController extends GetxController {
               if (result['data']['phone'].toString() == currentUserPhone.value) {
                 Get.snackbar(
                   'Error', 
-                  'Anda tidak dapat melakukan transfer ke diri sendiri',
+                  'You cannot transfer to yourself',
                   backgroundColor: Colors.red.withOpacity(0.7),
                   colorText: Colors.white
                 );
@@ -129,15 +129,15 @@ class TransferPageController extends GetxController {
               selectedUserPhone.value = result['data']['phone'].toString();
               
               Get.snackbar(
-                'Sukses', 
-                'Pengguna ditemukan!',
+                'Success', 
+                'User found!',
                 backgroundColor: Colors.green.withOpacity(0.7),
                 colorText: Colors.white
               );
             } else {
               Get.snackbar(
                 'Info', 
-                'Tidak ada pengguna yang ditemukan',
+                'No user found',
                 backgroundColor: Colors.orange.withOpacity(0.7),
                 colorText: Colors.white
               );
@@ -145,7 +145,7 @@ class TransferPageController extends GetxController {
           } catch (e) {
             Get.snackbar(
               'Error', 
-              'Format data tidak valid: ${e.toString()}',
+              'Invalid data format: ${e.toString()}',
               backgroundColor: Colors.red.withOpacity(0.7),
               colorText: Colors.white
             );
@@ -153,7 +153,7 @@ class TransferPageController extends GetxController {
         } else {
           Get.snackbar(
             'Info', 
-            'Tidak ada data yang ditemukan',
+            'No data found',
             backgroundColor: Colors.orange.withOpacity(0.7),
             colorText: Colors.white
           );
@@ -161,7 +161,7 @@ class TransferPageController extends GetxController {
       } else {
         Get.snackbar(
           'Error', 
-          result['message'] ?? 'Gagal mencari pengguna',
+          result['message'] ?? 'Failed to search user',
           backgroundColor: Colors.red.withOpacity(0.7),
           colorText: Colors.white
         );
@@ -169,7 +169,7 @@ class TransferPageController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Error', 
-        'Terjadi kesalahan: ${e.toString()}',
+        'An error occurred: ${e.toString()}',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white
       );
@@ -183,7 +183,7 @@ class TransferPageController extends GetxController {
     if (selectedUserPhone.value.isEmpty) {
       Get.snackbar(
         'Error', 
-        'Silakan cari dan pilih penerima',
+        'Please search and select a recipient',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white
       );
@@ -194,7 +194,7 @@ class TransferPageController extends GetxController {
     if (selectedUserPhone.value == currentUserPhone.value) {
       Get.snackbar(
         'Error', 
-        'Anda tidak dapat melakukan transfer ke diri sendiri',
+        'You cannot transfer to yourself',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white
       );
@@ -204,7 +204,7 @@ class TransferPageController extends GetxController {
     if (amountController.text.isEmpty) {
       Get.snackbar(
         'Error', 
-        'Silakan masukkan jumlah',
+        'Please enter an amount',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white
       );
@@ -217,7 +217,7 @@ class TransferPageController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Error', 
-        'Jumlah harus berupa angka',
+        'Amount must be a number',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white
       );
@@ -236,8 +236,8 @@ class TransferPageController extends GetxController {
       
       if (result['success']) {
         Get.snackbar(
-          'Sukses', 
-          'Transfer sebesar ${amountController.text} berhasil dikirim ke ${selectedUser.value}',
+          'Success', 
+          'Transfer of ${amountController.text} successfully sent to ${selectedUser.value}',
           backgroundColor: Colors.green.withOpacity(0.7),
           colorText: Colors.white
         );
@@ -252,7 +252,7 @@ class TransferPageController extends GetxController {
       } else {
         Get.snackbar(
           'Error', 
-          result['message'] ?? 'Gagal melakukan transfer',
+          result['message'] ?? 'Failed to make transfer',
           backgroundColor: Colors.red.withOpacity(0.7),
           colorText: Colors.white
         );
@@ -260,7 +260,7 @@ class TransferPageController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Error', 
-        'Terjadi kesalahan: ${e.toString()}',
+        'An error occurred: ${e.toString()}',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white
       );

@@ -26,7 +26,7 @@ class IncomeView extends GetView<IncomeController> {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
-        
+
         if (controller.errorMessage.isNotEmpty) {
           return Center(
             child: Column(
@@ -46,7 +46,7 @@ class IncomeView extends GetView<IncomeController> {
             ),
           );
         }
-        
+
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -97,7 +97,7 @@ class IncomeView extends GetView<IncomeController> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -237,7 +237,7 @@ class IncomeView extends GetView<IncomeController> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -287,14 +287,14 @@ class IncomeView extends GetView<IncomeController> {
     double normalValue = double.tryParse(controller.normalIncome.value) ?? 0;
     double giftValue = double.tryParse(controller.giftIncome.value) ?? 0;
     double topupValue = double.tryParse(controller.topupIncome.value) ?? 0;
-    
+
     // Jika semua nilai 0, tambahkan nilai kecil untuk menghindari chart kosong
     if (normalValue == 0 && giftValue == 0 && topupValue == 0) {
       normalValue = 1;
       giftValue = 1;
       topupValue = 1;
     }
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -303,7 +303,7 @@ class IncomeView extends GetView<IncomeController> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -458,7 +458,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // List of income record cards
+  //## List income record cards
   Widget _buildIncomeRecordsList() {
     if (controller.filteredRecords.isEmpty) {
       return Container(
@@ -480,7 +480,6 @@ class IncomeView extends GetView<IncomeController> {
         ),
       );
     }
-
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -492,7 +491,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // Individual income record card
+  //## Incomee record card
   Widget _buildIncomeRecordCard(Income record) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -501,7 +500,7 @@ class IncomeView extends GetView<IncomeController> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -583,7 +582,9 @@ class IncomeView extends GetView<IncomeController> {
                 ),
               ],
             ),
-            if (record.type == 'gift' && record.message != null && record.message!.isNotEmpty) ...[
+            if (record.type == 'gift' &&
+                record.message != null &&
+                record.message!.isNotEmpty) ...[
               const SizedBox(height: 16),
               const Text(
                 'Message:',

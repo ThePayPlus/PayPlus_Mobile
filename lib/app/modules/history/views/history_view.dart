@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../models/history_controller.dart';
+import '../controllers/history_controller.dart';
 
 class HistoryView extends GetView<HistoryController> {
   const HistoryView({super.key});
@@ -68,110 +68,12 @@ class HistoryView extends GetView<HistoryController> {
                 ),
               ),
               const SizedBox(height: 16),
-
-              // Statistik Cards
-              _buildHistoryStatsGrid(),
-              const SizedBox(height: 16),
-
               // List History Card
               _buildHistoryRecordsList(),
             ],
           ),
         );
       }),
-    );
-  }
-
-  Widget _buildHistoryStatsGrid() {
-    return GridView.count(
-      crossAxisCount: 2,
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
-      childAspectRatio: 1.5,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      children: [
-        _buildStatCard(
-          title: 'Total History',
-          icon: Icons.history,
-          iconColor: Colors.blue,
-          iconBgColor: Colors.blue.shade100,
-          valueWidget: Text(
-            controller.totalHistory.toString(),
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF333333),
-            ),
-          ),
-        ),
-        _buildStatCard(
-          title: 'Total Amount',
-          icon: Icons.attach_money,
-          iconColor: Colors.green,
-          iconBgColor: Colors.green.shade100,
-          valueWidget: Text(
-            controller.formatCurrency(controller.totalAmount.value),
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF333333),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatCard({
-    required String title,
-    required IconData icon,
-    required Color iconColor,
-    required Color iconBgColor,
-    required Widget valueWidget,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: iconBgColor,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            padding: const EdgeInsets.all(8),
-            child: Icon(icon, color: iconColor, size: 28),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Color(0xFF666666),
-                  ),
-                ),
-                valueWidget,
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 
