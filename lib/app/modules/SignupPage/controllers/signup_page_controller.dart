@@ -13,16 +13,6 @@ class SignupPageController extends GetxController {
   final isConfirmPasswordHidden = true.obs;
   final isLoading = false.obs;
 
-  @override
-  void onClose() {
-    nameController.dispose();
-    phoneController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.onClose();
-  }
-
   void togglePasswordVisibility() {
     isPasswordHidden.value = !isPasswordHidden.value;
   }
