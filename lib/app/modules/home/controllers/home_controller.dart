@@ -10,9 +10,9 @@ class HomeController extends GetxController {
 
   // Profile data observables
   final RxString name = ''.obs;
-  final RxDouble totalIncome = 0.0.obs;
-  final RxDouble balance = 0.0.obs;
-  final RxDouble totalExpense = 0.0.obs;
+  final RxString totalIncome = ''.obs;
+  final RxString balance = ''.obs;
+  final RxString totalExpense = ''.obs;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
 
@@ -54,9 +54,11 @@ class HomeController extends GetxController {
       if (result['success']) {
         final data = result['data'];
         name.value = data['name'];
-        balance.value = (data['balance'] ?? 0).toDouble();
-        totalIncome.value = (data['total_income'] ?? 0).toDouble();
-        totalExpense.value = (data['total_expense'] ?? 0).toDouble();
+        balance.value = formatCurrency((data['balance'] ?? 0).toString());
+        totalIncome.value =
+            formatCurrency((data['total_income'] ?? 0).toString());
+        totalExpense.value =
+            formatCurrency((data['total_expense'] ?? 0).toString());
       } else {
         errorMessage.value = 'Failed to load profile data';
       }

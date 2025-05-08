@@ -173,8 +173,7 @@ class HomeView extends GetView<HomeController> {
                   const SizedBox(height: 4),
                   Obx(
                     () => Text(
-                      controller
-                          .formatCurrency(controller.balance.value.toString()),
+                      controller.balance.value,
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -339,8 +338,7 @@ class HomeView extends GetView<HomeController> {
             Expanded(
               child: Obx(() => _buildRecordCard(
                     title: 'Income Records',
-                    amount: controller.formatCurrency(
-                        controller.totalIncome.value.toString()),
+                    amount: controller.totalIncome.value,
                     icon: Icons.arrow_downward_rounded,
                     iconColor: const Color(0xFF4CAF50),
                     onTap: () => Get.toNamed(Routes.INCOME),
@@ -350,8 +348,7 @@ class HomeView extends GetView<HomeController> {
             Expanded(
               child: Obx(() => _buildRecordCard(
                     title: 'Expense Records',
-                    amount: controller.formatCurrency(
-                        controller.totalExpense.value.toString()),
+                    amount: controller.totalExpense.value,
                     icon: Icons.arrow_upward_rounded,
                     iconColor: const Color(0xFFFF6B6B),
                     onTap: () => Get.toNamed(Routes.EXPENSE),
