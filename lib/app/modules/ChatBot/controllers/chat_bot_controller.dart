@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:payplus_mobile/services/api_service.dart';
 
 class ChatMessage {
   final String text;
@@ -16,6 +17,7 @@ class ChatMessage {
 class ChatBotController extends GetxController {
   final chatMessages = <ChatMessage>[].obs;
   final TextEditingController messageController = TextEditingController();
+  final isLoading = false.obs;
 
   @override
   void onInit() {
@@ -29,7 +31,7 @@ class ChatBotController extends GetxController {
     );
   }
 
-  void sendMessage() {
+  Future<void> sendMessage() async {
     final text = messageController.text.trim();
     if (text.isEmpty) return;
 
@@ -42,29 +44,36 @@ class ChatBotController extends GetxController {
     );
     
     messageController.clear();
+    isLoading.value = true;
 
-    // Simulasi respons dari bot (dalam aplikasi nyata, ini akan terhubung ke API)
-    Future.delayed(const Duration(seconds: 1), () {
-      final botResponse = _generateBotResponse(text);
+    try {
+      // Panggil API chatbot
+      final result = await ApiService.sendChatbotMessage(text);
+      
+      if (result['success']) {
+        chatMessages.add(
+          ChatMessage(
+            text: result['response'],
+            isUser: false,
+          ),
+        );
+      } else {
+        chatMessages.add(
+          ChatMessage(
+            text: 'Maaf, saya mengalami kesulitan untuk menjawab saat ini. Silakan coba lagi nanti.',
+            isUser: false,
+          ),
+        );
+      }
+    } catch (e) {
       chatMessages.add(
         ChatMessage(
-          text: botResponse,
+          text: 'Terjadi kesalahan. Silakan periksa koneksi internet Anda dan coba lagi.',
           isUser: false,
         ),
       );
-    });
-  }
-
-  String _generateBotResponse(String userMessage) {
-    // Ini hanya simulasi sederhana, dalam aplikasi nyata akan terhubung ke API
-    if (userMessage.toLowerCase().contains('saldo')) {
-      return 'Untuk memeriksa saldo, silakan buka halaman Beranda dan lihat di bagian atas.';
-    } else if (userMessage.toLowerCase().contains('transfer')) {
-      return 'Anda dapat melakukan transfer dengan memilih menu Transfer di halaman Beranda, lalu ikuti petunjuk yang diberikan.';
-    } else if (userMessage.toLowerCase().contains('investasi')) {
-      return 'PayPlus menawarkan berbagai produk investasi dengan imbal hasil menarik. Silakan buka menu Investasi untuk melihat pilihan yang tersedia.';
-    } else {
-      return 'Terima kasih atas pertanyaan Anda. Saya masih belajar untuk memberikan jawaban yang lebih baik. Ada hal lain yang ingin Anda tanyakan?';
+    } finally {
+      isLoading.value = false;
     }
   }
 

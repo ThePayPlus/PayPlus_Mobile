@@ -43,6 +43,7 @@ class ChatBotView extends GetView<ChatBotController> {
           ),
 
           // Input area
+          // Di dalam metode build, perbarui bagian input area
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
@@ -81,17 +82,28 @@ class ChatBotView extends GetView<ChatBotController> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Container(
+                Obx(() => Container(
                   decoration: BoxDecoration(
                     color: Colors.indigo[700],
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    onPressed: () => controller.sendMessage(),
-                    icon: const Icon(Icons.send_rounded),
+                    onPressed: controller.isLoading.value 
+                      ? null 
+                      : () => controller.sendMessage(),
+                    icon: controller.isLoading.value
+                      ? SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Icon(Icons.send_rounded),
                     color: Colors.white,
                   ),
-                ),
+                )),
               ],
             ),
           ),
