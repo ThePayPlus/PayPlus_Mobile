@@ -127,63 +127,10 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
-    );
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return Obx(() => Container(
-          decoration: BoxDecoration(
-            color: cardColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.07),
-                blurRadius: 10,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            child: BottomNavigationBar(
-              currentIndex: controller.selectedIndex.value,
-              onTap: controller.changeTabIndex,
-              selectedItemColor: primaryColor,
-              unselectedItemColor: const Color(0xFFA0A0A0),
-              selectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontSize: 11,
-              ),
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: cardColor,
-              elevation: 0,
-              items: [
-                _buildBottomNavItem(Icons.home_rounded, 'Home'),
-                _buildBottomNavItem(Icons.send_rounded, 'Transfer'),
-                _buildBottomNavItem(Icons.chat_bubble_rounded, 'Chatbot'),
-              ],
-            ),
-          ),
-        ));
-  }
-
-  BottomNavigationBarItem _buildBottomNavItem(IconData icon, String label) {
-    return BottomNavigationBarItem(
-      icon: Padding(
-        padding: const EdgeInsets.only(bottom: 4),
-        child: Icon(icon),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Get.toNamed(Routes.CHAT_BOT),
+        child: const Icon(Icons.chat_bubble_outline, color: Colors.white),
       ),
-      label: label,
     );
   }
 
