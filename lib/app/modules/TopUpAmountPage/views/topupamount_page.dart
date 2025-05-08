@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/topupamount_controller.dart';
 
 class TopUpAmountPage extends StatefulWidget {
   const TopUpAmountPage({super.key});
@@ -10,6 +11,7 @@ class TopUpAmountPage extends StatefulWidget {
 
 class _TopUpAmountPageState extends State<TopUpAmountPage> {
   final TextEditingController _amountController = TextEditingController();
+  final TopUpAmountController controller = Get.put(TopUpAmountController());
 
   @override
   void dispose() {
@@ -193,10 +195,24 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                // Menutup dialog dan menampilkan notifikasi sukses
+              onPressed: () async {
+                // Menutup dialog
                 Get.back();
-                _showSuccessNotification(amount);
+                
+                // Panggil API untuk top up
+                final result = await controller.topUp(amount);
+                
+                if (result['success']) {
+                  _showSuccessNotification(amount);
+                } else {
+                  Get.snackbar(
+                    'Error',
+                    result['message'] ?? 'Failed to top up',
+                    snackPosition: SnackPosition.TOP,
+                    backgroundColor: Colors.redAccent,
+                    colorText: Colors.white,
+                  );
+                }
               },
               child: const Text('Confirm'),
             ),

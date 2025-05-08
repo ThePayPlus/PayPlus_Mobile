@@ -1051,6 +1051,44 @@ class ApiService {
 
   // Metode searchUser sudah diimplementasikan di atas
 
+  // Top Up method
+  static Future<Map<String, dynamic>> topUp(String amount) async {
+    try {
+      // Check if token exists
+      final token = await getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication required'};
+      }
+
+      final headers = await _getAuthHeaders();
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/topup'),
+        headers: headers,
+        body: jsonEncode({
+          'amount': amount,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {
+          'success': true, 
+          'message': data['message'] ?? 'Top up berhasil',
+          'data': data
+        };
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Gagal melakukan top up'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: ${e.toString()}'};
+    }
+  }
+
   //## LOGOUT
   static Future<Map<String, dynamic>> logout() async {
     try {
