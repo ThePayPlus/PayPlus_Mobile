@@ -1,11 +1,11 @@
 name: payplus_mobile
-description: 'A new Flutter project.'
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+description: "A new Flutter project."
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0' # Modified SDK constraint to be more compatible
+  sdk: ">=3.0.0 <4.0.0" # Modified SDK constraint to be more compatible
 
 dependencies:
   flutter:
@@ -17,6 +17,8 @@ dependencies:
   http: ^1.3.0
   shared_preferences: ^2.5.3
   web_socket_channel: ^3.0.3
+  image_picker: ^1.0.7
+  camera: ^0.10.5+9
 
 dev_dependencies:
   flutter_test:
@@ -26,9 +28,9 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.3
 
 flutter_icons:
-  android: 'launcher_icon'
+  android: "launcher_icon"
   ios: true
-  image_path: 'assets/images/logoTab.png'
+  image_path: "assets/images/logoTab.png"
 
 flutter:
   uses-material-design: true

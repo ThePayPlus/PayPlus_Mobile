@@ -28,19 +28,31 @@ class SettingView extends GetView<SettingController> {
                 ),
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.white,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(48),
-                        child: Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png',
-                          width: 96,
-                          height: 96,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                    Obx(() => GestureDetector(
+                          onTap: () async {
+                            await controller.pickProfileImage();
+                          },
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Colors.white,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(48),
+                              child: controller.profileImage.value != null
+                                  ? Image.file(
+                                      controller.profileImage.value!,
+                                      width: 96,
+                                      height: 96,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.network(
+                                      'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png',
+                                      width: 96,
+                                      height: 96,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),
+                        )),
                     const SizedBox(height: 12),
                     Obx(() => Text(
                           '+${controller.phoneNumber.value}',

@@ -20,17 +20,9 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: AppBar(
-        title: Image.asset(
-          'assets/images/Logo-PayPlus.png',
-          height: 40,
-        ),
-        centerTitle: true,
-        backgroundColor: cardColor,
-        elevation: 0.5,
-      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(
+            top: 61.0, bottom: 16.0, left: 16.0, right: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -104,7 +96,7 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 10),
 
             // Total Balance Card
             _buildTotalBalanceCard(),
@@ -468,7 +460,6 @@ class HomeView extends GetView<HomeController> {
               color: textDarkColor,
             ),
           ),
-          const SizedBox(height: 12),
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),

@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:payplus_mobile/app/routes/app_pages.dart';
 import 'package:payplus_mobile/services/api_service.dart';
 import 'package:payplus_mobile/services/settings_service.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class SettingController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -20,6 +22,8 @@ class SettingController extends GetxController {
   final RxString errorMessage = ''.obs;
   final RxBool isError = false.obs;
   final RxString phoneNumber = ''.obs;
+  final Rx<File?> profileImage = Rx<File?>(null);
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void onInit() {
@@ -152,5 +156,43 @@ class SettingController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> pickProfileImage() async {
+    final XFile? pickedFile = await _picker.pickImage(
+      source: await _showImageSourceDialog(),
+      imageQuality: 80,
+      maxWidth: 600,
+    );
+    if (pickedFile != null) {
+      profileImage.value = File(pickedFile.path);
+    }
+  }
+
+  Future<ImageSource> _showImageSourceDialog() async {
+    ImageSource? source = ImageSource.gallery;
+    await Get.dialog(
+      AlertDialog(
+        title: const Text('Pilih Sumber Foto'),
+        content: const Text('Ambil foto dari kamera atau galeri?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              source = ImageSource.camera;
+              Get.back();
+            },
+            child: const Text('Kamera'),
+          ),
+          TextButton(
+            onPressed: () {
+              source = ImageSource.gallery;
+              Get.back();
+            },
+            child: const Text('Galeri'),
+          ),
+        ],
+      ),
+    );
+    return source!;
   }
 }
