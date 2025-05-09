@@ -15,7 +15,7 @@ class SettingView extends GetView<SettingController> {
           key: controller.formKey,
           child: Column(
             children: [
-              // Profile Header
+              //## Header untuk profile
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.only(top: 50, bottom: 20),
@@ -28,7 +28,6 @@ class SettingView extends GetView<SettingController> {
                 ),
                 child: Column(
                   children: [
-                    // Profile picture
                     CircleAvatar(
                       radius: 50,
                       backgroundColor: Colors.white,
@@ -43,27 +42,24 @@ class SettingView extends GetView<SettingController> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    // Phone number
-                    GetX<SettingController>(
-                      builder: (controller) => Text(
-                        '+${controller.phoneNumber.value}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    Obx(() => Text(
+                          '+${controller.phoneNumber.value}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        )),
                   ],
                 ),
               ),
 
+              //## Akun Settings
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Section title
                     const Text(
                       'Account Settings',
                       style: TextStyle(
@@ -73,8 +69,6 @@ class SettingView extends GetView<SettingController> {
                       ),
                     ),
                     const SizedBox(height: 20),
-
-                    // Personal Information Card
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
@@ -92,7 +86,6 @@ class SettingView extends GetView<SettingController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Section header
                           Row(
                             children: [
                               Container(
@@ -120,8 +113,6 @@ class SettingView extends GetView<SettingController> {
                             ],
                           ),
                           const SizedBox(height: 24),
-
-                          // Full Name
                           const Text(
                             'Full Name',
                             style: TextStyle(
@@ -152,10 +143,7 @@ class SettingView extends GetView<SettingController> {
                               return null;
                             },
                           ),
-
                           const SizedBox(height: 20),
-
-                          // Email
                           const Text(
                             'Email',
                             style: TextStyle(
@@ -193,10 +181,7 @@ class SettingView extends GetView<SettingController> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 20),
-
-                    // Security Card
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
@@ -214,7 +199,6 @@ class SettingView extends GetView<SettingController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Section header
                           Row(
                             children: [
                               Container(
@@ -242,8 +226,6 @@ class SettingView extends GetView<SettingController> {
                             ],
                           ),
                           const SizedBox(height: 24),
-
-                          // Current Password
                           const Text(
                             'Current Password',
                             style: TextStyle(
@@ -253,49 +235,45 @@ class SettingView extends GetView<SettingController> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          GetX<SettingController>(
-                            builder: (controller) => TextFormField(
-                              controller: controller.currentPasswordController,
-                              obscureText:
-                                  !controller.isCurrentPasswordVisible.value,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 12),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xFFF9FAFB),
-                                prefixIcon: const Icon(
-                                    Icons.lock_outline_rounded,
-                                    color: Color(0xFF6B7280),
-                                    size: 20),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    controller.isCurrentPasswordVisible.value
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: Colors.grey,
+                          Obx(() => TextFormField(
+                                controller:
+                                    controller.currentPasswordController,
+                                obscureText:
+                                    !controller.isCurrentPasswordVisible.value,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 12),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
                                   ),
-                                  onPressed: controller
-                                      .toggleCurrentPasswordVisibility,
+                                  filled: true,
+                                  fillColor: const Color(0xFFF9FAFB),
+                                  prefixIcon: const Icon(
+                                      Icons.lock_outline_rounded,
+                                      color: Color(0xFF6B7280),
+                                      size: 20),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      controller.isCurrentPasswordVisible.value
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: Colors.grey,
+                                    ),
+                                    onPressed: controller
+                                        .toggleCurrentPasswordVisibility,
+                                  ),
                                 ),
-                              ),
-                              validator: (value) {
-                                if (controller.newPasswordController.text
-                                        .isNotEmpty &&
-                                    (value == null || value.isEmpty)) {
-                                  return 'Please enter your current password';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-
+                                validator: (value) {
+                                  if (controller.newPasswordController.text
+                                          .isNotEmpty &&
+                                      (value == null || value.isEmpty)) {
+                                    return 'Please enter your current password';
+                                  }
+                                  return null;
+                                },
+                              )),
                           const SizedBox(height: 20),
-
-                          // New Password
                           const Text(
                             'New Password',
                             style: TextStyle(
@@ -305,54 +283,49 @@ class SettingView extends GetView<SettingController> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          GetX<SettingController>(
-                            builder: (controller) => TextFormField(
-                              controller: controller.newPasswordController,
-                              obscureText:
-                                  !controller.isNewPasswordVisible.value,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 12),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xFFF9FAFB),
-                                prefixIcon: const Icon(
-                                    Icons.lock_outline_rounded,
-                                    color: Color(0xFF6B7280),
-                                    size: 20),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    controller.isNewPasswordVisible.value
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: Colors.grey,
+                          Obx(() => TextFormField(
+                                controller: controller.newPasswordController,
+                                obscureText:
+                                    !controller.isNewPasswordVisible.value,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 12),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
                                   ),
-                                  onPressed:
-                                      controller.toggleNewPasswordVisibility,
+                                  filled: true,
+                                  fillColor: const Color(0xFFF9FAFB),
+                                  prefixIcon: const Icon(
+                                      Icons.lock_outline_rounded,
+                                      color: Color(0xFF6B7280),
+                                      size: 20),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      controller.isNewPasswordVisible.value
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: Colors.grey,
+                                    ),
+                                    onPressed:
+                                        controller.toggleNewPasswordVisibility,
+                                  ),
                                 ),
-                              ),
-                              validator: (value) {
-                                if (controller.currentPasswordController.text
-                                        .isNotEmpty &&
-                                    (value == null || value.isEmpty)) {
-                                  return 'Please enter a new password';
-                                }
-                                if (value != null &&
-                                    value.isNotEmpty &&
-                                    value.length < 6) {
-                                  return 'Password must be at least 6 characters';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-
+                                validator: (value) {
+                                  if (controller.currentPasswordController.text
+                                          .isNotEmpty &&
+                                      (value == null || value.isEmpty)) {
+                                    return 'Please enter a new password';
+                                  }
+                                  if (value != null &&
+                                      value.isNotEmpty &&
+                                      value.length < 6) {
+                                    return 'Password must be at least 6 characters';
+                                  }
+                                  return null;
+                                },
+                              )),
                           const SizedBox(height: 20),
-
-                          // Confirm New Password
                           const Text(
                             'Confirm New Password',
                             style: TextStyle(
@@ -362,171 +335,157 @@ class SettingView extends GetView<SettingController> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          GetX<SettingController>(
-                            builder: (controller) => TextFormField(
-                              controller: controller.confirmPasswordController,
-                              obscureText:
-                                  !controller.isConfirmPasswordVisible.value,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 12),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xFFF9FAFB),
-                                prefixIcon: const Icon(
-                                    Icons.lock_outline_rounded,
-                                    color: Color(0xFF6B7280),
-                                    size: 20),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    controller.isConfirmPasswordVisible.value
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: Colors.grey,
+                          Obx(() => TextFormField(
+                                controller:
+                                    controller.confirmPasswordController,
+                                obscureText:
+                                    !controller.isConfirmPasswordVisible.value,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 12),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
                                   ),
-                                  onPressed: controller
-                                      .toggleConfirmPasswordVisibility,
+                                  filled: true,
+                                  fillColor: const Color(0xFFF9FAFB),
+                                  prefixIcon: const Icon(
+                                      Icons.lock_outline_rounded,
+                                      color: Color(0xFF6B7280),
+                                      size: 20),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      controller.isConfirmPasswordVisible.value
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: Colors.grey,
+                                    ),
+                                    onPressed: controller
+                                        .toggleConfirmPasswordVisibility,
+                                  ),
                                 ),
-                              ),
-                              validator: (value) {
-                                if (controller.newPasswordController.text
-                                        .isNotEmpty &&
-                                    (value == null || value.isEmpty)) {
-                                  return 'Please confirm your new password';
-                                }
-                                if (value !=
-                                    controller.newPasswordController.text) {
-                                  return 'Passwords do not match';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
+                                validator: (value) {
+                                  if (controller.newPasswordController.text
+                                          .isNotEmpty &&
+                                      (value == null || value.isEmpty)) {
+                                    return 'Please confirm your new password';
+                                  }
+                                  if (value !=
+                                      controller.newPasswordController.text) {
+                                    return 'Passwords do not match';
+                                  }
+                                  return null;
+                                },
+                              )),
                         ],
                       ),
                     ),
 
-                    // Error or success message
-                    GetX<SettingController>(
-                      builder: (controller) =>
-                          controller.errorMessage.value.isNotEmpty
-                              ? Container(
-                                  margin: const EdgeInsets.only(top: 20),
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: controller.isError.value
-                                        ? const Color(0xFFFEE2E2)
-                                        : const Color(0xFFD1FAE5),
-                                    borderRadius: BorderRadius.circular(12),
+                    // Menampilkan pesan sukses atau error
+                    Obx(() => controller.errorMessage.value.isNotEmpty
+                        ? Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: controller.isError.value
+                                  ? const Color(0xFFFEE2E2)
+                                  : const Color(0xFFD1FAE5),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  controller.isError.value
+                                      ? Icons.error_outline
+                                      : Icons.check_circle_outline,
+                                  color: controller.isError.value
+                                      ? const Color(0xFFDC2626)
+                                      : const Color(0xFF10B981),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    controller.errorMessage.value,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: controller.isError.value
+                                          ? const Color(0xFFDC2626)
+                                          : const Color(0xFF10B981),
+                                    ),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        controller.isError.value
-                                            ? Icons.error_outline
-                                            : Icons.check_circle_outline,
-                                        color: controller.isError.value
-                                            ? const Color(0xFFDC2626)
-                                            : const Color(0xFF10B981),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          controller.errorMessage.value,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: controller.isError.value
-                                                ? const Color(0xFFDC2626)
-                                                : const Color(0xFF10B981),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                    ),
-
+                                ),
+                              ],
+                            ),
+                          )
+                        : const SizedBox.shrink()),
                     const SizedBox(height: 24),
 
-                    // Action Buttons
+                    //## Button Section
                     Row(
                       children: [
-                        // Cancel Button
                         Expanded(
-                          child: GetX<SettingController>(
-                            builder: (controller) => ElevatedButton(
-                              onPressed: controller.isLoading.value
-                                  ? null
-                                  : () => Get.offAllNamed(Routes.HOME),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: const Color(0xFF6B7280),
-                                elevation: 0,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  side: const BorderSide(
-                                      color: Color(0xFFD1D5DB)),
+                          child: Obx(() => ElevatedButton(
+                                onPressed: controller.isLoading.value
+                                    ? null
+                                    : () => Get.offAllNamed(Routes.HOME),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: const Color(0xFF6B7280),
+                                  elevation: 0,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    side: const BorderSide(
+                                        color: Color(0xFFD1D5DB)),
+                                  ),
                                 ),
-                              ),
-                              child: const Text(
-                                'Back',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                                child: const Text(
+                                  'Back',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
+                              )),
                         ),
                         const SizedBox(width: 12),
-                        // Save Changes Button
                         Expanded(
-                          child: GetX<SettingController>(
-                            builder: (controller) => ElevatedButton(
-                              onPressed: controller.isLoading.value
-                                  ? null
-                                  : controller.saveChanges,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF6366F1),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                          child: Obx(() => ElevatedButton(
+                                onPressed: controller.isLoading.value
+                                    ? null
+                                    : controller.saveChanges,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF6366F1),
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                              ),
-                              child: controller.isLoading.value
-                                  ? const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 2,
+                                child: controller.isLoading.value
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : const Text(
+                                        'Save Changes',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
-                                    )
-                                  : const Text(
-                                      'Save Changes',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                            ),
-                          ),
+                              )),
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 20),
-
-                    // Logout Button
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
@@ -554,7 +513,7 @@ class SettingView extends GetView<SettingController> {
     );
   }
 
-  // Simple logout dialog
+  //## Fungsi untuk menampilkan dialog logout
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,

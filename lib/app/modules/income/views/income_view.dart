@@ -87,7 +87,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // Card to display the total income
+  //## Untuk membuat total income card
   Widget _buildTotalIncomeCard() {
     return Container(
       width: double.infinity,
@@ -145,7 +145,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // Grid of income stats cards
+  //## Section total transaction, normal income, gift income, topup income
   Widget _buildIncomeStatsGrid() {
     return GridView.count(
       crossAxisCount: 2,
@@ -222,7 +222,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // Generic stat card
+  //## Membuat card widget untuk total transaction, normal income, gift income, topup income
   Widget _buildStatCard({
     required String title,
     required IconData icon,
@@ -281,14 +281,14 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // Income distribution chart
+  //## Untuk membuat pie chart income distribution
   Widget _buildIncomeDistributionChart() {
-    // Konversi nilai string ke double untuk chart
+    // Konversi nilai string ke double untuk pie chart
     double normalValue = double.tryParse(controller.normalIncome.value) ?? 0;
     double giftValue = double.tryParse(controller.giftIncome.value) ?? 0;
     double topupValue = double.tryParse(controller.topupIncome.value) ?? 0;
 
-    // Jika semua nilai 0, tambahkan nilai kecil untuk menghindari chart kosong
+    // Jika semua nilai 0,  ganti 1 agar menghindari chart kosong
     if (normalValue == 0 && giftValue == 0 && topupValue == 0) {
       normalValue = 1;
       giftValue = 1;
@@ -365,7 +365,7 @@ class IncomeView extends GetView<IncomeController> {
             ),
           ),
           const SizedBox(height: 20),
-          // Legend
+          // Legend (bawah pie chart)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -381,7 +381,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // Legend item for the pie chart
+  //## Widget legend item untuk pie chart (bawah pie chart)
   Widget _buildLegendItem(String label, Color color) {
     return Row(
       children: [
@@ -405,7 +405,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // Recent transactions header with filter buttons
+  //## Section untuk recent transactions dan button filter
   Widget _buildRecentTransactionsHeader() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -437,7 +437,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  // Filter button
+  //## Buat Widget button untuk filter
   Widget _buildFilterButton(String label, String filterValue) {
     return ElevatedButton(
       onPressed: () => controller.applyFilter(filterValue),
@@ -491,7 +491,7 @@ class IncomeView extends GetView<IncomeController> {
     );
   }
 
-  //## Incomee record card
+  //## Income record card widget
   Widget _buildIncomeRecordCard(Income record) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -582,6 +582,7 @@ class IncomeView extends GetView<IncomeController> {
                 ),
               ],
             ),
+            // kalau tipe nya gift, maka tampilkan pesan
             if (record.type == 'gift' &&
                 record.message != null &&
                 record.message!.isNotEmpty) ...[

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'http://10.0.2.2:3000/api';
+  static const String baseUrl = 'http://localhost:3000/api';
 
   // Token storage keyd
   static const String tokenKey = 'auth_token';
@@ -28,7 +28,7 @@ class ApiService {
     return prefs.getString(tokenKey);
   }
 
-  // Method to clear auth token (for logout)
+  //## Metod untuk menghapus token otentikasi
   static Future<void> clearAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(tokenKey);
@@ -589,12 +589,10 @@ class ApiService {
   //## GET Income Record
   static Future<Map<String, dynamic>> getIncomeRecords() async {
     try {
-      // Cek kalau token masih ada
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
       }
-      // Kalau token ada, kita ambil headersnya
       final headers = await _getAuthHeaders();
       final response = await http.get(
         Uri.parse('$baseUrl/income-record'),
@@ -1151,10 +1149,8 @@ class ApiService {
         Uri.parse('$baseUrl/auth/logout'),
         headers: headers,
       );
-
       final data = jsonDecode(response.body);
 
-      // Clear token regardless of response
       await clearAuthToken();
 
       if (response.statusCode == 200) {
@@ -1166,7 +1162,6 @@ class ApiService {
         return {'success': false, 'message': data['message'] ?? 'Logout gagal'};
       }
     } catch (e) {
-      // Clear token even if there's an error
       await clearAuthToken();
       return {'success': true, 'message': 'Logout berhasil'};
     }

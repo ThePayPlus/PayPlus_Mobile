@@ -29,7 +29,6 @@ class SignupView extends GetView<SignupPageController> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Logo
                 Image.asset(
                   'assets/images/Logo-PayPlus.png',
                   height: 60,

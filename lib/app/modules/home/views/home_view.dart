@@ -7,7 +7,6 @@ import '../controllers/home_controller.dart';
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
 
-  // Define consistent colors
   static const Color primaryColor = Color(0xFF6C63FF);
   static const Color primaryDarkColor = Color(0xFF4B0082);
   static const Color successColor = Color(0xFF4CAF50);
@@ -35,7 +34,6 @@ class HomeView extends GetView<HomeController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Welcome Section
             Container(
               margin: const EdgeInsets.only(bottom: 16),
               child: Row(
@@ -122,8 +120,6 @@ class HomeView extends GetView<HomeController> {
 
             // Recent Transactions
             _buildRecentTransactions(),
-
-            // Add bottom padding to account for bottom nav bar
             const SizedBox(height: 60),
           ],
         ),
@@ -136,6 +132,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  //## Untuk menampilkan card total balance
   Widget _buildTotalBalanceCard() {
     return Container(
       width: double.infinity,
@@ -213,6 +210,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  //## Untuk membuat quick action section
   Widget _buildQuickActions() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,6 +269,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  //## Untuk membuat widget quick action (button)
   Widget _buildQuickActionButton({
     required IconData icon,
     required String label,
@@ -322,6 +321,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  //## Untuk membuat financial records section (income dan expense)
   Widget _buildRecordsSections() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,6 +362,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  //## Untuk membuat widget card untuk financial records
   Widget _buildRecordCard({
     required String title,
     required String amount,
@@ -449,6 +450,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  //## Untuk membuat recent transactions section
   Widget _buildRecentTransactions() {
     return Obx(() {
       final transactions = controller.recentTransactions;
@@ -487,6 +489,7 @@ class HomeView extends GetView<HomeController> {
     });
   }
 
+  //## Fungsi untuk mendapatkan icon berdasarkan tipe transaksi
   IconData _getIconForType(String? type) {
     switch (type) {
       case 'topup':
@@ -498,6 +501,7 @@ class HomeView extends GetView<HomeController> {
     }
   }
 
+  //## Untuk membuat widget item transaksi
   Widget _buildTransactionItem({
     required IconData icon,
     required String title,

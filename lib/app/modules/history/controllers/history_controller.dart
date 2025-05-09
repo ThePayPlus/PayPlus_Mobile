@@ -15,7 +15,8 @@ class HistoryController extends GetxController {
     super.onInit();
     fetchHistoryRecords();
   }
-
+  
+  // Fungsi untuk mengambil data riwayat transaksi
   Future<void> fetchHistoryRecords() async {
     try {
       isLoading(true);
@@ -35,6 +36,7 @@ class HistoryController extends GetxController {
     }
   }
 
+  // Fungsi untuk mengonversi angka menjadi format mata uang
   String formatCurrency(String amount) {
     // Format sederhana, bisa pakai intl jika perlu
     return 'Rp ${amount.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';

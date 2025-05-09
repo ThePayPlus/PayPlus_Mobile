@@ -83,7 +83,7 @@ class ExpenseView extends GetView<ExpenseController> {
     );
   }
 
-  // Grid of Expense stats cards
+  // Fungsi untuk membuat grid untuk statistik pengeluaran
   Widget _buildExpenseStatsGrid() {
     return GridView.count(
       crossAxisCount: 2,
@@ -93,7 +93,7 @@ class ExpenseView extends GetView<ExpenseController> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       children: [
-        // Total Expense Card
+        // Card builder untuk Total Expense
         _buildStatCard(
           title: 'Total Expense',
           icon: Icons.account_balance_wallet,
@@ -109,7 +109,7 @@ class ExpenseView extends GetView<ExpenseController> {
           ),
         ),
 
-        // Total Transactions Card
+        // Card builder untuk Total Transactions
         _buildStatCard(
           title: 'Total Transactions',
           icon: Icons.people,
@@ -125,7 +125,7 @@ class ExpenseView extends GetView<ExpenseController> {
           ),
         ),
 
-        // Normal Expense Card
+        // Card builder untuk Normal Expense
         _buildStatCard(
           title: 'Normal Expense',
           icon: Icons.pie_chart,
@@ -141,7 +141,7 @@ class ExpenseView extends GetView<ExpenseController> {
           ),
         ),
 
-        // Gift Expense Card
+        // Card builder untuk Gift Expense
         _buildStatCard(
           title: 'Gift Expense',
           icon: Icons.card_giftcard,
@@ -160,7 +160,7 @@ class ExpenseView extends GetView<ExpenseController> {
     );
   }
 
-  // Generic stat card
+  // Fungsi untuk membuat card statistik pengeluaran
   Widget _buildStatCard({
     required String title,
     required IconData icon,
@@ -219,7 +219,7 @@ class ExpenseView extends GetView<ExpenseController> {
     );
   }
 
-  // Expense distribution chart
+  // Fungsi untuk membuat chart distribusi pengeluaran
   Widget _buildExpenseDistributionChart() {
     // Konversi nilai string ke double untuk chart
     double normalValue = double.tryParse(controller.normalExpense.value) ?? 0;
@@ -304,7 +304,7 @@ class ExpenseView extends GetView<ExpenseController> {
     );
   }
 
-  // Legend item for the pie chart
+  // Fungsi untuk memetakan label sesuai dengan warna
   Widget _buildLegendItem(String label, Color color) {
     return Row(
       children: [
@@ -328,7 +328,7 @@ class ExpenseView extends GetView<ExpenseController> {
     );
   }
 
-  // Recent transactions header with filter buttons
+  // Fungsi untuk membuat header untuk daftar pengeluaran terbaru
   Widget _buildRecentTransactionsHeader() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -358,7 +358,7 @@ class ExpenseView extends GetView<ExpenseController> {
     );
   }
 
-  // Filter button
+  // Fungsi untuk membuat tombol filter pengeluaran
   Widget _buildFilterButton(String label, String filterValue) {
     return ElevatedButton(
       onPressed: () => controller.applyFilter(filterValue),
@@ -379,7 +379,7 @@ class ExpenseView extends GetView<ExpenseController> {
     );
   }
 
-  // List of Expense record cards
+  // Fungsi untuk membuat daftar pengeluaran dalam bentuk card
   Widget _buildExpenseRecordsList() {
     if (controller.filteredRecords.isEmpty) {
       return Container(
@@ -413,7 +413,7 @@ class ExpenseView extends GetView<ExpenseController> {
     );
   }
 
-  // Individual Expense record card
+  // Fungsi untuk membuat card pengeluaran
   Widget _buildExpenseRecordCard(ExpenseRecord record) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),

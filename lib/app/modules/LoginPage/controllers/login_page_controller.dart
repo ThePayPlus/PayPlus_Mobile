@@ -26,7 +26,6 @@ class LoginPageController extends GetxController {
   }
 
   Future<void> login() async {
-    // Validate inputs
     if (phoneController.text.isEmpty) {
       Get.snackbar(
         'Error', 
@@ -50,14 +49,12 @@ class LoginPageController extends GetxController {
     try {
       isLoading.value = true;
       
-      // Call the API service to login
       final result = await ApiService.login(
         phoneController.text, 
         passwordController.text
       );
       
       if (result['success']) {
-        // Login successful
         Get.snackbar(
           'Success', 
           'Login successful',
@@ -65,10 +62,8 @@ class LoginPageController extends GetxController {
           colorText: Colors.white,
         );
         
-        // Navigate to home page
         Get.offAllNamed('/home');
       } else {
-        // Login failed
         Get.snackbar(
           'Error', 
           result['message'] ?? 'Login failed',
@@ -89,7 +84,6 @@ class LoginPageController extends GetxController {
   }
 
   void goToSignUp() {
-    // Navigate to sign up page
     Get.toNamed('/signup');
   }
 }

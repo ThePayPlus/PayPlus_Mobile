@@ -7,14 +7,12 @@ import 'package:payplus_mobile/services/settings_service.dart';
 class SettingController extends GetxController {
   final formKey = GlobalKey<FormState>();
 
-  // Form controllers
   final fullNameController = TextEditingController();
   final emailController = TextEditingController();
   final currentPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  // Observables
   final RxBool isLoading = false.obs;
   final RxBool isCurrentPasswordVisible = false.obs;
   final RxBool isNewPasswordVisible = false.obs;
@@ -31,7 +29,6 @@ class SettingController extends GetxController {
 
   @override
   void onClose() {
-    // Dispose controllers
     fullNameController.dispose();
     emailController.dispose();
     currentPasswordController.dispose();
@@ -40,7 +37,7 @@ class SettingController extends GetxController {
     super.onClose();
   }
 
-  // Ambil data profile dari API
+  //## Untuk mengambil data profile user
   Future<void> loadUserProfile() async {
     isLoading.value = true;
     try {
@@ -60,7 +57,7 @@ class SettingController extends GetxController {
     }
   }
 
-  // Toggle password visibility
+  //## Fungsi untuk menampilkan/menyembunyikan tampilan isi password
   void toggleCurrentPasswordVisibility() {
     isCurrentPasswordVisible.value = !isCurrentPasswordVisible.value;
   }
@@ -73,35 +70,33 @@ class SettingController extends GetxController {
     isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
   }
 
-  // Clear any error/success message
+  //## Fungsi untuk menghapus pesan error
   void clearMessage() {
     errorMessage.value = '';
   }
 
-  // Set error message
+  //## Fungsi untuk set pesan error
   void setErrorMessage(String message) {
     errorMessage.value = message;
     isError.value = true;
   }
 
-  // Set success message
+  //## Fungsi untuk set pesan sukses
   void setSuccessMessage(String message) {
     errorMessage.value = message;
     isError.value = false;
   }
 
-  // Save profile changes
+  //## Fungsi untuk mengupdate data profile jika klik tombol save
   Future<void> saveChanges() async {
     if (formKey.currentState!.validate()) {
       isLoading.value = true;
       clearMessage();
       try {
-        //Cek apakah ingin ganti password atau tidak
         final bool isChangingPassword =
             currentPasswordController.text.isNotEmpty &&
                 newPasswordController.text.isNotEmpty &&
                 confirmPasswordController.text.isNotEmpty;
-        // Validasi password ketika ingin mengganti password
         if (isChangingPassword) {
           if (newPasswordController.text != confirmPasswordController.text) {
             setErrorMessage('New passwords do not match');
@@ -109,7 +104,6 @@ class SettingController extends GetxController {
             return;
           }
         }
-        // Update settings dan cek apakah user ingin ganti password juga
         final result = await SettingsService.updateSettings(
             name: fullNameController.text,
             email: emailController.text,
@@ -118,7 +112,6 @@ class SettingController extends GetxController {
             newPassword:
                 isChangingPassword ? newPasswordController.text : null);
         if (result['success']) {
-          // Hapus formfield password jika sudah diupdate
           if (isChangingPassword) {
             currentPasswordController.clear();
             newPasswordController.clear();
@@ -137,20 +130,19 @@ class SettingController extends GetxController {
     }
   }
 
+  //## Fungsi untuk logout
   Future<void> logout() async {
     isLoading.value = true;
     clearMessage();
     try {
       final result = await ApiService.logout();
       if (result['success']) {
-        // Tampilkan pesan sukses
         Get.snackbar(
           'Berhasil',
           result['message'],
           backgroundColor: Colors.green.withOpacity(0.7),
           colorText: Colors.white,
         );
-        // Redirect ke halaman login
         Get.offAllNamed(Routes.LOGIN);
       } else {
         setErrorMessage(result['message'] ?? 'Logout gagal');
