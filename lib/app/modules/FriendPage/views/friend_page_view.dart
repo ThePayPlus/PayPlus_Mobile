@@ -27,76 +27,25 @@ class FriendPageView extends StatelessWidget {
             icon: Icon(Icons.add, color: AppTheme.primaryPurple),
             onPressed: () => Get.dialog(AddFriendDialog()),
           ),
+          SizedBox(
+            height: 50,
+          )
         ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(2.0),
+          child: Divider(
+            color: AppTheme.primaryPurple.withOpacity(0.2),
+            thickness: 1.0,
+            height: 1.0,
+          ),
+        ),
       ),
+
       body: Stack(
         children: [
           Column(
             children: [
-              // Search bar
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-                    border: Border.all(
-                      color: AppTheme.textDark.withOpacity(0.2),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 3,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: TextField(
-                            controller: controller.searchController,
-                            decoration: InputDecoration(
-                              hintText: 'Cari teman...',
-                              hintStyle: TextStyle(
-                                color: AppTheme.primaryPurple.withOpacity(0.4),
-                              ),
-                              border: InputBorder.none,
-                            ),
-                            style: TextStyle(
-                              color: AppTheme.textDark,
-                              fontSize: 14,
-                            ),
-                            cursorColor: AppTheme.primaryPurple,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 45,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryYellow.withOpacity(0.2),
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            bottomRight: Radius.circular(10),
-                          ),
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.search,
-                            color: AppTheme.primaryPurple,
-                            size: 22,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              SizedBox(height: 16),
 
               // Friend list
               Expanded(
@@ -167,24 +116,17 @@ class FriendPageView extends StatelessWidget {
                   }
 
                   return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    // Ubah padding untuk memberikan jarak lebih
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                     itemCount: controller.friends.length,
                     itemBuilder: (context, index) {
                       final friend = controller.friends[index];
                       return Dismissible(
                         key: Key(friend['id']?.toString() ?? index.toString()),
+                        // Hapus background untuk geser kiri (edit)
                         background: Container(
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.only(left: 20),
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius:
-                                BorderRadius.circular(AppTheme.borderRadius),
-                          ),
-                          child: const Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
+                          color: Colors.transparent,
                         ),
                         secondaryBackground: Container(
                           alignment: Alignment.centerRight,
@@ -199,16 +141,15 @@ class FriendPageView extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
+                        // Hanya izinkan geser ke kanan untuk hapus
+                        direction: DismissDirection.endToStart,
                         confirmDismiss: (direction) async {
                           if (direction == DismissDirection.endToStart) {
                             // Delete action
                             return await _showDeleteConfirmationDialog(
                                 context, friend);
-                          } else if (direction == DismissDirection.startToEnd) {
-                            // Edit action
-                            _showEditDialog(context, friend);
-                            return false; // Don't dismiss the item
                           }
+
                           return false;
                         },
                         onDismissed: (direction) {
@@ -217,11 +158,13 @@ class FriendPageView extends StatelessWidget {
                           }
                         },
                         child: Container(
-                          margin: const EdgeInsets.only(bottom: 12),
+                          // Tambahkan margin untuk memberikan jarak antar item
+                          margin: const EdgeInsets.only(bottom: 16),
                           decoration: AppTheme.cardDecoration,
                           child: ListTile(
+                            // Tambahkan padding dalam ListTile untuk memberikan ruang lebih
                             contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
+                                horizontal: 20, vertical: 12),
                             leading: CircleAvatar(
                               radius: 24,
                               backgroundColor:
@@ -346,70 +289,6 @@ class FriendPageView extends StatelessWidget {
           },
         ) ??
         false;
-  }
-
-  // Dialog untuk edit teman
-  void _showEditDialog(BuildContext context, Map<String, dynamic> friend) {
-    final nameController = TextEditingController(text: friend['name']);
-
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Container(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Edit Nama Teman',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.primaryPurple,
-                ),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Nama',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Get.back(),
-                    child: Text('Batal'),
-                  ),
-                  SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: () {
-                      final controller = Get.find<FriendPageController>();
-                      controller.updateFriend(
-                        friend['phone']
-                            .toString(), // Gunakan friendPhone, bukan friendId
-                        nameController.text,
-                        friend['phone']?.toString() ?? '',
-                      );
-                      Get.back();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryPurple,
-                    ),
-                    child: Text('Simpan'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   String _getInitials(String name) {

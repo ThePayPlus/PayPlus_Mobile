@@ -7,13 +7,26 @@ import '../controllers/chat_bot_controller.dart';
 class ChatBotView extends GetView<ChatBotController> {
   const ChatBotView({super.key});
 
+  // Menambahkan konstanta warna yang sama dengan home_view.dart
+  static const Color primaryColor = Color(0xFF6C63FF);
+  static const Color primaryDarkColor = Color(0xFF4B0082);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('PayPlus Assistant'),
         centerTitle: true,
-        backgroundColor: Colors.indigo[700],
+        // Mengubah warna background dengan gradient
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [primaryColor, primaryDarkColor],
+            ),
+          ),
+        ),
         foregroundColor: Colors.white,
         elevation: 2,
         leading: IconButton(
@@ -84,7 +97,12 @@ class ChatBotView extends GetView<ChatBotController> {
                 const SizedBox(width: 8),
                 Obx(() => Container(
                   decoration: BoxDecoration(
-                    color: Colors.indigo[700],
+                    // Mengubah warna tombol dengan gradient
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [primaryColor, primaryDarkColor],
+                    ),
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
@@ -129,7 +147,15 @@ class ChatBotView extends GetView<ChatBotController> {
                 vertical: 12,
               ),
               decoration: BoxDecoration(
-                color: isUser ? Colors.indigo[700] : Colors.white,
+                // Mengubah warna pesan pengguna dengan gradient
+                gradient: isUser
+                    ? const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [primaryColor, primaryDarkColor],
+                      )
+                    : null,
+                color: isUser ? null : Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
@@ -167,7 +193,7 @@ class ChatBotView extends GetView<ChatBotController> {
       child: Center(
         child: Icon(
           Icons.smart_toy_rounded,
-          color: Colors.indigo[700],
+          color: primaryColor,
           size: 20,
         ),
       ),
@@ -179,7 +205,11 @@ class ChatBotView extends GetView<ChatBotController> {
       width: 36,
       height: 36,
       decoration: const BoxDecoration(
-        color: Colors.indigo,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [primaryColor, primaryDarkColor],
+        ),
         shape: BoxShape.circle,
       ),
       child: const Center(

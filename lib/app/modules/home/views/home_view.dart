@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:payplus_mobile/app/routes/app_pages.dart';
+import 'package:payplus_mobile/app/theme/app_theme.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -90,7 +91,7 @@ class HomeView extends GetView<HomeController> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
+                          color: Colors.black.withOpacity(0.05),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -128,6 +129,7 @@ class HomeView extends GetView<HomeController> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppTheme.primaryYellow.withOpacity(1.0),
         onPressed: () => Get.toNamed(Routes.CHAT_BOT),
         child: const Icon(Icons.chat_bubble_outline, color: Colors.white),
       ),
@@ -147,7 +149,7 @@ class HomeView extends GetView<HomeController> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: primaryColor.withValues(alpha: 0.2),
+            color: primaryColor.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -167,7 +169,7 @@ class HomeView extends GetView<HomeController> {
                     'Available Balance',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: Colors.white.withOpacity(0.9),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -284,7 +286,7 @@ class HomeView extends GetView<HomeController> {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
+              color: Colors.black.withOpacity(0.08),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -296,7 +298,7 @@ class HomeView extends GetView<HomeController> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: primaryColor.withValues(alpha: 0.1),
+                color: primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -376,7 +378,7 @@ class HomeView extends GetView<HomeController> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -390,7 +392,7 @@ class HomeView extends GetView<HomeController> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: iconColor.withValues(alpha: 0.1),
+                    color: iconColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -511,7 +513,7 @@ class HomeView extends GetView<HomeController> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withOpacity(0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -526,8 +528,8 @@ class HomeView extends GetView<HomeController> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: isExpense
-                    ? [dangerColor, dangerColor.withValues(alpha: 0.8)]
-                    : [successColor, successColor.withValues(alpha: 0.8)],
+                    ? [dangerColor, dangerColor.withOpacity(0.8)]
+                    : [successColor, successColor.withOpacity(0.8)],
               ),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -555,7 +557,7 @@ class HomeView extends GetView<HomeController> {
                   date,
                   style: TextStyle(
                     fontSize: 12,
-                    color: textMediumColor.withValues(alpha: 0.8),
+                    color: textMediumColor.withOpacity(0.8),
                   ),
                 ),
               ],
@@ -565,8 +567,8 @@ class HomeView extends GetView<HomeController> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: isExpense
-                  ? dangerColor.withValues(alpha: 0.1)
-                  : successColor.withValues(alpha: 0.1),
+                  ? dangerColor.withOpacity(0.1)
+                  : successColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(

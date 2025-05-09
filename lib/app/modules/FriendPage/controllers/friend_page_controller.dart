@@ -139,34 +139,6 @@ class FriendPageController extends GetxController {
     }
   }
 
-  // Fungsi baru: Cari teman
-  Future<void> searchFriends(String query) async {
-    if (query.isEmpty) {
-      searchResults.clear();
-      return;
-    }
-
-    isSearching.value = true;
-    final result = await ApiService.searchFriends(query);
-    isSearching.value = false;
-
-    if (result['success']) {
-      if (result['data'] != null && result['data']['friends'] != null) {
-        searchResults.value = result['data']['friends'];
-      } else {
-        searchResults.clear();
-      }
-    } else {
-      Get.snackbar(
-        'Error',
-        result['message'],
-        backgroundColor: Colors.red.withOpacity(0.7),
-        colorText: Colors.white,
-      );
-      searchResults.clear();
-    }
-  }
-
   // Delete friend
   Future<void> deleteFriend(String friendPhone) async {
     // Ganti friendId menjadi friendPhone
@@ -201,38 +173,6 @@ class FriendPageController extends GetxController {
       Get.snackbar(
         'Error',
         result['message'] ?? 'Gagal menghapus teman',
-        backgroundColor: Colors.red.withOpacity(0.7),
-        colorText: Colors.white,
-      );
-    }
-  }
-
-  // Update friend
-  Future<void> updateFriend(
-      String friendPhone, String name, String phone) async {
-    isLoading.value = true;
-    final result = await ApiService.updateFriend(friendPhone, name, phone);
-    isLoading.value = false;
-
-    if (result['success']) {
-      // Update teman di daftar
-      final index = friends
-          .indexWhere((friend) => friend['phone'].toString() == friendPhone);
-      if (index != -1) {
-        friends[index]['name'] = name;
-        friends[index]['phone'] = phone;
-        friends.refresh();
-      }
-      Get.snackbar(
-        'Sukses',
-        'Data teman berhasil diperbarui',
-        backgroundColor: Colors.green.withOpacity(0.7),
-        colorText: Colors.white,
-      );
-    } else {
-      Get.snackbar(
-        'Error',
-        result['message'] ?? 'Gagal memperbarui data teman',
         backgroundColor: Colors.red.withOpacity(0.7),
         colorText: Colors.white,
       );

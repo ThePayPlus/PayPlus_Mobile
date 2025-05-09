@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:payplus_mobile/app/theme/app_theme.dart';
 import '../controllers/chat_screen_controller.dart';
 
 class ChatScreenView extends GetView<ChatScreenController> {
   final String friendPhone;
   final String friendName;
+
+  // Menambahkan konstanta warna yang sama dengan home_view.dart
+  static const Color primaryColor = Color(0xFF6C63FF);
+  static const Color primaryDarkColor = Color(0xFF4B0082);
 
   const ChatScreenView({
     Key? key,
@@ -20,7 +25,8 @@ class ChatScreenView extends GetView<ChatScreenController> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF075E54),
+        // Mengubah warna background menjadi solid primaryDarkColor
+        backgroundColor: primaryDarkColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
@@ -169,9 +175,8 @@ class ChatScreenView extends GetView<ChatScreenController> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
-                              color: isSender
-                                  ? Color(0xFF128C7E)
-                                  : Colors.grey[700],
+                              // Mengubah warna pesan pengirim menjadi primaryColor
+                              color: isSender ? primaryColor : Colors.grey[700],
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Column(
@@ -206,7 +211,8 @@ class ChatScreenView extends GetView<ChatScreenController> {
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              color: Color(0xFF1F2C34),
+              // Mengubah warna background menjadi solid primaryDarkColor
+              color: primaryDarkColor,
               child: Row(
                 children: [
                   // Hapus IconButton emoji_emotions
@@ -215,7 +221,7 @@ class ChatScreenView extends GetView<ChatScreenController> {
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         color: Colors.grey[800],
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       child: TextField(
                         controller: controller.messageController,
@@ -229,11 +235,13 @@ class ChatScreenView extends GetView<ChatScreenController> {
                     ),
                   ),
                   SizedBox(width: 8),
-                  FloatingActionButton(
-                    mini: true,
-                    backgroundColor: Color(0xFF00A884),
-                    child: Icon(Icons.send, color: Colors.white),
-                    onPressed: () => controller.sendMessage(),
+                  Container(
+                    child: FloatingActionButton(
+                      mini: true,
+                      backgroundColor: AppTheme.textDark,
+                      child: Icon(Icons.send, color: Colors.white),
+                      onPressed: () => controller.sendMessage(),
+                    ),
                   ),
                 ],
               ),

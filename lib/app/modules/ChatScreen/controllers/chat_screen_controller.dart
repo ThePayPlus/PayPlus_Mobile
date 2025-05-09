@@ -34,7 +34,7 @@ class ChatScreenController extends GetxController {
   // Fungsi untuk menghubungkan ke WebSocket
   void connectToWebSocket() {
     channel = WebSocketChannel.connect(
-      Uri.parse('ws://192.168.18.4:3000'),
+      Uri.parse('ws://10.0.2.2:3000'),
     );
 
     // Menerima pesan dari WebSocket
@@ -57,14 +57,14 @@ class ChatScreenController extends GetxController {
     final result = await ApiService.getMessages(friendPhone);
     isLoading.value = false;
 
-    if (result != null && result['success'] == true) {
+    if (result['success'] == true) {
       if (result['messages'] is List) {
         messages.value = List<Map<String, dynamic>>.from(result['messages']);
       } else {
         Get.snackbar('Error', 'Format pesan tidak valid');
       }
     } else {
-      Get.snackbar('Error', result?['message'] ?? 'Pesan tidak ditemukan');
+      Get.snackbar('Error', result['message'] ?? 'Pesan tidak ditemukan');
     }
   }
 
