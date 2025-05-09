@@ -147,7 +147,8 @@ class SavingsPage extends GetView<SavingsController> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.lightBlueAccent, width: 2),
+                    borderSide: const BorderSide(
+                        color: Colors.lightBlueAccent, width: 2),
                   ),
                 ),
               ),
@@ -162,7 +163,8 @@ class SavingsPage extends GetView<SavingsController> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.lightBlueAccent, width: 2),
+                    borderSide: const BorderSide(
+                        color: Colors.lightBlueAccent, width: 2),
                   ),
                 ),
                 maxLines: 2,
@@ -179,7 +181,8 @@ class SavingsPage extends GetView<SavingsController> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.lightBlueAccent, width: 2),
+                    borderSide: const BorderSide(
+                        color: Colors.lightBlueAccent, width: 2),
                   ),
                 ),
                 keyboardType: TextInputType.number,
@@ -190,13 +193,15 @@ class SavingsPage extends GetView<SavingsController> {
                 decoration: InputDecoration(
                   labelText: "Initial Amount",
                   hintText: "e.g. 500000",
-                  prefixIcon: const Icon(Icons.account_balance_wallet, color: Colors.grey),
+                  prefixIcon: const Icon(Icons.account_balance_wallet,
+                      color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.lightBlueAccent, width: 2),
+                    borderSide: const BorderSide(
+                        color: Colors.lightBlueAccent, width: 2),
                   ),
                 ),
                 keyboardType: TextInputType.number,
@@ -648,16 +653,14 @@ class SavingsPage extends GetView<SavingsController> {
           const SizedBox(height: 10),
           Row(
             children: [
-              // Tampilkan tombol yang berbeda berdasarkan status tabungan
               if (!isCompleted) ...[
-                // Tombol Add to Savings hanya ditampilkan jika belum mencapai target
                 ElevatedButton(
                   onPressed: () => showAddToSavingDialog(index),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     padding: const EdgeInsets.symmetric(
                       vertical: 12,
-                      horizontal: 20,
+                      horizontal: 15,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -672,7 +675,6 @@ class SavingsPage extends GetView<SavingsController> {
                   ),
                 ),
               ] else ...[
-                // Tombol Withdraw hanya ditampilkan jika sudah mencapai target
                 ElevatedButton(
                   onPressed: () => controller.withdrawSaving(index),
                   style: ElevatedButton.styleFrom(
@@ -695,7 +697,6 @@ class SavingsPage extends GetView<SavingsController> {
                 ),
               ],
               const SizedBox(width: 5),
-              // Tombol Edit selalu ditampilkan
               ElevatedButton(
                 onPressed: () => showEditTargetDialog(index),
                 style: ElevatedButton.styleFrom(
@@ -717,7 +718,6 @@ class SavingsPage extends GetView<SavingsController> {
                 ),
               ),
               const SizedBox(width: 5),
-              // Tombol Delete hanya ditampilkan jika belum mencapai target
               if (!isCompleted)
                 ElevatedButton(
                   onPressed: onDelete,

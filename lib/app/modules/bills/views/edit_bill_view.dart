@@ -76,7 +76,7 @@ class EditBillView extends GetView<BillController> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     labelText: 'Amount',
-                    prefixIcon: const Icon(Icons.attach_money, color: Colors.deepPurple),
+                    prefixIcon: const Icon(Icons.money, color: Colors.deepPurple),
                     filled: true,
                     fillColor: Colors.grey.shade50,
                     focusedBorder: OutlineInputBorder(
