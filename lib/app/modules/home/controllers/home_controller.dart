@@ -1,14 +1,9 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:payplus_mobile/app/models/recent_transaction.dart';
-import 'package:payplus_mobile/app/routes/app_pages.dart';
 import 'package:payplus_mobile/services/api_service.dart';
 
 class HomeController extends GetxController {
-  // For bottom navigation
-  final selectedIndex = 0.obs;
-
-  // Profile data observables
   final RxString name = ''.obs;
   final RxString totalIncome = ''.obs;
   final RxString balance = ''.obs;
@@ -25,6 +20,7 @@ class HomeController extends GetxController {
     fetchRecentTransactions();
   }
 
+  //## Untuk mengambil data recent transaction
   Future<void> fetchRecentTransactions() async {
     try {
       isLoading(true);
@@ -46,6 +42,7 @@ class HomeController extends GetxController {
     }
   }
 
+  //## Untuk mengambil data user
   void fetchProfileData() async {
     isLoading.value = true;
     errorMessage.value = '';
@@ -69,25 +66,11 @@ class HomeController extends GetxController {
     }
   }
 
-  void changeTabIndex(int index) {
-    selectedIndex.value = index;
-    if (index == 0) {
-      Get.toNamed(Routes.HOME);
-    } else if (index == 1) {
-      Get.toNamed(Routes.TRANSFER);
-    } else if (index == 2) {
-      Get.toNamed(Routes.CHAT_BOT);
-    }
-  }
-
+  //## Fungsi untuk format mata uang indonesia
   String formatCurrency(String amount) {
     final value = int.tryParse(amount) ?? 0;
     final formatter =
         NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     return formatter.format(value);
   }
-
-  final count = 0.obs;
-
-  void increment() => count.value++;
 }

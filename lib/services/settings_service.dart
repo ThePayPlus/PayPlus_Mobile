@@ -8,13 +8,10 @@ class SettingsService {
       String? currentPassword,
       String? newPassword}) async {
     try {
-      // Update profile
       final profileResult = await ApiService.updateProfile(name, email);
-      // Jika update profile gagal, return error
       if (!profileResult['success']) {
         return profileResult;
       }
-      // Jika password field ada isinya, update password
       if (currentPassword != null &&
           newPassword != null &&
           currentPassword.isNotEmpty &&
@@ -27,11 +24,9 @@ class SettingsService {
             'message': 'Profile and password updated successfully',
           };
         } else {
-          // Jika update password gagal, return error
           return passwordResult;
         }
       }
-      // Jika tidak ada password yang diubah, return hasil update profile
       return {
         'success': true,
         'message': 'Profile updated successfully',
