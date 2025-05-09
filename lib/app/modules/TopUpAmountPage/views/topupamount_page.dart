@@ -24,8 +24,8 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F8),
       appBar: AppBar(
-        title: const Text("Top Up",
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title:
+            const Text("Top Up", style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -50,20 +50,22 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
                 TextField(
                   controller: _amountController,
                   keyboardType: TextInputType.number,
-                  style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 30, fontWeight: FontWeight.bold),
                   decoration: const InputDecoration(
                     prefixIcon: Padding(
                       padding: EdgeInsets.only(top: 0, left: 0),
                       child: Text(
                         'Rp',
-                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                     ),
                     hintText: '0',
-                    hintStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    hintStyle:
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     border: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.indigoAccent)
-                    ),
+                        borderSide: BorderSide(color: Colors.indigoAccent)),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -77,10 +79,10 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // 2x3 layout
+                    crossAxisCount: 3,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 16,
-                    childAspectRatio: 1.8, // Atur aspek perbandingan lebar dan tinggi
+                    childAspectRatio: 1.8,
                   ),
                   itemCount: 6,
                   itemBuilder: (context, index) {
@@ -96,15 +98,12 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
                   },
                 ),
                 const SizedBox(height: 30),
-                // Hapus TextField kedua untuk Account Number karena sudah ada TextField untuk amount di atas
-                // Tombol Continue
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
                       final amount = _amountController.text;
                       if (amount.isNotEmpty) {
-                        // Tampilkan dialog konfirmasi sebelum melanjutkan
                         _showConfirmationDialog(amount);
                       } else {
                         Get.snackbar(
@@ -144,14 +143,12 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
     );
   }
 
-  // Fungsi untuk membuat tombol rekomendasi top up
+  // Fungsi rekomendasi top up
   Widget _buildRecommendedAmountButton(String amount) {
     return ElevatedButton(
       onPressed: () {
-        // Update TextField dengan nilai yang dipilih
         setState(() {
           _amountController.text = amount.replaceAll(RegExp(r'[^0-9]'), '');
- // Update value di text field
         });
       },
       style: ElevatedButton.styleFrom(
@@ -172,7 +169,7 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
     );
   }
 
-  // Fungsi untuk menampilkan dialog konfirmasi
+  // Fungsi dialog konfirmasi
   void _showConfirmationDialog(String amount) {
     showDialog(
       context: context,
@@ -183,19 +180,16 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                // Menutup dialog jika pengguna batal
                 Get.back();
               },
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () async {
-                // Menutup dialog
                 Get.back();
-                
-                // Panggil API untuk top up
+
                 final result = await controller.topUp(amount);
-                
+
                 if (result['success']) {
                   _showSuccessNotification(amount);
                 } else {
@@ -216,7 +210,7 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
     );
   }
 
-  // Fungsi untuk menampilkan notifikasi top up sukses
+  // Fungsi notifikasi top up sukses
   void _showSuccessNotification(String amount) {
     Get.snackbar(
       'Top Up Success',

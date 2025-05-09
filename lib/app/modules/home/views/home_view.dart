@@ -43,7 +43,7 @@ class HomeView extends GetView<HomeController> {
                     onTap: () => Get.offAllNamed(Routes.SETTING),
                     child: CircleAvatar(
                       radius: 24,
-                      backgroundColor: primaryColor,
+                      backgroundColor: AppTheme.primaryPurple,
                       child: Obx(() => Text(
                             controller.name.isNotEmpty
                                 ? controller.name.value

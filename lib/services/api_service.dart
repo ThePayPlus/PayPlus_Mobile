@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:math' show min; // Tambahkan import ini
+import 'dart:math' show min;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Base URL for the backend API
-  static const String baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'http://10.0.2.2:3000/api';
 
   // Token storage keyd
   static const String tokenKey = 'auth_token';
@@ -104,7 +104,6 @@ class ApiService {
 
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        // If login successful, store the token
         if (data['token'] != null) {
           await setAuthToken(data['token']);
         }
@@ -156,7 +155,6 @@ class ApiService {
   // Get friends list
   static Future<Map<String, dynamic>> getFriends() async {
     try {
-      // Pastikan token sudah ada
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Anda belum login'};
@@ -179,7 +177,6 @@ class ApiService {
         };
       }
 
-      // Coba parse JSON dengan penanganan error yang lebih baik
       Map<String, dynamic> data;
       try {
         data = jsonDecode(response.body);
@@ -207,7 +204,6 @@ class ApiService {
   // Add friend by phone number
   static Future<Map<String, dynamic>> addFriend(String friendPhone) async {
     try {
-      // Check if token exists
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
@@ -244,7 +240,6 @@ class ApiService {
   // Get friend requests
   static Future<Map<String, dynamic>> getFriendRequests() async {
     try {
-      // Check if token exists
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
@@ -276,7 +271,6 @@ class ApiService {
   static Future<Map<String, dynamic>> respondToFriendRequest(
       String requestId, String action) async {
     try {
-      // Check if token exists
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
@@ -288,7 +282,7 @@ class ApiService {
         Uri.parse('$baseUrl/friends/respond/$requestId'),
         headers: headers,
         body: jsonEncode({
-          'action': action, // 'accept' or 'reject'
+          'action': action,
         }),
       );
 
@@ -336,7 +330,6 @@ class ApiService {
   // Search user by phone
   static Future<Map<String, dynamic>> searchUser(String phone) async {
     try {
-      // Pastikan token sudah ada
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Anda belum login'};
@@ -349,7 +342,6 @@ class ApiService {
         headers: headers,
       );
 
-      // Periksa jika respons bukan JSON
       if (response.headers['content-type'] != null &&
           !response.headers['content-type']!.contains('application/json')) {
         return {
@@ -359,7 +351,6 @@ class ApiService {
         };
       }
 
-      // Coba parse JSON dengan penanganan error yang lebih baik
       Map<String, dynamic> data;
       try {
         data = jsonDecode(response.body);
@@ -429,17 +420,15 @@ class ApiService {
   // Mengambil pesan antara dua teman
   static Future<Map<String, dynamic>> getMessages(String friendPhone) async {
     try {
-      final token = await getAuthToken(); // Ambil token untuk autentikasi
+      final token = await getAuthToken();
       final response = await http.get(
-        Uri.parse(
-            '$baseUrl/messages/$friendPhone'), // Endpoint untuk mengambil pesan
+        Uri.parse('$baseUrl/messages/$friendPhone'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
-      // Parse response JSON
       final data = json.decode(response.body);
       return data;
     } catch (e) {
@@ -467,7 +456,6 @@ class ApiService {
         }),
       );
 
-      // Jika status code adalah 201, berarti berhasil
       if (response.statusCode == 201) {
         final data = json.decode(response.body);
 
@@ -618,7 +606,6 @@ class ApiService {
 
   static Future<Map<String, dynamic>> getExpenseRecords() async {
     try {
-      // Check if token exists
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};
@@ -643,7 +630,7 @@ class ApiService {
         try {
           data = jsonDecode(response.body);
         } catch (e) {
-          // Jika response body tidak bisa di-decode sebagai JSON
+          return {'success': false, 'message': 'Invalid response from server'};
         }
 
         return {
@@ -848,7 +835,7 @@ class ApiService {
 
   // Savings methods
 
-  // Get all savings for the current user
+  // Get all savings
   static Future<Map<String, dynamic>> getSavings() async {
     try {
       final token = await getAuthToken();
@@ -895,8 +882,7 @@ class ApiService {
           'deskripsi': description,
           'target': target,
           'terkumpul': collected,
-          'deductFromBalance': collected >
-              0, // Parameter baru untuk menandakan apakah perlu mengurangi saldo
+          'deductFromBalance': collected > 0,
         }),
       );
 
@@ -999,12 +985,10 @@ class ApiService {
         headers: headers,
         body: jsonEncode({
           'amount': amount,
-          'deductFromBalance':
-              true, // Tambahkan parameter ini untuk mengurangi saldo
+          'deductFromBalance': true,
         }),
       );
 
-      // Coba parse response body dengan penanganan error
       Map<String, dynamic> data;
       try {
         data = jsonDecode(response.body);
@@ -1050,7 +1034,7 @@ class ApiService {
         try {
           data = jsonDecode(response.body);
         } catch (e) {
-          // Jika response body tidak bisa di-decode sebagai JSON
+          return {'success': false, 'message': 'Invalid response from server'};
         }
         return {
           'success': false,
@@ -1062,7 +1046,7 @@ class ApiService {
     }
   }
 
-  // Withdraw saving (move to balance and delete saving)
+  // Withdraw saving
   static Future<Map<String, dynamic>> withdrawSaving(int id) async {
     try {
       final token = await getAuthToken();
@@ -1081,7 +1065,7 @@ class ApiService {
         try {
           data = jsonDecode(response.body);
         } catch (e) {
-          // Jika response body tidak bisa di-decode sebagai JSON
+          return {'success': false, 'message': 'Invalid response from server'};
         }
         return {'success': true, 'data': data};
       } else {
@@ -1089,7 +1073,7 @@ class ApiService {
         try {
           data = jsonDecode(response.body);
         } catch (e) {
-          // Jika response body tidak bisa di-decode sebagai JSON
+          return {'success': false, 'message': 'Invalid response from server'};
         }
         return {
           'success': false,
@@ -1101,12 +1085,9 @@ class ApiService {
     }
   }
 
-  // Metode searchUser sudah diimplementasikan di atas
-
   // Top Up method
   static Future<Map<String, dynamic>> topUp(String amount) async {
     try {
-      // Check if token exists
       final token = await getAuthToken();
       if (token == null || token.isEmpty) {
         return {'success': false, 'message': 'Authentication required'};

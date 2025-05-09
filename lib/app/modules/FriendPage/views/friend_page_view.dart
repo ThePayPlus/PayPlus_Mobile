@@ -91,25 +91,30 @@ class FriendPageView extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.people_outline,
-                            color: AppTheme.primaryPurple.withOpacity(0.5),
+                            color: AppTheme.coinYellow,
                             size: 64,
                           ),
                           SizedBox(height: 16),
                           Text(
                             'Belum ada teman',
                             style: TextStyle(
-                              color: AppTheme.primaryPurple.withOpacity(0.7),
-                              fontSize: 16,
+                              color: AppTheme.textDark,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 23,
                             ),
                           ),
                           SizedBox(height: 16),
                           ElevatedButton(
-                            onPressed: () => Get.dialog(AddFriendDialog()),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.primaryPurple,
-                            ),
-                            child: Text('Tambah Teman'),
-                          ),
+                              onPressed: () => Get.dialog(AddFriendDialog()),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF6C63FF),
+                              ),
+                              child: Text(
+                                'Tambah Teman',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              )),
                         ],
                       ),
                     );
@@ -215,7 +220,7 @@ class FriendPageView extends StatelessWidget {
       ),
       // friend request button
       floatingActionButton: Obx(() => FloatingActionButton(
-            backgroundColor: AppTheme.primaryPurple,
+            backgroundColor: Color(0xFF6C63FF),
             onPressed: () {
               Get.dialog(
                 Dialog(
@@ -238,7 +243,7 @@ class FriendPageView extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Icon(Icons.group_add, size: 28),
+                Icon(Icons.group_add, size: 28, color: Colors.white),
                 if (controller.friendRequests.isNotEmpty)
                   Positioned(
                     top: 6,
