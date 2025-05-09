@@ -22,6 +22,7 @@ class ExpenseController extends GetxController {
     fetchExpenseRecords();
   }
 
+  // Fungsi untuk mengambil data riwayat pengeluaran
   Future<void> fetchExpenseRecords() async {
     try {
       isLoading(true);
@@ -47,7 +48,8 @@ class ExpenseController extends GetxController {
       isLoading(false);
     }
   }
-  // Calculate total expense, transactions and type-specific expenses
+
+  // Fungsi untuk menghitung total expense, transactions, dan type-specific expenses
   void calculateExpenseStats() {
     double total = 0;
     double normal = 0;
@@ -74,7 +76,7 @@ class ExpenseController extends GetxController {
     giftExpense.value = gift.toString();
   }
 
-  // Apply filter to expense records
+  // Fungsi untuk menerapkan filter berdasarkan jenis pengeluaran
   void applyFilter(String filter) {
     currentFilter.value = filter;
 
@@ -85,6 +87,7 @@ class ExpenseController extends GetxController {
     }
   }
 
+  // Fungsi untuk mendapatkan label sesuai dengan jenis pengeluaran
   String getExpenseTypeLabel(String type) {
     switch (type) {
       case 'normal':
@@ -96,7 +99,7 @@ class ExpenseController extends GetxController {
     }
   }
 
-  // Get the color for the expense type
+  // Fungsi untuk mendapatkan warna sesuai dengan jenis pengeluaran
   Color getExpenseTypeColor(String type) {
     switch (type) {
       case 'normal':
@@ -108,7 +111,7 @@ class ExpenseController extends GetxController {
     }
   }
 
-  // Get the background color for the expense type
+  // Fungsi untuk mendapatkan warna latar belakang sesuai dengan jenis pengeluaran
   Color getExpenseTypeBackgroundColor(String type) {
     switch (type) {
       case 'normal':
@@ -120,6 +123,7 @@ class ExpenseController extends GetxController {
     }
   }
 
+  // Fungsi untuk mengonversi angka menjadi format mata uang
   String formatCurrency(String amount) {
     try {
       final value = int.parse(amount);

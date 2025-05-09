@@ -77,7 +77,8 @@ class HistoryView extends GetView<HistoryController> {
     );
   }
 
-Widget _buildHistoryRecordsList() {
+  // Fungsi untuk menampilkan daftar riwayat transaksi dalam bentuk card
+  Widget _buildHistoryRecordsList() {
     return Obx(() {
       final transactions = controller.historyRecords;
       if (transactions.isEmpty) {
@@ -86,6 +87,7 @@ Widget _buildHistoryRecordsList() {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Membuat card untuk setiap transaksi history
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -106,6 +108,7 @@ Widget _buildHistoryRecordsList() {
     });
   }
 
+  // Card builder untuk satu item transaksi, menampilkan ikon, judul, tanggal, dan jumlah
   Widget _buildTransactionItem({
     required IconData icon,
     required String title,
@@ -193,6 +196,7 @@ Widget _buildHistoryRecordsList() {
     );
   }
 
+  // Fungsi untuk mendapatkan ikon sesuai dengan tipe transaksi
   IconData _getIconForType(String? type) {
     switch (type) {
       case 'topup':
