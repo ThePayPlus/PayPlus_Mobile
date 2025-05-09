@@ -22,7 +22,6 @@ class SignupPageController extends GetxController {
   }
 
   Future<void> register() async {
-    // Validate inputs
     if (nameController.text.isEmpty) {
       Get.snackbar(
         'Error',
@@ -96,12 +95,10 @@ class SignupPageController extends GetxController {
     try {
       isLoading.value = true;
 
-      // Call the API service to register
       final result = await ApiService.register(nameController.text,
           phoneController.text, emailController.text, passwordController.text);
 
       if (result['success']) {
-        // Registration successful
         Get.snackbar(
           'Success',
           'Registration successful! Please login.',
@@ -109,10 +106,8 @@ class SignupPageController extends GetxController {
           colorText: Colors.white,
         );
 
-        // Navigate to login page
         Get.toNamed('/login');
       } else {
-        // Registration failed
         Get.snackbar(
           'Error',
           result['message'] ?? 'Registration failed',
@@ -133,7 +128,6 @@ class SignupPageController extends GetxController {
   }
 
   void goToLogin() {
-    // Navigasi ke halaman login
     Get.toNamed('/login');
   }
 }

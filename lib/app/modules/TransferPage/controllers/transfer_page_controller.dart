@@ -13,17 +13,14 @@ class TransferPageController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxList<Map<String, dynamic>> searchResults = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> friends = <Map<String, dynamic>>[].obs;
-  final RxInt transferMethod = 0.obs; // 0 = nomor telepon, 1 = daftar teman
-  final RxString currentUserPhone = ''.obs; // Tambahkan variabel untuk menyimpan nomor telepon pengguna saat ini
-  
+  final RxInt transferMethod = 0.obs; 
+  final RxString currentUserPhone = ''.obs; 
   final List<String> transferTypes = ['Normal', 'Gift'];
   
   @override
   void onInit() {
     super.onInit();
-    // Muat daftar teman saat controller diinisialisasi
     fetchFriends();
-    // Ambil data profil pengguna saat ini
     getCurrentUserProfile();
   }
   
@@ -72,7 +69,6 @@ class TransferPageController extends GetxController {
   
   // Fungsi untuk memilih teman dari daftar
   void selectFriend(Map<String, dynamic> friend) {
-    // Cek apakah nomor telepon teman sama dengan nomor telepon pengguna saat ini
     if (friend['phone'].toString() == currentUserPhone.value) {
       Get.snackbar(
         'Error', 
@@ -109,12 +105,9 @@ class TransferPageController extends GetxController {
     try {
       final result = await ApiService.searchUser(searchController.text);
       if (result['success']) {
-        // Periksa jika respons bukan JSON
         if (result['data'] != null) { 
-          // Coba parse data users dari respons
           try {
             if (result['data']['name'] != null) {
-              // Cek apakah pengguna mencari dirinya sendiri
               if (result['data']['phone'].toString() == currentUserPhone.value) {
                 Get.snackbar(
                   'Error', 
@@ -179,7 +172,6 @@ class TransferPageController extends GetxController {
   }
   
   Future<void> sendTransfer() async {
-    // Validasi input
     if (selectedUserPhone.value.isEmpty) {
       Get.snackbar(
         'Error', 
@@ -190,7 +182,6 @@ class TransferPageController extends GetxController {
       return;
     }
     
-    // Validasi transfer ke diri sendiri
     if (selectedUserPhone.value == currentUserPhone.value) {
       Get.snackbar(
         'Error', 
@@ -226,7 +217,6 @@ class TransferPageController extends GetxController {
     
     isLoading.value = true;
     try {
-      // Panggil API untuk transfer
       final result = await ApiService.transferMoney(
         selectedUserPhone.value,
         amount,
@@ -242,7 +232,6 @@ class TransferPageController extends GetxController {
           colorText: Colors.white
         );
         
-        // Reset field setelah transfer berhasil
         searchController.clear();
         amountController.clear();
         notesController.clear();

@@ -31,15 +31,12 @@ class LoginView extends GetView<LoginPageController> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Logo from URL
-                // Replace the Image.network with Image.asset
                 Image.asset(
                   'assets/images/Logo-PayPlus.png',
                   height: 60,
                 ),
                 const SizedBox(height: 20),
 
-                // Welcome Back Text
                 const Text(
                   'Welcome Back!',
                   style: TextStyle(
@@ -50,7 +47,6 @@ class LoginView extends GetView<LoginPageController> {
                 ),
                 const SizedBox(height: 30),
 
-                // Phone Number Field
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
