@@ -171,53 +171,318 @@ class _TopUpAmountPageState extends State<TopUpAmountPage> {
 
   // Fungsi dialog konfirmasi
   void _showConfirmationDialog(String amount) {
+    // Format amount dengan pemisah ribuan
+    final formattedAmount = amount.replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]}.',
+    );
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm Top Up'),
-          content: Text('Are you sure you want to top up Rp $amount?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: const Text('Cancel'),
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                  offset: const Offset(0.0, 10.0),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () async {
-                Get.back();
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon top up
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF6C63FF).withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.account_balance_wallet,
+                    color: Color(0xFF6C63FF),
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Judul
+                const Text(
+                  'Konfirmasi Top Up',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Jumlah top up
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF6C63FF).withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'Rp $formattedAmount',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF6C63FF),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Pesan konfirmasi
+                const Text(
+                  'Apakah Anda yakin ingin melakukan top up dengan jumlah ini?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Tombol aksi
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Tombol batal
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(color: Colors.grey.shade300),
+                          ),
+                        ),
+                        child: const Text(
+                          'Batal',
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    // Tombol konfirmasi
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          Get.back();
 
-                final result = await controller.topUp(amount);
+                          // Tampilkan loading
+                          Get.dialog(
+                            Dialog(
+                              backgroundColor: Colors.transparent,
+                              elevation: 0,
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Color(0xFF6C63FF)),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      const Text(
+                                        'Memproses top up...',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            barrierDismissible: false,
+                          );
 
-                if (result['success']) {
-                  _showSuccessNotification(amount);
-                } else {
-                  Get.snackbar(
-                    'Error',
-                    result['message'] ?? 'Failed to top up',
-                    snackPosition: SnackPosition.TOP,
-                    backgroundColor: Colors.redAccent,
-                    colorText: Colors.white,
-                  );
-                }
-              },
-              child: const Text('Confirm'),
+                          final result = await controller.topUp(amount);
+
+                          // Tutup dialog loading
+                          Get.back();
+
+                          if (result['success']) {
+                            _showSuccessDialog(formattedAmount);
+                          } else {
+                            Get.snackbar(
+                              'Error',
+                              result['message'] ?? 'Gagal melakukan top up',
+                              snackPosition: SnackPosition.TOP,
+                              backgroundColor: Colors.redAccent,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(16),
+                              borderRadius: 8,
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF6C63FF),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Konfirmasi',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
   }
 
-  // Fungsi notifikasi top up sukses
-  void _showSuccessNotification(String amount) {
-    Get.snackbar(
-      'Top Up Success',
-      'You have successfully topped up Rp $amount',
-      snackPosition: SnackPosition.TOP,
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
+  // Fungsi dialog sukses
+  void _showSuccessDialog(String formattedAmount) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                  offset: const Offset(0.0, 10.0),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon sukses
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Judul
+                const Text(
+                  'Top Up Berhasil!',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Jumlah top up
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'Rp $formattedAmount',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Pesan sukses
+                const Text(
+                  'Saldo Anda telah berhasil ditambahkan ke akun PayPlus Anda.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Tombol kembali
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.back();
+                      Get.offAllNamed('/home');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF6C63FF),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Kembali ke Beranda',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
+  }
+
+  // Fungsi notifikasi top up sukses (tidak digunakan lagi, diganti dengan dialog)
+  void _showSuccessNotification(String amount) {
+    // Format amount dengan pemisah ribuan
+    final formattedAmount = amount.replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]}.',
+    );
+
+    _showSuccessDialog(formattedAmount);
   }
 }
