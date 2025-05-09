@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:payplus_mobile/services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPageController extends GetxController {
   final phoneController = TextEditingController();
@@ -9,6 +10,12 @@ class LoginPageController extends GetxController {
   final isPasswordHidden = true.obs;
   final rememberMe = false.obs;
   final isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadSavedCredentials();
+  }
 
   @override
   void onClose() {
@@ -23,6 +30,35 @@ class LoginPageController extends GetxController {
 
   void toggleRememberMe() {
     rememberMe.value = !rememberMe.value;
+  }
+
+  // Fungsi untuk menyimpan kredensial
+  Future<void> saveCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (rememberMe.value) {
+      await prefs.setString('phone', phoneController.text);
+      await prefs.setString('password', passwordController.text);
+      await prefs.setBool('rememberMe', true);
+    } else {
+      await prefs.remove('phone');
+      await prefs.remove('password');
+      await prefs.setBool('rememberMe', false);
+    }
+  }
+
+  // Fungsi untuk memuat kredensial tersimpan
+  Future<void> loadSavedCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedRememberMe = prefs.getBool('rememberMe') ?? false;
+    
+    if (savedRememberMe) {
+      final savedPhone = prefs.getString('phone') ?? '';
+      final savedPassword = prefs.getString('password') ?? '';
+      
+      phoneController.text = savedPhone;
+      passwordController.text = savedPassword;
+      rememberMe.value = true;
+    }
   }
 
   Future<void> login() async {
@@ -55,6 +91,9 @@ class LoginPageController extends GetxController {
       );
       
       if (result['success']) {
+        // Simpan kredensial jika "Remember Me" diaktifkan
+        await saveCredentials();
+        
         Get.snackbar(
           'Success', 
           'Login successful',
