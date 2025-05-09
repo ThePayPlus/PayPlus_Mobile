@@ -19,7 +19,7 @@ class BillController extends GetxController {
   final selectedDate = Rx<DateTime?>(null);
   Timer? _notificationTimer;
 
-  // Tambahkan map untuk menyimpan icon berdasarkan kategori
+  // map untuk menyimpan icon berdasarkan kategori
   final Map<String, IconData> categoryIcons = {
     'Rent': Icons.home,
     'Utilities': Icons.bolt,
@@ -30,7 +30,6 @@ class BillController extends GetxController {
     'Other': Icons.receipt,
   };
   
-  // Perbaikan: Hapus duplikasi, gunakan hanya satu deklarasi
   final selectedIcon = Rx<IconData>(Icons.home);
   
   @override
@@ -48,7 +47,7 @@ class BillController extends GetxController {
       checkBillNotifications();
     });
     
-    // Tambahkan listener untuk mengubah icon saat kategori berubah
+    // listener untuk mengubah icon saat kategori berubah
     ever(selectedCategory, (category) {
       updateSelectedIcon(category);
     });
@@ -77,7 +76,6 @@ class BillController extends GetxController {
       final result = await ApiService.getBills();
       
       if (result['success']) {
-        // Perbaikan: Periksa tipe data dan tangani dengan benar
         final dynamic billsData = result['data'];
         
         if (billsData is List) {
@@ -88,11 +86,9 @@ class BillController extends GetxController {
           if (billsData.containsKey('bills') && billsData['bills'] is List) {
             bills.value = (billsData['bills'] as List).map((data) => Bill.fromJson(data)).toList();
           } else {
-            // Jika tidak ada kunci yang berisi List, kosongkan bills
             bills.clear();
           }
         } else {
-          // Jika data bukan List atau Map, kosongkan bills
           bills.clear();
         }
         
@@ -123,7 +119,6 @@ class BillController extends GetxController {
     } finally {
       isLoading.value = false;
       
-      // Check for overdue bills and show notifications
       checkOverdueBills();
     }
   }
@@ -361,12 +356,8 @@ class BillController extends GetxController {
   IconData getIconForCategory(String category) {
     return categoryIcons[category] ?? Icons.receipt;
   }
-  
-  // Hapus metode updateSelectedIcon duplikat
-  // void updateSelectedIcon(String category) {
-  //   selectedIcon.value = getCategoryIcon(category);
-  // }
 
+  // Metode untuk mengatur tanggal terpilih
   void setSelectedDate(DateTime date) {
     selectedDate.value = date;
     dateController.text = DateFormat('yyyy-MM-dd').format(date);
